@@ -1,0 +1,77 @@
+
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+
+extern "C" {
+    typedef void (*callbackFunc)(const char *);
+    const char* DialogOpenFilePanel(const char*, const char*, const char*, bool);
+    const char* DialogOpenFolderPanel(const char*, const char*, bool);
+    const char* DialogSaveFilePanel(const char*, const char*, const char*, const char*);
+
+    void DialogOpenFilePanelAsync(const char*, const char*, const char*, bool, callbackFunc);
+    void DialogOpenFolderPanelAsync(const char*, const char*, bool, callbackFunc);
+    void DialogSaveFilePanelAsync(const char*, const char*, const char*, const char*, callbackFunc);
+}
+
+@interface PopUpButtonHandler : NSObject {
+    NSPanel* _panel;
+    NSArray* _extensions;
+}
+@property (nonatomic, strong) NSPanel* panel;
+@property (nonatomic, strong) NSArray* extensions;
+- (id)initWithPanel:(NSSavePanel*)panel;
+- (void)setExtensions:(NSArray*)extensions;
+- (void)selectFormatOpen:(id)sender;
+- (void)selectFormatSave:(id)sender;
+@end
+
+//
+
+@interface StandaloneFileBrowser : NSObject {
+}
+- (id)init;
+- (NSString*)dialogOpenFilePanel:(NSString*)title
+                       directory:(NSString*)directory
+                         filters:(NSString*)filters
+                     multiselect:(BOOL)multiselect
+                  canChooseFiles:(BOOL)canChooseFiles
+                canChooseFolders:(BOOL)canChooseFolders;
+
+- (NSString*)dialogSaveFilePanel:(NSString*)title
+                       directory:(NSString*)directory
+                     defaultName:(NSString*)defaultName
+                         filters:(NSString*)filters;
+
+- (void)dialogOpenFilePanelAsync:(NSString*)title
+                       directory:(NSString*)directory
+                         filters:(NSString*)filters
+                     multiselect:(BOOL)multiselect
+                  canChooseFiles:(BOOL)canChooseFiles
+                canChooseFolders:(BOOL)canChooseFolders;
+
+- (void)dialogOpenFilePanelAsyncSelector:(NSOpenPanel*)panel;
+
+- (void)dialogSaveFilePanelAsync:(NSString*)title
+                       directory:(NSString*)directory
+                     defaultName:(NSString*)defaultName
+                         filters:(NSString*)filters;
+
+- (void)dialogSaveFilePanelAsyncSelector:(NSOpenPanel*)panel;
+
+- (NSOpenPanel*)createOpenPanel:(NSString*)title
+                      directory:(NSString*)directory
+                        filters:(NSString*)filters
+                    multiselect:(BOOL)multiselect
+                 canChooseFiles:(BOOL)canChooseFiles
+               canChooseFolders:(BOOL)canChooseFolders;
+
+- (NSSavePanel*)createSavePanel:(NSString*)title
+                      directory:(NSString*)directory
+                    defaultName:(NSString*)defaultName
+                        filters:(NSString*)filters;
+
+- (void)parseFilter:(NSString*)filter
+            filters:(NSMutableArray*)filters
+         extensions:(NSMutableArray*)extensions;
+@end
+
