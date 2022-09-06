@@ -12,6 +12,7 @@ DOWNLOAD: [aiimag.es](https://aiimag.es)
 2. Unzip it (at a path that has no space in it)
 3. Run aiimages.exe
 
+![aiimages tool](https://aiimag.es/wp-content/uploads/2022/09/aiimages_tool.jpg "aiimages tool")
 
 # About #
 
