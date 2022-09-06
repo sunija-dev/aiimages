@@ -40,6 +40,29 @@ public class Utility : MonoBehaviour
         }
     }
 
+    public static IEnumerator ieLoadImageAsync(string _strFilePath, UnityEngine.UI.RawImage _rawImage, Texture2D _texDefault)
+    {
+        if (!File.Exists(_strFilePath))
+        {
+            Debug.Log($"Could not load image {_strFilePath}. File does not exist.");
+            _rawImage.texture = _texDefault;
+            yield break;
+        }
+
+        UnityEngine.Networking.UnityWebRequest uwr = UnityEngine.Networking.UnityWebRequestTexture.GetTexture(_strFilePath);
+        yield return uwr.SendWebRequest();
+
+        if (uwr.isNetworkError || uwr.isHttpError)
+        {
+            Debug.Log($"Could not load image {_strFilePath}. Crashed. {uwr.error}");
+            _rawImage.texture = _texDefault;
+            yield break;
+        }
+
+        Texture texture = ((UnityEngine.Networking.DownloadHandlerTexture)uwr.downloadHandler).texture;
+        _rawImage.texture = texture;
+    }
+
     /// <summary>
     /// Waits until the file was unlocked for at least _fUnlockedFor.
     /// </summary>
@@ -259,6 +282,156 @@ public class Utility : MonoBehaviour
                 }
                 file.ExtractToFile(completeFileName, true);
             }
+        }
+    }
+
+    /// <summary>
+    /// Adapts the width/height to fit the aspect ratio and a maximum amount of pixels.
+    /// </summary>
+    public static Vector2Int v2iLimitPixelSize(int _iWidth, int _iHeight, int _iPixelTarget)
+    {
+        float fAspectRatio = (float)_iWidth / (float)_iHeight;
+
+        float fWidthNew = Mathf.Sqrt(fAspectRatio * _iPixelTarget);
+        float fHeightNew = fWidthNew / fAspectRatio;
+
+        return new Vector2Int((int)fWidthNew, (int)fHeightNew);
+    }
+
+    public static bool bOverlap(float _fMin1, float _fMax1, float _fMin2, float _fMax2)
+    {
+        return 0f < fOverlap(_fMin1, _fMax1, _fMin2, _fMax2);
+    }
+
+    public static float fOverlap(float _fMin1, float _fMax1, float _fMin2, float _fMax2)
+    {
+        float fOverlap = Mathf.Max(0f, Mathf.Min(_fMax1, _fMax2) - Mathf.Max(_fMin1, _fMin2));
+        return fOverlap;
+    }
+
+    
+}
+
+
+
+
+
+
+
+
+// adapted from: https://stackoverflow.com/questions/67578533/serialize-observablecollection-like-class-observablelist-in-unity-c-sharp
+[System.Serializable]
+public class ObservedList<T> : IList<T>
+{
+    public delegate void ChangedDelegate(int index, T oldValue, T newValue);
+
+    [SerializeField] private List<T> _list = new List<T>();
+
+    // NOTE: I changed the signature to provide a bit more information
+    // now it returns index, oldValue, newValue
+    public event ChangedDelegate Changed;
+
+    public event System.Action Updated;
+
+    public void Init(List<T> _li)
+    {
+        _list = _li;
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return _list.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public void Add(T item)
+    {
+        _list.Add(item);
+        Updated?.Invoke();
+    }
+
+    public void Clear()
+    {
+        _list.Clear();
+        Updated?.Invoke();
+    }
+
+    public bool Contains(T item)
+    {
+        return _list.Contains(item);
+    }
+
+    public void CopyTo(T[] array, int arrayIndex)
+    {
+        _list.CopyTo(array, arrayIndex);
+    }
+
+    public bool Remove(T item)
+    {
+        var output = _list.Remove(item);
+        Updated?.Invoke();
+
+        return output;
+    }
+
+    public int Count => _list.Count;
+    public bool IsReadOnly => false;
+
+    public int IndexOf(T item)
+    {
+        return _list.IndexOf(item);
+    }
+
+    public void Insert(int index, T item)
+    {
+        _list.Insert(index, item);
+        Updated?.Invoke();
+    }
+
+    public void RemoveAt(int index)
+    {
+        _list.RemoveAt(index);
+        Updated?.Invoke();
+    }
+
+    public void AddRange(IEnumerable<T> collection)
+    {
+        _list.AddRange(collection);
+        Updated?.Invoke();
+    }
+
+    public void RemoveAll(System.Predicate<T> predicate)
+    {
+        _list.RemoveAll(predicate);
+        Updated?.Invoke();
+    }
+
+    public void InsertRange(int index, IEnumerable<T> collection)
+    {
+        _list.InsertRange(index, collection);
+        Updated?.Invoke();
+    }
+
+    public void RemoveRange(int index, int count)
+    {
+        _list.RemoveRange(index, count);
+        Updated?.Invoke();
+    }
+
+    public T this[int index]
+    {
+        get { return _list[index]; }
+        set
+        {
+            var oldValue = _list[index];
+            _list[index] = value;
+            Changed?.Invoke(index, oldValue, value);
+            // I would also call the generic one here
+            Updated?.Invoke();
         }
     }
 }

@@ -67,15 +67,11 @@ public class OptionsVisualizer : MonoBehaviour
     /// <summary>
     /// Adapts the width/height to fit the aspect ratio.
     /// </summary>
-    public void SetAspectRatio(float _fWidth, float _fHeight)
+    public void SetAspectRatio(int _iWidth, int _iHeight)
     {
-        int iPixelGoal = 512 * 512;
-        float fAspectRatio = _fWidth / _fHeight;
-        
-        float fWidthNew = Mathf.Sqrt(fAspectRatio * iPixelGoal);
-        float fHeightNew = fWidthNew / fAspectRatio;
+        Vector2Int v2iNewSize = Utility.v2iLimitPixelSize(_iWidth, _iHeight, 512 * 512);
 
-        optionDimensions.Set((int)fWidthNew, (int)fHeightNew);
+        optionDimensions.Set(_iWidth, _iHeight);
     }
 
 }

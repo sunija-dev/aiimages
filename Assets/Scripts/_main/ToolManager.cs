@@ -21,6 +21,8 @@ public class ToolManager : MonoBehaviour
     public static List<string> s_liFavoriteGUIDs = new List<string>();
     public static List<User> s_liUsers = new List<User>();
 
+    public GameObject goImagePreviewPrefab;
+
     public Color colorFavorite;
     public Color colorButton;
 
@@ -35,8 +37,8 @@ public class ToolManager : MonoBehaviour
     // UI
     public TMP_Text textFeedback;
 
-    public List<Tuple<ImagePreview, Output>> liRequestQueue = new List<Tuple<ImagePreview, Output>>(); // requester and prompt
-    private Tuple<ImagePreview, Output> tuCurrentRequest;
+    public List<Output> liRequestQueue = new List<Output>(); // requester and prompt
+    private Output outputCurrentRequested;
 
     public List<ImagePreview> liImagePreviews;
 
@@ -53,9 +55,13 @@ public class ToolManager : MonoBehaviour
     public User userActive = new User();
 
     public UnityEvent eventQueueUpdated = new UnityEvent();
+    public UnityEvent eventHistoryUpdates = new UnityEvent();
 
     private float fProcessingTime = 0f;
     private float fLoadingTime = 0f;
+
+    private bool bCalculating = false;
+    private bool bKeepRequesting = false;
 
 
     void Awake()
@@ -79,7 +85,8 @@ public class ToolManager : MonoBehaviour
     {
         if (!s_settings.bAcceptedLicense)
             OpenPage(Page.License);
-        else if(s_settings.bShowStartSelection || !s_settings.bDidSetup || !setup.bEverythingIsThere())
+        else if(!Application.isEditor 
+            && (s_settings.bShowStartSelection || !s_settings.bDidSetup || !setup.bEverythingIsThere()))
             OpenPage(Page.Select);
         else
             OpenPage(Page.Main);
@@ -91,9 +98,6 @@ public class ToolManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
-            StartingPreviews();
-
         if (!genConnection.bInitialized)
         {
             fLoadingTime += Time.deltaTime;
@@ -102,15 +106,18 @@ public class ToolManager : MonoBehaviour
         else if (genConnection.bProcessing)
         {
             fProcessingTime += Time.deltaTime;
-            textFeedback.text = $"Painting {liRequestQueue.Count + 1}... {fProcessingTime.ToString("0.0")}s";
+            textFeedback.text = $"Painting {(bKeepRequesting ? "oo + " : "")}{liRequestQueue.Count + 1}... {fProcessingTime.ToString("0.0")}s";
         }
         else
         {
+            if (bKeepRequesting && liRequestQueue.Count == 0)
+                RequestImage();
+
             if (liRequestQueue.Count > 0)
             {
-                tuCurrentRequest = liRequestQueue.First();
-                tuCurrentRequest.Item2.eventStartsProcessing.Invoke(tuCurrentRequest.Item2);
-                StartCoroutine(genConnection.ieRequestImage(tuCurrentRequest.Item2, OnTextureReceived));
+                outputCurrentRequested = liRequestQueue.First();
+                outputCurrentRequested.eventStartsProcessing.Invoke(outputCurrentRequested);
+                StartCoroutine(genConnection.ieRequestImage(outputCurrentRequested, OnTextureReceived));
                 liRequestQueue.RemoveAt(0);
                 fProcessingTime = 0f;
                 eventQueueUpdated.Invoke();
@@ -124,7 +131,7 @@ public class ToolManager : MonoBehaviour
 
     public void OnTextureReceived(Texture2D _tex, string _strFilePathFull, bool _bWorked)
     {
-        Output outputRequested = tuCurrentRequest.Item2;
+        Output outputRequested = outputCurrentRequested;
         outputRequested.SetTex(_tex);
         outputRequested.fGenerationTime = fProcessingTime;
         outputRequested.dateCreation = DateTime.UtcNow;
@@ -132,7 +139,10 @@ public class ToolManager : MonoBehaviour
         outputRequested.strGpuModel = $"{SystemInfo.graphicsDeviceName} ({Mathf.RoundToInt(SystemInfo.graphicsMemorySize)} MB)";
 
         if (_bWorked)
+        {
             s_history.liOutputs.Add(outputRequested);
+            eventHistoryUpdates.Invoke();
+        }
 
         if (!_bWorked)
         {
@@ -144,28 +154,28 @@ public class ToolManager : MonoBehaviour
         outputRequested.eventStoppedProcessing.Invoke(outputRequested, _bWorked);
     }
 
-    public void StartingPreviews()
+    public void TogglePlay()
     {
-        UnityEngine.Debug.Log($"Starting previews for {options.promptGet(_bIsPreview: true).strToString()}");
+        bKeepRequesting = !bKeepRequesting;
+    }
 
-        // generate one for each preview image
-        liRequestQueue.Clear();
+    public void RequestImage()
+    {
+        UnityEngine.Debug.Log($"Starting preview for {options.promptGet(_bIsPreview: true).strToString()}");
 
-        foreach (ImagePreview imagePreview in liImagePreviews)
+        Output outputNew = new Output()
         {
-            Prompt prompt = options.promptGet(_bIsPreview: true);
-            Output outputNew = new Output()
-            {
-                strGUID = Guid.NewGuid().ToString(),
-                prompt = prompt,
-                extraOptionsFull = options.extraOptionsGet(),
-                userCreator = userActive
-            };
+            strGUID = Guid.NewGuid().ToString(),
+            prompt = options.promptGet(_bIsPreview: true),
+            extraOptionsFull = options.extraOptionsGet(),
+            userCreator = userActive
+        };
+        RequestImage(outputNew);
+    }
 
-            imagePreview.SetNewPrompt(outputNew);
-            liRequestQueue.Add(new Tuple<ImagePreview, Output>(imagePreview, outputNew));
-        }
-
+    public void RequestImage(Output _output)
+    {
+        liRequestQueue.Add(_output);
         eventQueueUpdated.Invoke();
     }
 

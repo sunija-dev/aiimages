@@ -29,8 +29,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public List<Output> liOutputs = new List<Output>();
     public List<Output> liOldOutputs = new List<Output>();
 
-    private int iDisplayed = 0;
-    private Output outputDisplayed;
+    public Output outputDisplayed;
     public bool bProcessingThis = false;
     public Vector2 v2MaxSize = Vector2.zero;
 
@@ -84,15 +83,25 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void DisplayOutput(Output _output)
     {
+        StartCoroutine(ieDisplayOutput(_output));
+    }
+
+    public IEnumerator ieDisplayOutput(Output _output)
+    {
         if (!liOutputs.Any(x => x.strGUID == _output.strGUID))
         {
-            Debug.LogWarning("ImagePreview: Was asked to display output that it doesn't have.");
-            return;
+            //Debug.LogWarning("ImagePreview: Was asked to display output that it doesn't have.");
+            liOutputs.Add(_output);
         }
 
         outputDisplayed = _output;
-        iDisplayed = liOutputs.FindIndex(x => x.strGUID == _output.strGUID);
-        rawimage.texture = Utility.texLoadImageSecure(_output.strGetFullPath(), ToolManager.s_texDefaultMissing);
+
+        // scale rect
+        Output output = liOutputs[0];
+        RectTransform rtrans = rawimage.GetComponent<RectTransform>();
+        Utility.ScaleRectToImage(rtrans, v2MaxSize, new Vector2(output.prompt.iWidth, output.prompt.iHeight));
+
+        yield return Utility.ieLoadImageAsync(_output.strGetFullPath(), rawimage, ToolManager.s_texDefaultMissing);
 
         UpdateDisplay();
     }
@@ -100,10 +109,13 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private void UpdateDisplay()
     {
         // queue number
+        /*
         int iIndex = ToolManager.Instance.liRequestQueue.FindIndex(x => x.Item1 == this);
         bool bInQueue = iIndex >= 0;
         if (bInQueue)
             textQueueNumber.text = (iIndex + 1).ToString();
+        */
+        bool bInQueue = false;
 
         // step variations
         foreach (GameObject go in liStepNumbers)
@@ -141,7 +153,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             button.colors = colorBlock;
         }
 
-        textQueueNumber.gameObject.SetActive(!bProcessingThis && bInQueue);
+        //textQueueNumber.gameObject.SetActive(!bProcessingThis && bInQueue);
         goProcessingCircle.SetActive(bProcessingThis);
 
         goShadeOut.SetActive(textQueueNumber.gameObject.activeInHierarchy || goProcessingCircle.activeInHierarchy);
@@ -163,9 +175,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         outputNew.prompt.iSteps = OptionsVisualizer.instance.optionSteps.iStepsRedo;
         AddOutput(outputNew);
 
-        ToolManager.Instance.liRequestQueue.RemoveAll(x => x.Item1 == this);
-        ToolManager.Instance.liRequestQueue.Insert(0, new System.Tuple<ImagePreview, Output>(this, outputNew));
-        ToolManager.Instance.eventQueueUpdated.Invoke();
+        ToolManager.Instance.RequestImage(outputNew);
     }
 
     private void AddOutput(Output _output)
@@ -245,7 +255,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (liOutputs.Any(x => !string.IsNullOrEmpty(x.strFilePath)))
         {
             goHoverOverlay.SetActive(true);
-            PreviewImage.Instance.SetVisible(true, outputDisplayed.texGet());
+            PreviewImage.Instance.SetVisible(true, outputDisplayed.texGet(), outputDisplayed.prompt.strToString());
         }
     }
 
@@ -253,5 +263,14 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         goHoverOverlay.SetActive(false);
         PreviewImage.Instance.SetVisible(false, null);
+    }
+
+    void OnDestroy()
+    {
+        Debug.Log("Got destroyed");
+        foreach (Output output in liOutputs)
+        {
+            output.UnloadTexture(); // remove texture, so memory can be freed again
+        }
     }
 }

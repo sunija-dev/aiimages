@@ -47,7 +47,8 @@ public class ContextMenu : MonoBehaviour, IPointerClickHandler, IPointerDownHand
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Open();
+        if (eventData.button == PointerEventData.InputButton.Right)
+            Open();
     }
 
     public void OnPointerDown(PointerEventData eventData)

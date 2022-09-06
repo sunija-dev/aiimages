@@ -64,13 +64,22 @@ public class Output
     public Texture2D texGet()
     {
         if (tex == null)
+        {
             tex = Utility.texLoadImageSecure(strGetFullPath(), ToolManager.s_texDefaultMissing);
+            tex.hideFlags = HideFlags.HideAndDontSave;
+        }
         return tex;
     }
 
     public void SetTex(Texture2D _tex)
     {
         tex = _tex;
+    }
+
+    public void UnloadTexture()
+    {
+        GameObject.Destroy(tex);
+        tex = null;
     }
 
     /// <summary>
@@ -130,6 +139,25 @@ public class Prompt
 
         return strPrompt;
     }
+
+    public bool bEqualExceptSteps(Prompt _promptOther, bool _bIgnoreSeed = false)
+    {
+        return  (_bIgnoreSeed || iSeed == _promptOther.iSeed)
+            && startImage == _promptOther.startImage
+            && iWidth == _promptOther.iWidth
+            && iHeight == _promptOther.iHeight
+            && fCfgScale == _promptOther.fCfgScale
+            && strContentPrompt == _promptOther.strContentPrompt
+            && strStylePrompt == _promptOther.strStylePrompt;
+    }
+
+    public bool bEqualContentStyle(Prompt _promptOther)
+    {
+        return //strContentPrompt.First() == _promptOther.strContentPrompt.First() // catching the obvious cases first
+            //&& strStylePrompt.First() == _promptOther.strStylePrompt.First()
+            strContentPrompt == _promptOther.strContentPrompt
+            && strStylePrompt == _promptOther.strStylePrompt;
+    }
 }
 
 [System.Serializable]
@@ -175,7 +203,8 @@ public class Template
 [System.Serializable]
 public class History
 {
-    public List<Output> liOutputs = new List<Output>();
+    public List<Output> liOutputs = new List<Output>(); // TODO: That should probably be a GUID->Output dict...?
+    public List<SectionData> liSections = new List<SectionData>();
     public string strSaveName = "history.json";
 
     public Output outputByGUID(string _strGUID)
