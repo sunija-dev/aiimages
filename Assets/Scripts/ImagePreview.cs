@@ -267,10 +267,6 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     void OnDestroy()
     {
-        Debug.Log("Got destroyed");
-        foreach (Output output in liOutputs)
-        {
-            output.UnloadTexture(); // remove texture, so memory can be freed again
-        }
+        Destroy(rawimage.texture);
     }
 }

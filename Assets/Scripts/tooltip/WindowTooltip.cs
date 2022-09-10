@@ -44,7 +44,7 @@ public class WindowTooltip : MonoBehaviour
         rectOutline.sizeDelta = v2TextSize + v2Padding;
         rectOutline.position = rectMask.position;
 
-        Debug.Log($"Padding: {v2Padding} - textSize: {v2TextSize} - OriginalScaleBg: {v2TextSize} - rectMask.pos: {rectMask.position}");
+        //Debug.Log($"Padding: {v2Padding} - textSize: {v2TextSize} - OriginalScaleBg: {v2TextSize} - rectMask.pos: {rectMask.position}");
     }
 
     private void Update()

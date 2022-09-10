@@ -36,6 +36,7 @@ public class ToolManager : MonoBehaviour
 
     // UI
     public TMP_Text textFeedback;
+    public TMP_Text textVersion;
 
     public List<Output> liRequestQueue = new List<Output>(); // requester and prompt
     private Output outputCurrentRequested;
@@ -67,6 +68,7 @@ public class ToolManager : MonoBehaviour
     void Awake()
     {
         Application.runInBackground = true;
+        textVersion.text = $"v{Application.version}";
 
         s_liUsers.Add(userActive);
 
@@ -357,4 +359,5 @@ public class ToolManager : MonoBehaviour
     {
         Save();
     }
+
 }

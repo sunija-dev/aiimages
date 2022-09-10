@@ -56,11 +56,14 @@ public class Utility : MonoBehaviour
         {
             Debug.Log($"Could not load image {_strFilePath}. Crashed. {uwr.error}");
             _rawImage.texture = _texDefault;
+            uwr.Dispose();
             yield break;
         }
 
         Texture texture = ((UnityEngine.Networking.DownloadHandlerTexture)uwr.downloadHandler).texture;
         _rawImage.texture = texture;
+
+        uwr.Dispose();
     }
 
     /// <summary>

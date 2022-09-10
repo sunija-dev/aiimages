@@ -65,8 +65,9 @@ public class Output
     {
         if (tex == null)
         {
+            Debug.Log("Loaded tex");
             tex = Utility.texLoadImageSecure(strGetFullPath(), ToolManager.s_texDefaultMissing);
-            tex.hideFlags = HideFlags.HideAndDontSave;
+            //tex.hideFlags = HideFlags.HideAndDontSave;
         }
         return tex;
     }
@@ -76,10 +77,9 @@ public class Output
         tex = _tex;
     }
 
-    public void UnloadTexture()
+    public bool bHasTexture()
     {
-        GameObject.Destroy(tex);
-        tex = null;
+        return tex != null;
     }
 
     /// <summary>
