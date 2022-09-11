@@ -37,9 +37,17 @@ public class ToolManager : MonoBehaviour
     public PaletteView paletteView;
 
     // UI
-    public TMP_Text textStartButton;
     public TMP_Text textFeedback;
     public TMP_Text textVersion;
+
+    // start button
+    public Button buttonStart;
+    public TMP_Text textStartButton;
+    public Image imageIconStart;
+    public Sprite spritePlay;
+    public Sprite spriteStop;
+    public Color colorPlay;
+    public Color colorStop;
 
     public List<ImageInfo> liRequestQueue = new List<ImageInfo>(); // requester and prompt
     private ImageInfo outputCurrentRequested;
@@ -136,11 +144,6 @@ public class ToolManager : MonoBehaviour
                 textFeedback.text = "Ready!";
             }
         }
-
-        if (bKeepRequesting)
-            textStartButton.text = "Stop";
-        else
-            textStartButton.text = "Start";
     }
 
     public void OnTextureReceived(Texture2D _tex, string _strFilePathFull, bool _bWorked)
@@ -171,6 +174,15 @@ public class ToolManager : MonoBehaviour
     public void TogglePlay()
     {
         bKeepRequesting = !bKeepRequesting;
+
+        textStartButton.text = bKeepRequesting ? "Stop" : "Start";
+        imageIconStart.sprite = bKeepRequesting ? spriteStop : spritePlay;
+
+        ColorBlock colorBlock = buttonStart.colors;
+        colorBlock.normalColor = bKeepRequesting ? colorStop : colorPlay;
+        colorBlock.pressedColor = bKeepRequesting ? colorStop : colorPlay;
+        colorBlock.selectedColor = bKeepRequesting ? colorStop : colorPlay;
+        buttonStart.colors = colorBlock;
     }
 
     public void RequestImage()

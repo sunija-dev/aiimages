@@ -120,7 +120,8 @@ public class Prompt
     public string strToString()
     {
         string strPrompt = strWithoutOptions();
-        strPrompt += $" -s {iSteps} -S {iSeed} -W {iWidth} -H {iHeight} -C {fCfgScale.ToString("0.0", CultureInfo.InvariantCulture)}";
+        string strWidthHeight = $"-W {iWidth} -H {iHeight}";
+        strPrompt += $" -s {iSteps} -S {iSeed} {(string.IsNullOrEmpty(startImage.strFilePath) ? strWidthHeight : "")} -C {fCfgScale.ToString("0.0", CultureInfo.InvariantCulture)}";
 
         if (!string.IsNullOrEmpty(startImage.strFilePath))
             strPrompt += $" --init_img=\"{startImage.strGetFullPath()}\" --strength={startImage.fStrength.ToString("0.0", CultureInfo.InvariantCulture)}";
