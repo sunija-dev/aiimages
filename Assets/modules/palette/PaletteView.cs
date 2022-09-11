@@ -53,7 +53,7 @@ public class PaletteView : MonoBehaviour
         if (imagePreviewHovering == default)
             palette.liImages.Add(_img);
         else
-            palette.liImages.Insert(palette.liImages.IndexOf(imagePreviewHovering.imgDisplayed), _img);
+            palette.liImages.Insert(Mathf.Clamp(palette.liImages.IndexOf(imagePreviewHovering.imgDisplayed), 0, palette.liImages.Count -1), _img);
 
         UpdateDisplay();
     }

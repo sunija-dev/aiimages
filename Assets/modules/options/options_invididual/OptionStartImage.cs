@@ -72,9 +72,13 @@ public class OptionStartImage : MonoBehaviour
 
         try
         {
+            imgPreview = new ImageInfo();
+
             if (!File.Exists(strGetFullFilePath()))
                 File.Copy(_strFilePathFull, strGetFullFilePath());
             texInputImage = Utility.texLoadImageSecure(strGetFullFilePath(), ToolManager.Instance.texDefaultMissing);
+            imgPreview.strFilePathRelative = strGetFullFilePath();
+            imgPreview.SetTex(texInputImage);
         }
         catch (System.Exception _ex)
         {
@@ -88,14 +92,6 @@ public class OptionStartImage : MonoBehaviour
             texInputImage = Utility.texCropAndScale(texInputImage, ToolManager.Instance.options.optionDimensions.iWidth, ToolManager.Instance.options.optionDimensions.iHeight);
             startImage.strFilePath = Path.GetFileNameWithoutExtension(startImage.strFilePath) + "_downscaled.png";
             Utility.WritePNG(startImage.strFilePath, texInputImage);
-        }
-        */
-
-        /*
-        if (string.IsNullOrEmpty(startImage.strGUID) && texInputImage.width != texInputImage.height)
-        {
-            Debug.Log("Input image was not square!");
-            startImage.strFilePath = "";
         }
         */
 

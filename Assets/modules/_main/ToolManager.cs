@@ -72,7 +72,7 @@ public class ToolManager : MonoBehaviour
     void Awake()
     {
         Application.runInBackground = true;
-        textVersion.text = $"v{Application.version}";
+        StartCoroutine(ieCheckVersion());
 
         s_liUsers.Add(userActive);
 
@@ -404,6 +404,28 @@ public class ToolManager : MonoBehaviour
 
         if (s_dictDisplayedBy[_img].Count == 0 && _img.bHasTexture() && _img.texGet() != s_texDefaultMissing)
                 Destroy(_img.texGet());
+    }
+
+    public IEnumerator ieCheckVersion()
+    {
+        UnityEngine.Networking.UnityWebRequest webRequest = UnityEngine.Networking.UnityWebRequest.Get("http://aiimag.es/data/version_newest.txt");
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
+        {
+            UnityEngine.Debug.Log(webRequest.error);
+            textVersion.text = $"v{Application.version}";
+            yield break;
+        }
+
+        if (webRequest.downloadHandler.text == Application.version)
+        {
+            textVersion.text = $"up-to-date - v{Application.version}";
+        }
+        else
+        {
+            textVersion.text = $"<color=#00FF00>NEW AVAILABLE</color> - v{Application.version}";
+        }
     }
 
 }

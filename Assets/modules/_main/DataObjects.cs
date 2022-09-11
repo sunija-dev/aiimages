@@ -43,8 +43,8 @@ public class ImageInfo
 {
     public string strGUID = "";
     public string strFilePathRelative = "";
-    public Prompt prompt;
-    public ExtraOptions extraOptionsFull; // special aiimag.es options
+    public Prompt prompt = new Prompt();
+    public ExtraOptions extraOptionsFull = new ExtraOptions(); // special aiimag.es options
     private Texture2D tex;
 
     // telemetry
