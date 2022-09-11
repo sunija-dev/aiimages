@@ -16,13 +16,15 @@ public class OptionStartImage : MonoBehaviour
     public ImagePreview imagePreviewInput;
     public Texture2D texDefault;
 
-    private Vector2 v2PreviewMaxSize = Vector2.zero;
-
     private ImageInfo imgPreview = new ImageInfo();
 
     private void Awake()
     {
         optionSlider.eventValueChanged.AddListener((float _fValue) => startImage.fStrength = 1f - _fValue);
+    }
+
+    private void Start()
+    {
         UpdateDisplay();
     }
 
@@ -47,6 +49,12 @@ public class OptionStartImage : MonoBehaviour
         UpdateDisplay();
     }
 
+    public void LoadImageFromHistory(ImageInfo _output)
+    {
+        if (_output != null && !string.IsNullOrEmpty(_output.strGUID))
+            LoadImageFromHistory(_output.strGUID);
+    }
+
     public void LoadImageFromFileName(string _strFilePathFull)
     {
         startImage.strFilePath = Path.GetFileName(_strFilePathFull);
@@ -66,7 +74,7 @@ public class OptionStartImage : MonoBehaviour
         {
             if (!File.Exists(strGetFullFilePath()))
                 File.Copy(_strFilePathFull, strGetFullFilePath());
-            texInputImage = Utility.texLoadImageSecure(strGetFullFilePath(), new Texture2D(1, 1));
+            texInputImage = Utility.texLoadImageSecure(strGetFullFilePath(), ToolManager.Instance.texDefaultMissing);
         }
         catch (System.Exception _ex)
         {
@@ -112,11 +120,7 @@ public class OptionStartImage : MonoBehaviour
         LoadImageFromFileName(arPaths[0]);
     }
 
-    public void LoadImageFromHistory(ImageInfo _output)
-    {
-        if (_output != null && !string.IsNullOrEmpty(_output.strGUID))
-            LoadImageFromHistory(_output.strGUID);
-    }
+
 
     public void Remove()
     {
@@ -128,12 +132,10 @@ public class OptionStartImage : MonoBehaviour
 
     public void UpdateDisplay()
     {
-        if (string.IsNullOrEmpty(startImage.strFilePath))
+        if (!string.IsNullOrEmpty(startImage.strFilePath))
             imagePreviewInput.DisplayImage(imgPreview);
         else
             imagePreviewInput.DisplayEmpty();
-
-        //Utility.ScaleRectToImage(rawimagePreview.GetComponent<RectTransform>(), v2PreviewMaxSize, new Vector2(rawimagePreview.texture.width, rawimagePreview.texture.height));
     }
 
     public string strGetFullFilePath(string _strFileName = "")

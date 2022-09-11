@@ -3285,6 +3285,14 @@ PrefabInstance:
       value: image_preview (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4801221228029570629, guid: 889c56f4352ede54db68811a3c3d46dc, type: 3}
+      propertyPath: v2MaxSize.x
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 4801221228029570629, guid: 889c56f4352ede54db68811a3c3d46dc, type: 3}
+      propertyPath: v2MaxSize.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 4801221228029570629, guid: 889c56f4352ede54db68811a3c3d46dc, type: 3}
       propertyPath: bShowHoverMenu
       value: 0
       objectReference: {fileID: 0}
@@ -3399,13 +3407,13 @@ MonoBehaviour:
   eventOnDraggedOn:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 550739102}
+        m_TargetAssemblyTypeName: OptionStartImage, Assembly-CSharp
+        m_MethodName: LoadImageFromHistory
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3422,7 +3430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1080a0a83d897684fa66084569191ad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &545412754
+--- !u!114 &545412756
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

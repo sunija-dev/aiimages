@@ -37,33 +37,39 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public List<ImageInfo> liOutputs = new List<ImageInfo>();
     public List<ImageInfo> liOldOutputs = new List<ImageInfo>();
 
-    public ImageInfo outputDisplayed;
+    public ImageInfo imgDisplayed;
     public bool bProcessingThis = false;
     public Vector2 v2MaxSize = Vector2.zero;
 
     private GameObject goDragPreview = null;
     private List<GameObject> liStepNumbers = new List<GameObject>();
+    private float fTargetAlpha = 1f;
+    private bool bDontInit = false;
 
     private void Start()
     {
+        if (bDontInit)
+            return;
+
         ToolManager.Instance.eventQueueUpdated.AddListener(UpdateDisplay);
-        v2MaxSize = rawimage.GetComponent<RectTransform>().sizeDelta;
+        if (v2MaxSize == Vector2.zero)
+            v2MaxSize = rawimage.GetComponent<RectTransform>().sizeDelta;
 
         contextMenu.AddOptions(
             new ContextMenu.Option("Create variations!", () => SetAsInputImage()),
             new ContextMenu.Option("Use these options", () =>
             {
-                OptionsVisualizer.instance.LoadOptions(outputDisplayed);
+                OptionsVisualizer.instance.LoadOptions(imgDisplayed);
             }),
             new ContextMenu.Option("Copy prompt (only text)", () =>
             {
-                if (outputDisplayed != null)
-                    Utility.CopyToClipboard(outputDisplayed.prompt.strWithoutOptions());
+                if (imgDisplayed != null)
+                    Utility.CopyToClipboard(imgDisplayed.prompt.strWithoutOptions());
             }),
             new ContextMenu.Option("Copy prompt (all)", () =>
             {
-                if (outputDisplayed != null)
-                    Utility.CopyToClipboard(outputDisplayed.prompt.strToString());
+                if (imgDisplayed != null)
+                    Utility.CopyToClipboard(imgDisplayed.prompt.strToString());
             }),
             new ContextMenu.Option("Save content as template", () =>
             {
@@ -75,13 +81,13 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }),
             new ContextMenu.Option("Copy seed", () =>
             {
-                if (outputDisplayed != null)
-                    Utility.CopyToClipboard(outputDisplayed.prompt.iSeed.ToString());
+                if (imgDisplayed != null)
+                    Utility.CopyToClipboard(imgDisplayed.prompt.iSeed.ToString());
             }),
             new ContextMenu.Option("Lock seed", () =>
             {
-                if (outputDisplayed != null)
-                    ToolManager.Instance.options.optionSeed.Set(outputDisplayed.prompt.iSeed, _bRandomSeed: false);
+                if (imgDisplayed != null)
+                    ToolManager.Instance.options.optionSeed.Set(imgDisplayed.prompt.iSeed, _bRandomSeed: false);
             })
             );
 
@@ -90,48 +96,46 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void DisplayEmpty()
     {
-        outputDisplayed = null;
+        imgDisplayed = null;
         liOutputs.Clear();
         UpdateDisplay();
     }
 
-    public void DisplayImage(ImageInfo _output)
+    public void DisplayImage(ImageInfo _output, bool _bAddtive = false, bool _bDontInit = false)
     {
-        StartCoroutine(ieDisplayOutput(_output));
+        bDontInit = _bDontInit;
+
+        StartCoroutine(ieDisplayImage(_output));
     }
 
-    public IEnumerator ieDisplayOutput(ImageInfo _output)
+    public IEnumerator ieDisplayImage(ImageInfo _img, bool _bAddtive = false)
     {
-        if (!liOutputs.Any(x => x.strGUID == _output.strGUID))
+        if (!_bAddtive)
         {
-            //Debug.LogWarning("ImagePreview: Was asked to display output that it doesn't have.");
-            liOutputs.Add(_output);
+            RemoveDisplayedImages();
+            imgDisplayed = _img;
         }
 
-        outputDisplayed = _output;
+        ToolManager.AddDisplayer(_img, this);
+
+        liOutputs.Add(_img);
+        _img.eventStartsProcessing.AddListener(StartedProcessing);
+        _img.eventStoppedProcessing.AddListener(StoppedProcessing);
 
         // scale rect
-        ImageInfo output = liOutputs[0];
-        RectTransform rtrans = rawimage.GetComponent<RectTransform>();
-        Utility.ScaleRectToImage(rtrans, v2MaxSize, v2GetDimensions());
+        //RectTransform rtrans = rawimage.GetComponent<RectTransform>();
+        //Utility.ScaleRectToImage(rtrans, v2MaxSize, v2GetDimensions());
 
-        canvasGroup.alpha = 0f;
-        yield return Utility.ieLoadImageAsync(strGetFilePath(), rawimage, ToolManager.s_texDefaultMissing);
-        canvasGroup.alpha = 1f;
+        float fTargetAlpha = canvasGroup.alpha;
+        //canvasGroup.alpha = 0f;
+        yield return StartCoroutine(ieLoadImageInfoTexture(_img));
+        canvasGroup.alpha = fTargetAlpha;
 
         UpdateDisplay();
     }
 
-    private void UpdateDisplay()
+    public void UpdateDisplay()
     {
-        // queue number
-        /*
-        int iIndex = ToolManager.Instance.liRequestQueue.FindIndex(x => x.Item1 == this);
-        bool bInQueue = iIndex >= 0;
-        if (bInQueue)
-            textQueueNumber.text = (iIndex + 1).ToString();
-        */
-
         // step variations
         foreach (GameObject go in liStepNumbers)
             Destroy(go);
@@ -145,20 +149,18 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             stepsNumber.imagePreviewParent = this;
             stepsNumber.output = output;
             stepsNumber.textNumber.text = output.prompt.iSteps.ToString();
-            stepsNumber.textNumber.color = output == outputDisplayed ? ToolManager.Instance.colorFavorite : colorStepsNormal;
+            stepsNumber.textNumber.color = output == imgDisplayed ? ToolManager.Instance.colorFavorite : colorStepsNormal;
             liStepNumbers.Add(goNumber);
         }
 
-        if (liOutputs.Count > 0)
+        if (imgDisplayed != null)
         {
-            ImageInfo output = liOutputs[0];
+            // scale image
             RectTransform rtrans = rawimage.GetComponent<RectTransform>();
             Utility.ScaleRectToImage(rtrans, v2MaxSize, v2GetDimensions());
-        }
 
-        if (outputDisplayed != null)
-        {
-            bool bFavorite = ToolManager.s_liFavoriteGUIDs.Any(x => x == outputDisplayed.strGUID);
+            // color favorite star
+            bool bFavorite = ToolManager.s_liFavoriteGUIDs.Any(x => x == imgDisplayed.strGUID);
             imageFavoriteStar.color = bFavorite ? ToolManager.Instance.colorFavorite : ToolManager.Instance.colorButton;
             Button button = imageFavoriteStar.GetComponent<Button>();
             ColorBlock colorBlock = button.colors;
@@ -173,9 +175,20 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             rawimage.texture = ToolManager.Instance.texDefaultMissing;
         }
 
+        if (!bShowHoverMenu)
+            goHoverOverlay.SetActive(false);
+
+        // processing info
+
+        // queue number
+        /*
+        int iIndex = ToolManager.Instance.liRequestQueue.FindIndex(x => x.Item1 == this);
+        bool bInQueue = iIndex >= 0;
+        if (bInQueue)
+            textQueueNumber.text = (iIndex + 1).ToString();
+        */
         //textQueueNumber.gameObject.SetActive(!bProcessingThis && bInQueue);
         goProcessingCircle.SetActive(bProcessingThis);
-
         goShadeOut.SetActive(textQueueNumber.gameObject.activeInHierarchy || goProcessingCircle.activeInHierarchy);
     }
 
@@ -189,40 +202,34 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void RequestRedo()
     {
-        Debug.Log($"Requesting HD version for seed {outputDisplayed.prompt.iSeed}");
+        Debug.Log($"Requesting HD version for seed {imgDisplayed.prompt.iSeed}");
 
-        ImageInfo outputNew = outputDisplayed.outputCopy();
+        ImageInfo outputNew = imgDisplayed.outputCopy();
         outputNew.prompt.iSteps = OptionsVisualizer.instance.optionSteps.iStepsRedo;
-        AddOutput(outputNew);
+        DisplayImage(outputNew, _bAddtive:true);
 
         ToolManager.Instance.RequestImage(outputNew);
     }
 
-    private void AddOutput(ImageInfo _output)
-    {
-        liOutputs.Add(_output);
-        _output.eventStartsProcessing.AddListener(StartedProcessing);
-        _output.eventStoppedProcessing.AddListener(StoppedProcessing);
-    }
 
     public void ToggleFavorite()
     {
-        bool bFavorite = !ToolManager.s_liFavoriteGUIDs.Any(x => x == outputDisplayed.strGUID);
+        bool bFavorite = !ToolManager.s_liFavoriteGUIDs.Any(x => x == imgDisplayed.strGUID);
 
-        string strFavoritePath = System.IO.Path.Combine(ToolManager.s_settings.strOutputDirectory, "favorites", System.IO.Path.GetFileName(outputDisplayed.strFilePathRelative));
+        string strFavoritePath = System.IO.Path.Combine(ToolManager.s_settings.strOutputDirectory, "favorites", System.IO.Path.GetFileName(imgDisplayed.strFilePathRelative));
 
         if (!bFavorite)
         {
-            ToolManager.s_liFavoriteGUIDs.RemoveAll(x => x == outputDisplayed.strGUID);
-            Debug.Log($"Removed favorite {outputDisplayed.strGUID}.");
+            ToolManager.s_liFavoriteGUIDs.RemoveAll(x => x == imgDisplayed.strGUID);
+            Debug.Log($"Removed favorite {imgDisplayed.strGUID}.");
 
             if (System.IO.File.Exists(strFavoritePath))
                 System.IO.File.Delete(strFavoritePath);
         }
         else
         {
-            ToolManager.s_liFavoriteGUIDs.Add(outputDisplayed.strGUID);
-            Debug.Log($"Added favorite {outputDisplayed.strGUID}.");
+            ToolManager.s_liFavoriteGUIDs.Add(imgDisplayed.strGUID);
+            Debug.Log($"Added favorite {imgDisplayed.strGUID}.");
 
             if (System.IO.File.Exists(strGetFilePath()))
                 System.IO.File.Copy(strGetFilePath(), strFavoritePath, overwrite:true);
@@ -234,19 +241,19 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public string strGetFilePath()
     {
         if (bIsInput)
-            return outputDisplayed.strFilePathFullInput();
+            return imgDisplayed.strFilePathFullInput();
         else
-            return outputDisplayed.strFilePathFull();
+            return imgDisplayed.strFilePathFull();
     }
 
     public void SaveAsTemplate(bool _bContent)
     {
-        ToolManager.Instance.SaveTemplate(outputDisplayed, _bContent);
+        ToolManager.Instance.SaveTemplate(imgDisplayed, _bContent);
     }
 
     public void SetAsInputImage()
     {
-        OptionsVisualizer.instance.optionStartImage.LoadImageFromHistory(outputDisplayed.strGUID);
+        OptionsVisualizer.instance.optionStartImage.LoadImageFromHistory(imgDisplayed.strGUID);
     }
 
     private void RemoveOldOutputs()
@@ -281,10 +288,14 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (bShowHoverMenu && liOutputs.Any(x => !string.IsNullOrEmpty(x.strFilePathRelative)))
+        if (bShowHoverMenu)
         {
             goHoverOverlay.SetActive(true);
-            PreviewImage.Instance.SetVisible(true, outputDisplayed.texGet(), outputDisplayed.prompt.strToString());
+        }
+
+        if (liOutputs.Any(x => !string.IsNullOrEmpty(x.strFilePathRelative)))
+        {
+            PreviewImage.Instance.SetVisible(true, imgDisplayed.texGet(), imgDisplayed.prompt.strToString());
         }
     }
 
@@ -307,7 +318,9 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         imagePreview.v2MaxSize = GetComponent<RectTransform>().sizeDelta;
         imagePreview.canvasGroup.alpha = 0.3f;
         imagePreview.canvasGroup.blocksRaycasts = false;
-        imagePreview.DisplayImage(outputDisplayed);
+        imagePreview.bShowHoverMenu = false;
+        imagePreview.DisplayImage(imgDisplayed);
+        
         goDragPreview.transform.position = transform.position;
     }
 
@@ -322,14 +335,22 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private Vector2 v2GetDimensions()
     {
-        if (outputDisplayed.prompt != null)
-            return new Vector2(outputDisplayed.prompt.iWidth, outputDisplayed.prompt.iHeight);
-        else if (outputDisplayed.texGet() != null)
-            return new Vector2(outputDisplayed.texGet().width, outputDisplayed.texGet().height);
+        if (imgDisplayed.prompt != null)
+            return new Vector2(imgDisplayed.prompt.iWidth, imgDisplayed.prompt.iHeight);
+        else if (imgDisplayed.texGet() != null)
+            return new Vector2(imgDisplayed.texGet().width, imgDisplayed.texGet().height);
         else
             return Vector2.zero;
     }
 
+    private void RemoveDisplayedImages()
+    {
+        foreach (ImageInfo _img in liOutputs)
+        {
+            ToolManager.RemoveDisplayer(imgDisplayed, this);
+        }
+        liOutputs.Clear();
+    }
 
     public void OnEndDrag(PointerEventData eventData)
     {
@@ -340,14 +361,26 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         goDragPreview = null;
 
         if (CanBeDraggedOn.s_hovering != null)
-            CanBeDraggedOn.s_hovering.eventOnDraggedOn.Invoke(outputDisplayed);
+            CanBeDraggedOn.s_hovering.eventOnDraggedOn.Invoke(imgDisplayed);
         else
             eventDraggedOnEmpty.Invoke();
     }
 
     void OnDestroy()
     {
-        if (outputDisplayed != null)
-            Destroy(rawimage.texture);
+        RemoveDisplayedImages();
+        //if (imageDisplayed != null)
+        //    Destroy(rawimage.texture);
+    }
+
+    private IEnumerator ieLoadImageInfoTexture(ImageInfo _img)
+    {
+        if (true /* !_img.bHasTexture()*/) // hasTexture doesn't completely work, because it also recognizes the placeholder
+        {
+            yield return StartCoroutine(Utility.ieLoadImageAsync(strGetFilePath(), rawimage, ToolManager.s_texDefaultMissing));
+            _img.SetTex((Texture2D)rawimage.texture);
+        }
+        else
+            rawimage.texture = _img.texGet();
     }
 }

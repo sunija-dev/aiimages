@@ -80,7 +80,7 @@ public class ImageInfo
 
     public bool bHasTexture()
     {
-        return tex != null;
+        return tex != null && tex != default;
     }
 
     /// <summary>

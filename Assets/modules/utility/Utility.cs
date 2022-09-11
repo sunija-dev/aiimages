@@ -130,13 +130,26 @@ public class Utility : MonoBehaviour
     public static void ScaleRectToImage(RectTransform _rtrans, Vector2 _v2MaxScaling, Vector2 _v2ImageScale)
     {
         Vector2 v2NewSize = _v2MaxScaling;
-        float fAspectRatio = _v2ImageScale.x / _v2ImageScale.y;
 
+        // longest size is just set target
+        // shorter size is scaled down (/ old long side * new short side)
         if (_v2ImageScale.x >= _v2ImageScale.y)
-            v2NewSize.y = _v2MaxScaling.y / fAspectRatio;
-        if (_v2ImageScale.y >= _v2ImageScale.x)
-            v2NewSize.x = _v2MaxScaling.x * fAspectRatio;
+        {
+            // x is longer
+            float fScaleDownRatio = _v2MaxScaling.x /_v2ImageScale.x;
+            v2NewSize.y = _v2ImageScale.y * fScaleDownRatio;
+        }
+        else
+        {
+            // y is longer
+            float fScaleDownRatio = _v2MaxScaling.y / _v2ImageScale.y;
+            v2NewSize.x = _v2ImageScale.x * fScaleDownRatio;
+        }
+
+        _rtrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, v2NewSize.x);
+        _rtrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, v2NewSize.y);
         _rtrans.sizeDelta = v2NewSize;
+
     }
 
     public static void DeleteFolder(string _strPath, bool _bKeepFolder = false)

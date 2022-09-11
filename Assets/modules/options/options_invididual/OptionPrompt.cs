@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class OptionInput : MonoBehaviour
+public class OptionPrompt : MonoBehaviour
 {
     public string strPrompt { get => inputPrompt.text; }
 

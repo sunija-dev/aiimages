@@ -20,6 +20,7 @@ public class ToolManager : MonoBehaviour
     public static List<Template> s_liContentTemplates = new List<Template>();
     public static List<string> s_liFavoriteGUIDs = new List<string>();
     public static List<User> s_liUsers = new List<User>();
+    public static Dictionary<ImageInfo, List<object>> s_dictDisplayedBy = new Dictionary<ImageInfo, List<object>>();
 
     public GameObject goImagePreviewPrefab;
 
@@ -358,6 +359,32 @@ public class ToolManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         Save();
+    }
+
+    public static void AddDisplayer(ImageInfo _img, object _oDisplayer)
+    {
+        if (!s_dictDisplayedBy.ContainsKey(_img))
+            s_dictDisplayedBy.Add(_img, new List<object> { _oDisplayer });
+        else
+        {
+            if (!s_dictDisplayedBy[_img].Contains(_oDisplayer))
+                s_dictDisplayedBy[_img].Add(_oDisplayer);
+        }
+            
+    }
+
+    public static void RemoveDisplayer(ImageInfo _img, object _oDisplayer)
+    {
+        if (!s_dictDisplayedBy.ContainsKey(_img))
+        {
+            UnityEngine.Debug.Log("Tried to remove displayer from imgInfo that doesn't have it.");
+            return;
+        }
+
+        s_dictDisplayedBy[_img].RemoveAll(x => x == _oDisplayer);
+
+        if (s_dictDisplayedBy[_img].Count == 0 && _img.bHasTexture() && _img.texGet() != s_texDefaultMissing)
+                Destroy(_img.texGet());
     }
 
 }

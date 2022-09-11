@@ -11,8 +11,8 @@ public class OptionsVisualizer : MonoBehaviour
     public OptionSteps optionSteps;
     public OptionAccuracy optionAccuracy;
     public OptionDimensions optionDimensions;
-    public OptionInput optionContent;
-    public OptionInput optionStyle;
+    public OptionPrompt optionContent;
+    public OptionPrompt optionStyle;
 
     private void Start()
     {
@@ -25,7 +25,8 @@ public class OptionsVisualizer : MonoBehaviour
 
         if (!string.IsNullOrEmpty(prompt.startImage.strFilePath))
             optionStartImage.LoadImageFromFileName(optionStartImage.strGetFullFilePath(System.IO.Path.GetFileName(prompt.startImage.strFilePath)));
-        optionStartImage.optionSlider.fValue = _output.extraOptionsFull.fStartImageStrengthVariance;
+        optionStartImage.UpdateDisplay();
+        optionStartImage.optionSlider.Set(_output.extraOptionsFull.fStartImageStrengthVariance);
         optionSeed.Set(prompt.iSeed, _output.extraOptionsFull.bRandomSeed);
         optionSteps.Set(_output.extraOptionsFull.iStepsPreview, _output.extraOptionsFull.iStepsRedo);
         optionAccuracy.Set(prompt.fCfgScale, _output.extraOptionsFull.fCfgScaleVariance);
