@@ -9,18 +9,18 @@ public class GridBoxDisplay : MonoBehaviour
     public GridLayoutGroup grid;
     public GridBoxData gridboxData;
 
-    private List<ImagePreview> liImagePreviews = new List<ImagePreview>();
+    public List<ImagePreview> liImagePreviews = new List<ImagePreview>();
 
     public void SetData(GridBoxData _gridboxData)
     {
         gridboxData = _gridboxData;
-        gridboxData.oliOutputs.Updated += UpdateDisplay;
+        gridboxData.oliImgs.Updated += UpdateDisplay;
         UpdateCellSize();
     }
 
     public void UpdateCellSize()
     {
-        grid.cellSize = gridboxData.oliOutputs.Count > 0 ? gridboxData.v2iGetElementSize() : Vector2.zero;
+        grid.cellSize = gridboxData.oliImgs.Count > 0 ? gridboxData.v2iGetElementSize() : Vector2.zero;
         Vector2 v2Spacing = grid.spacing;
         v2Spacing.x = gridboxData.fGetFittingPadding();
         grid.spacing = v2Spacing;
@@ -28,9 +28,9 @@ public class GridBoxDisplay : MonoBehaviour
 
     public void UpdateDisplay()
     {
-        for (int i = 0; i < gridboxData.oliOutputs.Count; i++)
+        for (int i = 0; i < gridboxData.oliImgs.Count; i++)
         {
-            ImageInfo output = gridboxData.oliOutputs[i]; // gridboxData.oliOutputs.Count - 1 - i
+            ImageInfo output = gridboxData.oliImgs[i]; // gridboxData.oliOutputs.Count - 1 - i
 
             if (!System.IO.File.Exists(output.strFilePathFull()))
                 continue;
@@ -63,6 +63,6 @@ public class GridBoxDisplay : MonoBehaviour
 
     private void OnDestroy()
     {
-        gridboxData.oliOutputs.Updated -= UpdateDisplay;
+        gridboxData.oliImgs.Updated -= UpdateDisplay;
     }
 }

@@ -60,4 +60,9 @@ public class OptionSeed : MonoBehaviour
         goNumber.SetActive(!bRandomSeed);
         goSlider.SetActive(!bRandomSeed);
     }
+
+    public void Set(ImageInfo _img)
+    {
+        input.text = _img.prompt.iSeed.ToString();
+    }
 }

@@ -17,7 +17,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public bool bAllowDragging = true;
     public float fAnimationSpeed = 40f;
     public Color colorStepsNormal;
-    public UnityEvent eventDraggedOnEmpty = new UnityEvent();
+    public UnityEvent<ImagePreview> eventDraggedOnEmpty = new UnityEvent<ImagePreview>();
     public bool bIsInput = false;
 
     [Header("References")]
@@ -40,6 +40,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public ImageInfo imgDisplayed;
     public bool bProcessingThis = false;
     public Vector2 v2MaxSize = Vector2.zero;
+
+    public bool bMouseCursorHovers = false;
 
     private GameObject goDragPreview = null;
     private List<GameObject> liStepNumbers = new List<GameObject>();
@@ -121,10 +123,6 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         liOutputs.Add(_img);
         _img.eventStartsProcessing.AddListener(StartedProcessing);
         _img.eventStoppedProcessing.AddListener(StoppedProcessing);
-
-        // scale rect
-        //RectTransform rtrans = rawimage.GetComponent<RectTransform>();
-        //Utility.ScaleRectToImage(rtrans, v2MaxSize, v2GetDimensions());
 
         float fTargetAlpha = canvasGroup.alpha;
         //canvasGroup.alpha = 0f;
@@ -288,6 +286,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        bMouseCursorHovers = true;
+
         if (bShowHoverMenu)
         {
             goHoverOverlay.SetActive(true);
@@ -301,6 +301,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        bMouseCursorHovers = false;
         goHoverOverlay.SetActive(false);
         PreviewImage.Instance.SetVisible(false, null);
     }
@@ -333,6 +334,20 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             goDragPreview.transform.position = eventData.position;
     }
 
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (!bAllowDragging)
+            return;
+
+        Destroy(goDragPreview);
+        goDragPreview = null;
+
+        if (CanBeDraggedOn.s_hovering != null)
+            CanBeDraggedOn.s_hovering.eventOnDraggedOn.Invoke(imgDisplayed);
+        else
+            eventDraggedOnEmpty.Invoke(this);
+    }
+
     private Vector2 v2GetDimensions()
     {
         if (imgDisplayed.prompt != null)
@@ -350,20 +365,6 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             ToolManager.RemoveDisplayer(imgDisplayed, this);
         }
         liOutputs.Clear();
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        if (!bAllowDragging)
-            return;
-
-        Destroy(goDragPreview);
-        goDragPreview = null;
-
-        if (CanBeDraggedOn.s_hovering != null)
-            CanBeDraggedOn.s_hovering.eventOnDraggedOn.Invoke(imgDisplayed);
-        else
-            eventDraggedOnEmpty.Invoke();
     }
 
     void OnDestroy()

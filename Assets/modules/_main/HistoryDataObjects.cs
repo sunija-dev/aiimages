@@ -29,18 +29,18 @@ public class SectionData
 public class GridBoxData
 {
     // save only ids, but keep references on load
-    [System.NonSerialized] public ObservedList<ImageInfo> oliOutputs = new ObservedList<ImageInfo>();
+    [System.NonSerialized] public ObservedList<ImageInfo> oliImgs = new ObservedList<ImageInfo>();
     public List<string> liOutputIDs = new List<string>();
 
     public GridBoxData()
     {
-        oliOutputs.Init(ToolManager.s_history.liOutputs.Where(x => liOutputIDs.Any(strCachedID => strCachedID == x.strGUID)).ToList());
-        oliOutputs.Updated += () => liOutputIDs = oliOutputs.Select(x => x.strGUID).ToList();
+        oliImgs.Init(ToolManager.s_history.liOutputs.Where(x => liOutputIDs.Any(strCachedID => strCachedID == x.strGUID)).ToList());
+        oliImgs.Updated += () => liOutputIDs = oliImgs.Select(x => x.strGUID).ToList();
     }
 
     public float fGetHeight()
     {
-        if (oliOutputs.Count == 0)
+        if (oliImgs.Count == 0)
             return 0f;
 
         // get width/height of one image
@@ -50,7 +50,7 @@ public class GridBoxData
         int iImagesInRow = Mathf.FloorToInt((float)EndlessHistory.s_fHistoryWidth / (float)v2iDimensionImage.x);
 
         // calculate rows
-        int iRows = Mathf.CeilToInt((float)oliOutputs.Count / (float)iImagesInRow);
+        int iRows = Mathf.CeilToInt((float)oliImgs.Count / (float)iImagesInRow);
 
         return iRows  * v2iDimensionImage.y;
     }
@@ -68,6 +68,6 @@ public class GridBoxData
 
     public Vector2Int v2iGetElementSize()
     {
-        return Utility.v2iLimitPixelSize(oliOutputs[0].prompt.iWidth, oliOutputs[0].prompt.iHeight, EndlessHistory.s_iPixelTarget);
+        return Utility.v2iLimitPixelSize(oliImgs[0].prompt.iWidth, oliImgs[0].prompt.iHeight, EndlessHistory.s_iPixelTarget);
     }
 }

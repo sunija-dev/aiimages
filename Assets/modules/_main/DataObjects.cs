@@ -241,6 +241,12 @@ public class History
     }
 }
 
+[System.Serializable]
+public class Palette
+{
+    public List<ImageInfo> liImages = new List<ImageInfo>();
+}
+
 /// <summary>
 /// What is actually saved to a json.
 /// </summary>
@@ -251,6 +257,7 @@ public class SaveData
     public List<Template> liContentTemplates = new List<Template>();
     public List<User> liUsers = new List<User>();
     public List<string> liFavoriteGUIDs = new List<string>();
+    public Palette palette = new Palette();
 
     public static string strSaveName = "savedata.json";
 

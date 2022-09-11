@@ -44,7 +44,7 @@ public class OptionsVisualizer : MonoBehaviour
             startImage = optionStartImage.startImage,
             iSeed = optionSeed.iSeed,
             iSteps = _bIsPreview ? optionSteps.iStepsPreview : optionSteps.iStepsRedo,
-            fCfgScale = optionAccuracy.fAccuracy,
+            fCfgScale = optionAccuracy.fAccuracy + Random.Range(0f, optionAccuracy.fVariance),
             strContentPrompt = optionContent.strPrompt,
             strStylePrompt = optionStyle.strPrompt
         };

@@ -12,7 +12,7 @@ public class OptionAccuracy : MonoBehaviour
 
     public void Set(float _fCfg, float _fVariance)
     {
-        optionSliderCfgScale.slider.value = _fCfg;
-        optionSliderVariance.slider.value = _fVariance;
+        optionSliderCfgScale.Set(_fCfg);
+        optionSliderVariance.Set(_fVariance);
     }
 }

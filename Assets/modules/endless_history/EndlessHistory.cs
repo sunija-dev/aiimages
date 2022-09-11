@@ -36,7 +36,7 @@ public class EndlessHistory : MonoBehaviour
 
     SectionData sectionCurrent = new SectionData();
     GridBoxData gridboxCurrent = new GridBoxData();
-    ImageInfo outputLast = null;
+    ImageInfo imgLast = null;
 
     IEnumerator Start()
     {
@@ -60,7 +60,8 @@ public class EndlessHistory : MonoBehaviour
 
         OnScaleUpdate();
 
-        ToolManager.Instance.eventHistoryUpdates.AddListener(() => UpdateSections(history.liOutputs.Last()));
+        ToolManager.Instance.eventHistoryUpdated.AddListener(() => UpdateSections(history.liOutputs.Last()));
+        ToolManager.Instance.eventHistoryElementDeleted.AddListener(OnElementDeleted);
 
         yield return null;
 
@@ -75,14 +76,37 @@ public class EndlessHistory : MonoBehaviour
         fScrollbarValueLast = scrollbar.value;
     }
 
-    private void UpdateSections(ImageInfo _output, bool _bUpdateView = true)
+    private void OnElementDeleted(ImageInfo _img)
     {
-        if (!System.IO.File.Exists(_output.strFilePathFull()))
+        liGridboxDataVisible.ForEach(grid => grid.oliImgs.RemoveAll(x => x.strGUID == _img.strGUID));
+
+        List<GridBoxDisplay> liGridDisplayWithImage = liGridBoxDisplays.Where(gridDisplay => gridDisplay.liImagePreviews.Any(x => x.imgDisplayed == _img)).ToList();
+        foreach (GridBoxDisplay gridDisplay in liGridDisplayWithImage)
+        {
+            foreach (ImagePreview imagePreview in gridDisplay.liImagePreviews)
+            {
+                if (imagePreview.liOutputs.Any(x => x == _img))
+                    Destroy(imagePreview);
+            }
+            gridDisplay.liImagePreviews.RemoveAll(x => x == null);
+
+            if (gridDisplay.liImagePreviews.Count == 0)
+            {
+                liGridboxDataVisible.Remove(gridDisplay.gridboxData);
+                Destroy(gridDisplay);
+            }     
+        }
+        liGridBoxDisplays.RemoveAll(x => x == null);
+    }
+
+    private void UpdateSections(ImageInfo _img, bool _bUpdateView = true)
+    {
+        if (!System.IO.File.Exists(_img.strFilePathFull()))
             return;
 
         // start new section?
         
-        if (outputLast != null && !_output.prompt.bEqualContentStyle(outputLast.prompt))
+        if (imgLast != null && !_img.prompt.bEqualContentStyle(imgLast.prompt))
         {
             sectionCurrent = new SectionData();
             liSections.Add(sectionCurrent);
@@ -91,20 +115,20 @@ public class EndlessHistory : MonoBehaviour
         }
 
         // start new gridbox?
-        if (gridboxCurrent.oliOutputs.Count != 0
-            && outputLast != null
-            && (outputLast.prompt.iWidth != _output.prompt.iWidth
-            || outputLast.prompt.iHeight != _output.prompt.iHeight
-            || gridboxCurrent.oliOutputs.Count >= iMaxItemsPerGridBox))
+        if (gridboxCurrent.oliImgs.Count != 0
+            && imgLast != null
+            && (imgLast.prompt.iWidth != _img.prompt.iWidth
+            || imgLast.prompt.iHeight != _img.prompt.iHeight
+            || gridboxCurrent.oliImgs.Count >= iMaxItemsPerGridBox))
         {
             gridboxCurrent = new GridBoxData();
             sectionCurrent.liGridBoxes.Add(gridboxCurrent);
         }
 
         // add
-        gridboxCurrent.oliOutputs.Add(_output);
+        gridboxCurrent.oliImgs.Add(_img);
 
-        outputLast = _output;
+        imgLast = _img;
 
         if (_bUpdateView)
             UpdateView();

@@ -34,6 +34,7 @@ public class ToolManager : MonoBehaviour
     public Transform transContextMenuCanvas;
     public GameObject goTooltipPrefab;
     public Transform transTooltipCanvas;
+    public PaletteView paletteView;
 
     // UI
     public TMP_Text textFeedback;
@@ -57,7 +58,8 @@ public class ToolManager : MonoBehaviour
     public User userActive = new User();
 
     public UnityEvent eventQueueUpdated = new UnityEvent();
-    public UnityEvent eventHistoryUpdates = new UnityEvent();
+    public UnityEvent eventHistoryUpdated = new UnityEvent();
+    public UnityEvent<ImageInfo> eventHistoryElementDeleted = new UnityEvent<ImageInfo>();
 
     private float fProcessingTime = 0f;
     private float fLoadingTime = 0f;
@@ -144,7 +146,7 @@ public class ToolManager : MonoBehaviour
         if (_bWorked)
         {
             s_history.liOutputs.Add(outputRequested);
-            eventHistoryUpdates.Invoke();
+            eventHistoryUpdated.Invoke();
         }
 
         if (!_bWorked)
@@ -281,7 +283,8 @@ public class ToolManager : MonoBehaviour
             liStyleTemplates = s_liStyleTemplates,
             liContentTemplates = s_liContentTemplates,
             liUsers = s_liUsers,
-            liFavoriteGUIDs = s_liFavoriteGUIDs
+            liFavoriteGUIDs = s_liFavoriteGUIDs,
+            palette = paletteView.palette
         };
         saveData.Save();
     }
@@ -296,6 +299,7 @@ public class ToolManager : MonoBehaviour
         s_liContentTemplates = saveData.liContentTemplates;
         s_liUsers = saveData.liUsers;
         s_liFavoriteGUIDs = saveData.liFavoriteGUIDs;
+        paletteView.Set(saveData.palette);
 
         Directory.CreateDirectory(s_settings.strInputDirectory);
         Directory.CreateDirectory(s_settings.strOutputDirectory);
@@ -307,6 +311,12 @@ public class ToolManager : MonoBehaviour
         Application.OpenURL("https://huggingface.co/spaces/CompVis/stable-diffusion-license");
     }
 
+    public void DeleteFromHistory(ImageInfo _img)
+    {
+        s_history.liOutputs.Remove(_img);
+        eventHistoryElementDeleted.Invoke(_img);
+        eventHistoryUpdated.Invoke();
+    }
     public void SaveTemplate(ImageInfo _output, bool _bContent)
     {
 
