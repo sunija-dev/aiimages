@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &24170663 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2877551302451649496, guid: d40a84376187202409d6eb925752f431, type: 3}
+  m_PrefabInstance: {fileID: 934542530}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &68761743
 GameObject:
   m_ObjectHideFlags: 0
@@ -7267,11 +7278,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2877551301263479046, guid: d40a84376187202409d6eb925752f431, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -244.04059
+      value: -209.64062
       objectReference: {fileID: 0}
     - target: {fileID: 2877551301263479046, guid: d40a84376187202409d6eb925752f431, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -238
+      value: 3.5999756
       objectReference: {fileID: 0}
     - target: {fileID: 2877551301263479046, guid: d40a84376187202409d6eb925752f431, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7363,8 +7374,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 9, y: -238}
-  m_SizeDelta: {x: 396.89, y: 50}
+  m_AnchoredPosition: {x: 211.80978, y: 3.600006}
+  m_SizeDelta: {x: 733.7097, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &967423208
 MonoBehaviour:
@@ -10933,7 +10944,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
+  m_CellSize: {x: 98, y: 98}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -13612,8 +13623,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -619, y: -258.76}
-  m_SizeDelta: {x: 505.98, y: 449.51}
+  m_AnchoredPosition: {x: -106.3, y: 493}
+  m_SizeDelta: {x: 505.98, y: 86.4951}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1695854873
 GameObject:
@@ -16268,6 +16279,7 @@ MonoBehaviour:
   goTooltipPrefab: {fileID: 2314404419762026941, guid: f1ce920dfff2c814a91ee15190251ab8, type: 3}
   transTooltipCanvas: {fileID: 574387606}
   paletteView: {fileID: 930873445}
+  textStartButton: {fileID: 24170663}
   textFeedback: {fileID: 967423208}
   textVersion: {fileID: 1065538186}
   liRequestQueue: []

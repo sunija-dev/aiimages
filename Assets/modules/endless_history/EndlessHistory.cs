@@ -86,14 +86,14 @@ public class EndlessHistory : MonoBehaviour
             foreach (ImagePreview imagePreview in gridDisplay.liImagePreviews)
             {
                 if (imagePreview.liOutputs.Any(x => x == _img))
-                    Destroy(imagePreview);
+                    Destroy(imagePreview.gameObject);
             }
             gridDisplay.liImagePreviews.RemoveAll(x => x == null);
 
             if (gridDisplay.liImagePreviews.Count == 0)
             {
                 liGridboxDataVisible.Remove(gridDisplay.gridboxData);
-                Destroy(gridDisplay);
+                Destroy(gridDisplay.gameObject);
             }     
         }
         liGridBoxDisplays.RemoveAll(x => x == null);

@@ -37,6 +37,7 @@ public class ToolManager : MonoBehaviour
     public PaletteView paletteView;
 
     // UI
+    public TMP_Text textStartButton;
     public TMP_Text textFeedback;
     public TMP_Text textVersion;
 
@@ -106,12 +107,15 @@ public class ToolManager : MonoBehaviour
         if (!genConnection.bInitialized)
         {
             fLoadingTime += Time.deltaTime;
-            textFeedback.text = $"Loading model... ({fLoadingTime.ToString("0")}s)";
+            if (fLoadingTime < 200f)
+                textFeedback.text = $"Loading model... ({fLoadingTime.ToString("0")}s)";
+            else
+                textFeedback.text = $"<color=#FF0000>Loading model... ({fLoadingTime.ToString("0")}s) - Ask for Discord support!</color>";
         }
         else if (genConnection.bProcessing)
         {
             fProcessingTime += Time.deltaTime;
-            textFeedback.text = $"Painting {(bKeepRequesting ? "oo + " : "")}{liRequestQueue.Count + 1}... {fProcessingTime.ToString("0.0")}s";
+            textFeedback.text = $"Painting {(bKeepRequesting ? "forever + " : "")}{liRequestQueue.Count + 1}... {fProcessingTime.ToString("0.0")}s";
         }
         else
         {
@@ -132,6 +136,11 @@ public class ToolManager : MonoBehaviour
                 textFeedback.text = "Ready!";
             }
         }
+
+        if (bKeepRequesting)
+            textStartButton.text = "Stop";
+        else
+            textStartButton.text = "Start";
     }
 
     public void OnTextureReceived(Texture2D _tex, string _strFilePathFull, bool _bWorked)
