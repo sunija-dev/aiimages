@@ -97,15 +97,25 @@ public class ToolManager : MonoBehaviour
 
     private void Startup()
     {
+        if (s_settings.bIsFirstStart)
+        {
+            if (SystemInfo.graphicsDeviceName.ToLower().Contains("gtx 16"))
+            {
+                UnityEngine.Debug.Log("Detected RTX 16XX. Switching to full precision.");
+                s_settings.bFullPrecision = true;
+                s_settings.Save();
+            }
+        }
+
         if (!s_settings.bAcceptedLicense)
             OpenPage(Page.License);
         else if(!Application.isEditor 
-            && (s_settings.bShowStartSelection || !s_settings.bDidSetup || !setup.bEverythingIsThere()))
+            && (s_settings.bIsFirstStart || !s_settings.bDidSetup || !setup.bEverythingIsThere()))
             OpenPage(Page.Select);
         else
             OpenPage(Page.Main);
 
-        s_settings.bShowStartSelection = false;
+        s_settings.bIsFirstStart = false;
         s_settings.Save();
     }
 
@@ -205,7 +215,6 @@ public class ToolManager : MonoBehaviour
         eventQueueUpdated.Invoke();
     }
 
-
     public string strGetGPUText()
     {
         string strOutput = "";
@@ -228,7 +237,7 @@ public class ToolManager : MonoBehaviour
         }
         else if (!SystemInfo.graphicsDeviceName.ToLower().Contains("rtx 30")
             && !SystemInfo.graphicsDeviceName.ToLower().Contains("rtx 20")
-            && !SystemInfo.graphicsDeviceName.ToLower().Contains("rtx 10"))
+            && !SystemInfo.graphicsDeviceName.ToLower().Contains("gtx 1"))
         {
             iWorks = 1;
             strProblem += "\nGPU is not the newest.";
@@ -240,6 +249,8 @@ public class ToolManager : MonoBehaviour
             strOutput += "Might work! <3" + strProblem;
         else if (iWorks == 0)
             strOutput += "Won't work, most likely. :(" + strProblem;
+
+        UnityEngine.Debug.Log(strOutput);
 
         return strOutput;
     }

@@ -97,7 +97,7 @@ public class GeneratorConnection : MonoBehaviour
 
 
         UnityEngine.Debug.Log("Writing: " + "python scripts/dream.py");
-        streamWriter.WriteLine($"python scripts/dream.py -o {ToolManager.s_settings.strOutputDirectory}");
+        streamWriter.WriteLine($"python scripts/dream.py -o {ToolManager.s_settings.strOutputDirectory} {(ToolManager.s_settings.bFullPrecision ? "--full_precision" : "")}");
     }
 
     public void RequestImage(ImageInfo _output, Action<Texture2D, string, bool> _actionTextureReturn)

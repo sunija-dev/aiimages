@@ -55,8 +55,9 @@ public class Settings
     }
 
     public bool bAcceptedLicense = false;
-    public bool bShowStartSelection = true;
+    public bool bIsFirstStart = true;
     public bool bDidSetup = false;
+    public bool bFullPrecision = false;
 
     private static string strSettingsName = "settings.json";
     private static string strSettingsPath = "";
@@ -69,9 +70,7 @@ public class Settings
 
         strSettingsPath = Path.Combine(Application.persistentDataPath, strSettingsName);
         if (File.Exists(strSettingsPath))
-        {
             settings = JsonUtility.FromJson<Settings>(File.ReadAllText(strSettingsPath));
-        }
 
         return settings;
     }
