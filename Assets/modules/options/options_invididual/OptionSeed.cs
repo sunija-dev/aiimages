@@ -7,18 +7,13 @@ using UnityEngine.UI;
 public class OptionSeed : MonoBehaviour
 {
     public bool bRandomSeed = true;
-    public int iSeedVariance
-    {
-        get => (int)optionSlider.fValue;
-        set => optionSlider.fValue = value;
-    }
 
     public GameObject goNumber;
     public GameObject goSlider;
 
     public int iSeed 
     { 
-        get => bRandomSeed ? Random.Range(0, int.MaxValue) : Mathf.Clamp(iSeedInternal + Random.Range(-iSeedVariance, iSeedVariance), 0, int.MaxValue);
+        get => bRandomSeed ? Random.Range(0, int.MaxValue) : Mathf.Clamp(iSeedInternal, 0, int.MaxValue);
         set => iSeedInternal = value;
     }
 

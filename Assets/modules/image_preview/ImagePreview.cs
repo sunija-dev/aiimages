@@ -19,6 +19,9 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public Color colorStepsNormal;
     public UnityEvent<ImagePreview> eventDraggedOnEmpty = new UnityEvent<ImagePreview>();
     public bool bIsInput = false;
+    public float fDisplayDelay = 0.1f; // how long curser has to be over image to display big view
+    public float fDisplayThreshold = 5f; // how little curser has to move to display big view
+    
 
     [Header("References")]
     public TMP_Text textQueueNumber;
@@ -47,6 +50,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private List<GameObject> liStepNumbers = new List<GameObject>();
     private float fTargetAlpha = 1f;
     private bool bDontInit = false;
+    private Coroutine coDisplayDelay = null;
+
 
     private void Start()
     {
@@ -283,7 +288,6 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         goProcessingCircle.transform.rotation = Quaternion.identity;
     }
 
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         bMouseCursorHovers = true;
@@ -295,8 +299,24 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (liOutputs.Any(x => !string.IsNullOrEmpty(x.strFilePathRelative)))
         {
-            PreviewImage.Instance.SetVisible(true, imgDisplayed.texGet(), imgDisplayed.prompt.strToString());
+            coDisplayDelay = StartCoroutine(ieDisplayDelay());
         }
+    }
+
+    private IEnumerator ieDisplayDelay()
+    {
+        float fHoverTime = 0f;
+        Vector2 v2LastMousePos = Input.mousePosition;
+
+        // don't display if time is not far enough, or cursor was still
+        while (fHoverTime < fDisplayDelay && Vector2.Distance(v2LastMousePos, Input.mousePosition) > fDisplayThreshold)
+        {
+            v2LastMousePos = Input.mousePosition;
+            fHoverTime += Time.deltaTime;
+            yield return null;
+        }
+
+        PreviewImage.Instance.SetVisible(true, imgDisplayed.texGet(), imgDisplayed.prompt.strToString());
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -304,6 +324,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         bMouseCursorHovers = false;
         goHoverOverlay.SetActive(false);
         PreviewImage.Instance.SetVisible(false, null);
+        if (coDisplayDelay != null)
+            StopCoroutine(coDisplayDelay);
     }
 
     public void OnBeginDrag(PointerEventData eventData)

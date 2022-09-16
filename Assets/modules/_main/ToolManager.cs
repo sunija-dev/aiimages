@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.Events;
+using Newtonsoft.Json;
 
 public class ToolManager : MonoBehaviour
 {
@@ -35,6 +36,7 @@ public class ToolManager : MonoBehaviour
     public GameObject goTooltipPrefab;
     public Transform transTooltipCanvas;
     public PaletteView paletteView;
+    public TextAsset textDefaultStyles;
 
     // UI
     public TMP_Text textFeedback;
@@ -105,12 +107,13 @@ public class ToolManager : MonoBehaviour
                 s_settings.bFullPrecision = true;
                 s_settings.Save();
             }
+            LoadDefaultStyles();
         }
 
         if (!s_settings.bAcceptedLicense)
             OpenPage(Page.License);
         else if(!Application.isEditor 
-            && (s_settings.bIsFirstStart || !s_settings.bDidSetup || !setup.bEverythingIsThere()))
+            && (!setup.bEverythingIsThere()))
             OpenPage(Page.Select);
         else
             OpenPage(Page.Main);
@@ -122,11 +125,15 @@ public class ToolManager : MonoBehaviour
 
     void Update()
     {
+        bool bButtonActive = genConnection.bInitialized;
+        if (bButtonActive != buttonStart.interactable)
+            buttonStart.interactable = bButtonActive;
+
         if (!genConnection.bInitialized)
         {
             fLoadingTime += Time.deltaTime;
             if (fLoadingTime < 200f)
-                textFeedback.text = $"Loading model... ({fLoadingTime.ToString("0")}s)";
+                textFeedback.text = $"Loading model. Please wait... ({fLoadingTime.ToString("0")}s)";
             else
                 textFeedback.text = $"<color=#FF0000>Loading model... ({fLoadingTime.ToString("0")}s) - Ask for Discord support!</color>";
         }
@@ -351,7 +358,6 @@ public class ToolManager : MonoBehaviour
     }
     public void SaveTemplate(ImageInfo _output, bool _bContent)
     {
-
         Template template = new Template()
         {
             strName = DateTime.Now.ToString("yyyy_MM_dd_hh_mm"),
@@ -451,4 +457,10 @@ public class ToolManager : MonoBehaviour
         }
     }
 
+    public void LoadDefaultStyles()
+    {
+        List<Template> liDefaultStyles = JsonConvert.DeserializeObject<List<Template>>(textDefaultStyles.text);
+        s_liStyleTemplates.AddRange(liDefaultStyles);
+        //File.WriteAllText("default_styles_generated.txt", JsonConvert.SerializeObject(s_liStyleTemplates, Formatting.Indented));
+    }
 }

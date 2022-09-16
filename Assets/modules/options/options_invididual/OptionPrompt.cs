@@ -29,7 +29,9 @@ public class OptionPrompt : MonoBehaviour
         {
             string strTemplatePrompt = bIsContent ? template.outputTemplate.prompt.strContentPrompt : template.outputTemplate.prompt.strStylePrompt;
             if (_strInput != strTemplatePrompt)
+            {
                 template = null;
+            }
         }
         
         UpdateDisplay();
@@ -61,5 +63,10 @@ public class OptionPrompt : MonoBehaviour
     { 
         // TODO: Could also load which template you selected, if we put it the ExtraSetttings. But too lazy. :3
         inputPrompt.text = bIsContent ? _output.prompt.strContentPrompt : _output.prompt.strStylePrompt;
+    }
+
+    public void SaveTemplate(ImageInfo _img)
+    {
+        ToolManager.Instance.SaveTemplate(_img, bIsContent);
     }
 }

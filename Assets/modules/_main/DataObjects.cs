@@ -186,7 +186,6 @@ public class User
 public class ExtraOptions
 {
     public float fStartImageStrengthVariance = 0f;
-    public int iSeedVariance = 0;
     public float fCfgScaleVariance = 0f;
     public bool bRandomSeed = true;
     public int iStepsPreview = 15;

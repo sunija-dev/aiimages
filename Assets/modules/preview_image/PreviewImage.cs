@@ -8,19 +8,23 @@ public class PreviewImage : MonoBehaviour
 {
     public static PreviewImage Instance;
 
+    public float fFadeSpeed = 5f;
+
     public RawImage rawimageBigPreview;
     public TMP_Text textPrompt;
     public Transform transPreviewRight;
     public Transform transPreviewLeft;
+    public CanvasGroup canvasGroup;
 
     private Vector2 v2MaxSize = Vector2.zero;
+    private Coroutine coSetVisible = null;
     public RectTransform rtrans;
 
     private void Awake()
     {
         Instance = this;
-        SetVisible(false, null);
         v2MaxSize = GetComponent<RectTransform>().sizeDelta;
+        gameObject.SetActive(false);
     }
 
     void Update()
@@ -33,11 +37,39 @@ public class PreviewImage : MonoBehaviour
 
     public void SetVisible(bool _bVisible, Texture _tex, string _strPrompt = "")
     {
+        if (coSetVisible != null)
+            StopCoroutine(coSetVisible);
+
+        gameObject.SetActive(true); // else we cannot start the coroutine
+        coSetVisible = StartCoroutine(ieSetVisible(_bVisible, _tex, _strPrompt));
+    }
+
+    private IEnumerator ieSetVisible(bool _bVisible, Texture _tex, string _strPrompt = "")
+    {
+        float fTarget = _bVisible ? 1f : 0f;
+
+        if (_bVisible)
+            ApplyImage(_tex, _strPrompt);
+
+        while (Mathf.Abs(canvasGroup.alpha - fTarget) > 0.05f)
+        {
+            canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, fTarget, fFadeSpeed * Time.deltaTime);
+            yield return null;
+        }
+        canvasGroup.alpha = fTarget;
+
+        if (!_bVisible)
+        {
+            ApplyImage(_tex, _strPrompt);
+            gameObject.SetActive(false);
+        } 
+    }
+
+    private void ApplyImage(Texture _tex, string _strPrompt = "")
+    {
         rawimageBigPreview.texture = _tex;
         textPrompt.text = _strPrompt;
         if (_tex != null)
             Utility.ScaleRectToImage(rtrans, v2MaxSize, new Vector2(_tex.width, _tex.height));
-
-        gameObject.SetActive(_bVisible);
     }
 }

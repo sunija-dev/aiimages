@@ -57,7 +57,6 @@ public class OptionsVisualizer : MonoBehaviour
         return new ExtraOptions()
         {
             fStartImageStrengthVariance = optionStartImage.startImage.fStrength,
-            iSeedVariance = optionSeed.iSeedVariance,
             fCfgScaleVariance = optionAccuracy.fVariance,
             bRandomSeed = optionSeed.bRandomSeed,
             iStepsPreview = optionSteps.iStepsPreview,

@@ -1,0 +1,548 @@
+[
+  {
+    "strName": "2022_09_12_11_59",
+    "strGUID": "307d55fd-e41a-4f5b-bab3-99c4172a5d91",
+    "outputTemplate": {
+      "strGUID": "214770bc-3f79-49b9-832b-da4f661bf702",
+      "strFilePathRelative": "000067.1409763076.png",
+      "prompt": {
+        "iWidth": 512,
+        "iHeight": 512,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 1409763076,
+        "iSteps": 30,
+        "fCfgScale": 11.0,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "top lighting, perfect shadow, soft painting, leaning towards watercolor, art by hidari and krenz cushart and wenjun lin and akihiko yoshida and caidychen and wlop and artgerm"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 6.71656942,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_00",
+    "strGUID": "31b3a562-e06c-425c-b294-a874c0a83722",
+    "outputTemplate": {
+      "strGUID": "e2329ac1-7140-4272-baf8-885a3763c189",
+      "strFilePathRelative": "000074.246435523.png",
+      "prompt": {
+        "iWidth": 512,
+        "iHeight": 512,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 246435523,
+        "iSteps": 30,
+        "fCfgScale": 11.0,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "kyoto animation, beautiful, finely detailed features, perfect art, detailed portrait, 4 k, concept art artgerm, krenz cushart, greg rutkowski, by kyoto animation, sharp focus, volumetric lighting, dynamic compositiom, cinematic lighting, studio quality number"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 6.716573,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_01",
+    "strGUID": "756520b0-99e2-43cf-a659-bf273c3d5ef8",
+    "outputTemplate": {
+      "strGUID": "8ba64ccf-514f-48d4-a788-2c0a2a7450e5",
+      "strFilePathRelative": "000084.906628047.png",
+      "prompt": {
+        "iWidth": 512,
+        "iHeight": 640,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 906628047,
+        "iSteps": 30,
+        "fCfgScale": 9.0,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "a beautiful full body illustration, top lighting, perfect shadow, soft painting, leaning towards watercolor, art by hidari and krenz cushart and wenjun lin and akihiko yoshida "
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 9.316561,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_02",
+    "strGUID": "543e2cef-cff7-462a-8574-333fa06eeea8",
+    "outputTemplate": {
+      "strGUID": "9f1110a0-bd71-44ec-8654-4ad63d1f4714",
+      "strFilePathRelative": "000089.180429999.png",
+      "prompt": {
+        "iWidth": 512,
+        "iHeight": 640,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 180429999,
+        "iSteps": 30,
+        "fCfgScale": 9.0,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "fairy tale style background, a beautiful half body illustration, top lighting, perfect shadow, soft painting, reduce saturation, leaning towards watercolor, art by hidari and krenz cushart and wenjun lin and akihiko yoshida "
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 9.36656952,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_04",
+    "strGUID": "bafdec0c-6993-464b-a87b-33c6f6b68bd6",
+    "outputTemplate": {
+      "strGUID": "f4d61f7b-5ce1-4073-98a8-e3efe9311f22",
+      "strFilePathRelative": "000098.938446349.png",
+      "prompt": {
+        "iWidth": 512,
+        "iHeight": 640,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 938446349,
+        "iSteps": 30,
+        "fCfgScale": 9.0,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "symmetrical features, cinematic lighting, soft bokeh, fantasy, modern, colourful, highly detailed, digital painting, artstation, deviantart, concept art, sharp focus, illustration, by alphonse mucha"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 9.333224,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_05",
+    "strGUID": "ced5af03-8101-4262-8b2a-50ff199b92e9",
+    "outputTemplate": {
+      "strGUID": "2fbd18ee-37dd-4b9b-9017-9289a47747e8",
+      "strFilePathRelative": "000112.1024536482.png",
+      "prompt": {
+        "iWidth": 384,
+        "iHeight": 704,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 1024536482,
+        "iSteps": 30,
+        "fCfgScale": 7.5,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "A starry night in the forest, by Studio Ghibli and Greg Rutkowski, artstation"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 7.81660271,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_06",
+    "strGUID": "97ea54cc-ba9d-4f8a-86b6-76a2a28a8782",
+    "outputTemplate": {
+      "strGUID": "15293e05-7d88-4faa-b65d-be01cea2820d",
+      "strFilePathRelative": "000116.683799744.png",
+      "prompt": {
+        "iWidth": 512,
+        "iHeight": 576,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 683799744,
+        "iSteps": 30,
+        "fCfgScale": 7.5,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "deiv calviz, splash art, natural light, elegant, intricate, fantasy, atmospheric lighting, by greg rutkowski, league of legends splash art, hd wallpaper, ultra high details"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 8.21656,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_07",
+    "strGUID": "c39faf8a-392e-4d55-bf63-8440b112cece",
+    "outputTemplate": {
+      "strGUID": "33675150-f9a6-4b97-933c-4e97b9f52e2b",
+      "strFilePathRelative": "000121.1663146845.png",
+      "prompt": {
+        "iWidth": 512,
+        "iHeight": 576,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 1663146845,
+        "iSteps": 30,
+        "fCfgScale": 7.5,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "full body, 8 k, hyperrealistic, hyperdetailed, fantasy portrait by laura sava"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 8.383234,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_09",
+    "strGUID": "4999271d-d88c-4395-8cd2-89fbe0a0074b",
+    "outputTemplate": {
+      "strGUID": "79016a65-4e2a-4480-a94f-b9ad8e29bf87",
+      "strFilePathRelative": "000133.716881624.png",
+      "prompt": {
+        "iWidth": 448,
+        "iHeight": 640,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 716881624,
+        "iSteps": 30,
+        "fCfgScale": 7.5,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "fantasy, gloomhaven, luminescent, organic painting, gaudy colors, octane render, unreal engine, by greg manchess, huang guangjian, gil elvgren, sachin teng, greg rutkowski, jesper ejsing, ilya kuvshinov"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 7.88322973,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_10",
+    "strGUID": "76629864-a059-4488-9313-8eed211c6788",
+    "outputTemplate": {
+      "strGUID": "7f4c2ac2-69e0-41fb-9656-d93eaf40a26c",
+      "strFilePathRelative": "000141.987566723.png",
+      "prompt": {
+        "iWidth": 448,
+        "iHeight": 640,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 987566723,
+        "iSteps": 30,
+        "fCfgScale": 7.5,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "by greg rutkowski, by greg tocchini, by james gilleard, by joe fenton, by kaethe butcher, gradient, blue, black, brown and cream color scheme, grunge aesthetic!!! white graffiti tag wall background"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 8.391311,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_10",
+    "strGUID": "8a86c597-53e9-4f04-a725-9186b3622923",
+    "outputTemplate": {
+      "strGUID": "bf0fe3aa-193e-4c60-b0e0-fc0d535df7fc",
+      "strFilePathRelative": "000148.349043964.png",
+      "prompt": {
+        "iWidth": 448,
+        "iHeight": 640,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 349043964,
+        "iSteps": 30,
+        "fCfgScale": 7.5,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "by artgerm, by wlop, by greg rutkowski, red tones, volumetric lighting, octane render, 4 k resolution, trending on artstation, masterpiece"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 7.89989567,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_12",
+    "strGUID": "7054e8c8-f402-47cb-b2d0-bc42492ccf15",
+    "outputTemplate": {
+      "strGUID": "3ea454c8-29ec-40ec-a2f0-c8a377912d00",
+      "strFilePathRelative": "000162.225270084.png",
+      "prompt": {
+        "iWidth": 448,
+        "iHeight": 640,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 225270084,
+        "iSteps": 30,
+        "fCfgScale": 7.5,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "by rodin, painting by greg rutkowski donato giancola jeff simpson norman rockwell stamp watercolor"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 7.89988661,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_13",
+    "strGUID": "0d72bd54-5dd2-4fe8-af40-d12c6d248b65",
+    "outputTemplate": {
+      "strGUID": "37c663b8-9baf-45ab-aa74-8d87d4baa864",
+      "strFilePathRelative": "000167.84282424.png",
+      "prompt": {
+        "iWidth": 448,
+        "iHeight": 640,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 84282424,
+        "iSteps": 30,
+        "fCfgScale": 7.5,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "nekopara fantastically detailed shining reflecting eyes modern anime style art cute vibrant detailed ears cat girl neko dress portrait  shinkai makoto Studio ghibli kyoto animation ufotable hideaki anno Sakimichan Stanley Artgerm Lau Rossdraws James Jean Marc Simonetti elegant highly detailed digital painting artstation pixiv"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 7.899895,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  },
+  {
+    "strName": "2022_09_13_12_14",
+    "strGUID": "c02db324-0855-4265-a92e-5d2e35cfc9e4",
+    "outputTemplate": {
+      "strGUID": "6ac30408-d64e-4705-aa7f-2153ef61fd1e",
+      "strFilePathRelative": "000172.681249868.png",
+      "prompt": {
+        "iWidth": 448,
+        "iHeight": 640,
+        "startImage": {
+          "strFilePath": "",
+          "fStrength": 0.549999952,
+          "strGUID": ""
+        },
+        "iSeed": 681249868,
+        "iSteps": 30,
+        "fCfgScale": 7.5,
+        "strContentPrompt": "Red haired girl with green hood",
+        "strStylePrompt": "A potrait of dreambot,  fine details. Night setting. Very anime style. Realistic shaded lighting poster by Ilya Kuvshinov katsuhiro, magali villeneuve, artgerm, Jeremy Lipkin and Michael Garmash, Rob Rey and Kentarõ Miura style, trending on art station"
+      },
+      "extraOptionsFull": {
+        "fStartImageStrengthVariance": 0.549999952,
+        "iSeedVariance": 0,
+        "fCfgScaleVariance": 0.0,
+        "bRandomSeed": true,
+        "iStepsPreview": 30,
+        "iStepsRedo": 60
+      },
+      "dateCreation": "0001-01-01T00:00:00",
+      "strGpuModel": "NVIDIA GeForce RTX 3060 (12142 MB)",
+      "userCreator": {
+        "strGUID": "",
+        "strName": "dreamer1"
+      },
+      "fGenerationTime": 7.97539139,
+      "eventStartsProcessing": {},
+      "eventStoppedProcessing": {}
+    }
+  }
+]

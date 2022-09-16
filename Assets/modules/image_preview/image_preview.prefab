@@ -520,6 +520,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   bIsInput: 0
+  fDisplayDelay: 1
+  fDisplayThreshold: 1
   textQueueNumber: {fileID: 380894737}
   goProcessingCircle: {fileID: 5305957348221944036}
   rawimage: {fileID: 384096012869571373}
@@ -533,7 +535,7 @@ MonoBehaviour:
   canvasGroup: {fileID: 624244734992803381}
   liOutputs: []
   liOldOutputs: []
-  outputDisplayed:
+  imgDisplayed:
     strGUID: 
     strFilePathRelative: 
     prompt:
@@ -568,6 +570,7 @@ MonoBehaviour:
         m_Calls: []
   bProcessingThis: 0
   v2MaxSize: {x: 0, y: 0}
+  bMouseCursorHovers: 0
 --- !u!114 &1002541215
 MonoBehaviour:
   m_ObjectHideFlags: 0
