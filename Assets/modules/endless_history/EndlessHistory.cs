@@ -67,6 +67,8 @@ public class EndlessHistory : MonoBehaviour
         yield return null;
 
         UpdateView();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rectContent);
+        //rectContent.gameObject.GetComponent<VerticalLayoutGroup>()
     }
 
     private void Update()
@@ -224,8 +226,6 @@ public class EndlessHistory : MonoBehaviour
             fSectionStart = fSectionEnd;
         }
 
-        //Debug.Log(fFirstElementPosition);
-
         // remove all disappeared gridboxes
         foreach (GridBoxDisplay gridboxDisplay in liGridBoxDisplays)
         {
@@ -254,13 +254,13 @@ public class EndlessHistory : MonoBehaviour
             }
         }
 
-        rectOffsetter.SetHeight(rectOffsetter.GetHeight());
-        //rectContentDisplay.position = new Vector2(rectContentDisplay.position.x, fDisplayRange / 2f - fFirstElementPosition);
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(rectContent);
+        rectOffsetter.SetHeight(fFirstElementPosition);
     }
 
     public void OnScaleUpdate()
     {
-        s_fHistoryWidth = GetComponent<RectTransform>().GetWidth();
+        s_fHistoryWidth = rectContent.GetWidth();
 
         s_iPixelTarget = (int)Mathf.Pow(Mathf.Lerp(fMinScale, fMaxScale, sliderScale.value), 2);
         foreach (GridBoxDisplay gridBoxDisplay in liGridBoxDisplays)
