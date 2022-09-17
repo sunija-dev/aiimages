@@ -20,7 +20,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public UnityEvent<ImagePreview> eventDraggedOnEmpty = new UnityEvent<ImagePreview>();
     public bool bIsInput = false;
     public float fDisplayDelay = 0.1f; // how long curser has to be over image to display big view
-    public float fDisplayThreshold = 5f; // how little curser has to move to display big view
+    public float fDisplayThreshold = 5f; // how little cursor has to move to display big view
     
 
     [Header("References")]

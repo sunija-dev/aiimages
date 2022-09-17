@@ -130,7 +130,7 @@ public class OptionStartImage : MonoBehaviour
     public void OpenDrawWindow()
     {
         if (imgPreview != null)
-            drawWindow.OpenImage(imgPreview);
+            drawWindow.OpenImage(imgPreview, LoadImageFromFileName);
     }
 
     public void Remove()

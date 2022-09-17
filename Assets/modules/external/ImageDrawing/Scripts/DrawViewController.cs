@@ -21,7 +21,7 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
     Color resetColor;
 
     //The color array of the changes to be applied
-    Color32[] currentColors;
+    Color32[] arCurrentPixels;
 
     //The rectTransform of the GameObject this script is attached to
     RectTransform rectTransform;
@@ -66,14 +66,14 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
             isZHeldDown &&
             drawSettings.CanUndo()) {
             // if there's something to undo, pull the last state off of the stack, and apply those changes
-            currentColors = drawSettings.Undo(drawTexture.GetPixels32());
+            arCurrentPixels = drawSettings.Undo(drawTexture.GetPixels32());
             ApplyCurrentColors();
         }
 
         if (isShiftHeldDown &&
             isYHeldDown &&
             drawSettings.CanRedo()) {
-            currentColors = drawSettings.Redo(drawTexture.GetPixels32());
+            arCurrentPixels = drawSettings.Redo(drawTexture.GetPixels32());
             ApplyCurrentColors();
         }
         //These controls only take effect if we build the game! See: Platform dependent compilation
@@ -98,7 +98,7 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
     // Changes the surrounding pixels of the pixelPosition to the drawSetting.drawColor
     public void Paint(Vector2 pixelPosition) {
         //grab the current image state
-        currentColors = drawTexture.GetPixels32();
+        arCurrentPixels = drawTexture.GetPixels32();
 
         if (previousDragPosition == Vector2.zero) {
             // If this is the first frame in a drag, color the pixels around the mouse
@@ -149,15 +149,28 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
         int arrayPosition = (y * (int)drawImage.texture.width) + x;
 
         // Check if this is a valid position
-        if (arrayPosition > currentColors.Length || arrayPosition < 0) {
+        if (arrayPosition > arCurrentPixels.Length || arrayPosition < 0) {
             return;
         }
 
-        currentColors[arrayPosition] = drawSettings.drawColor;
+        Color colorAlpha = arCurrentPixels[arrayPosition];
+        colorAlpha.a = 0f;
+        arCurrentPixels[arrayPosition] = colorAlpha;
+
+        /*
+        if (drawSettings.drawColor.a == 0f)
+        {
+            
+        }
+        else
+        {
+            arCurrentPixels[arrayPosition] = drawSettings.drawColor;
+        }
+        */
     }
 
     public void ApplyCurrentColors() {
-        drawTexture.SetPixels32(currentColors);
+        drawTexture.SetPixels32(arCurrentPixels);
         drawTexture.Apply();
     }
 

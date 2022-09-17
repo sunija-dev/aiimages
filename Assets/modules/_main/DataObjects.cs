@@ -45,7 +45,6 @@ public class ImageInfo
     public string strFilePathRelative = "";
     public Prompt prompt = new Prompt();
     public ExtraOptions extraOptionsFull = new ExtraOptions(); // special aiimag.es options
-    private Texture2D tex;
 
     // telemetry
     public System.DateTime dateCreation;
@@ -55,6 +54,8 @@ public class ImageInfo
 
     public UnityEvent<ImageInfo> eventStartsProcessing = new UnityEvent<ImageInfo>();
     public UnityEvent<ImageInfo, bool> eventStoppedProcessing = new UnityEvent<ImageInfo, bool>();
+
+    private Texture2D tex;
 
     public string strFilePathFull()
     {
