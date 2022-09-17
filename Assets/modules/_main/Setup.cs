@@ -217,11 +217,18 @@ public class Setup : MonoBehaviour
         yield return new WaitUntil(() => process.HasExited);
     }
 
+    public static void RenewDesktopShortcut()
+    {
+        string strShortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/aiimages.lnk";
+        if (File.Exists(strShortcutPath))
+            CreateDesktopShortcut();
+    }
+
     public static void CreateDesktopShortcut()
     {
         string strExePath = Application.dataPath + "/../aiimages.exe";
-        string strShortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/AIimages.lnk";
-        ShortcutCreator.CreateShortcut(strExePath, strShortcutPath, "AIimages");
+        string strShortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/aiimages.lnk";
+        ShortcutCreator.CreateShortcut(strExePath, strShortcutPath, "aiimages");
     }
 
     public class Download

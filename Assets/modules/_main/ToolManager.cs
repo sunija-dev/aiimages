@@ -24,9 +24,13 @@ public class ToolManager : MonoBehaviour
     public static Dictionary<ImageInfo, List<object>> s_dictDisplayedBy = new Dictionary<ImageInfo, List<object>>();
 
     public GameObject goImagePreviewPrefab;
+    public EndlessHistory endlessHistory;
 
     public Color colorFavorite;
     public Color colorButton;
+
+    public Canvas canvasMain;
+    public Canvas canvasTitle;
 
     public static Texture2D s_texDefaultMissing { get => Instance.texDefaultMissing; }
     public Texture2D texDefaultMissing;
@@ -41,6 +45,8 @@ public class ToolManager : MonoBehaviour
     // UI
     public TMP_Text textFeedback;
     public TMP_Text textVersion;
+
+    public Slider sliderUIScale;
 
     // start button
     public Button buttonStart;
@@ -92,6 +98,8 @@ public class ToolManager : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log(strGetGPUText());
+
         if (s_history.liOutputs.Count > 0)
             options.LoadOptions(s_history.liOutputs.Last());
         Startup();
@@ -99,14 +107,19 @@ public class ToolManager : MonoBehaviour
 
     private void Startup()
     {
+        // FIRST STARTUP
         if (s_settings.bIsFirstStart)
         {
-            if (SystemInfo.graphicsDeviceName.ToLower().Contains("gtx 16"))
+            if (SystemInfo.graphicsDeviceName.ToLower().Contains("gtx 16") && SystemInfo.graphicsMemorySize > 4500)
             {
                 UnityEngine.Debug.Log("Detected RTX 16XX. Switching to full precision.");
                 s_settings.bFullPrecision = true;
                 s_settings.Save();
             }
+
+            s_settings.fUIScale = Screen.height / 1080f;
+            Setup.CreateDesktopShortcut();
+
             LoadDefaultStyles();
         }
 
@@ -151,7 +164,7 @@ public class ToolManager : MonoBehaviour
             {
                 outputCurrentRequested = liRequestQueue.First();
                 outputCurrentRequested.eventStartsProcessing.Invoke(outputCurrentRequested);
-                StartCoroutine(genConnection.ieRequestImage(outputCurrentRequested, OnTextureReceived));
+                genConnection.RequestImage(outputCurrentRequested, OnTextureReceived);
                 liRequestQueue.RemoveAt(0);
                 fProcessingTime = 0f;
                 eventQueueUpdated.Invoke();
@@ -181,6 +194,8 @@ public class ToolManager : MonoBehaviour
         if (!_bWorked)
         {
             liRequestQueue.Clear();
+            if (bKeepRequesting)
+                TogglePlay();
             eventQueueUpdated.Invoke();
             fLoadingTime = 0f;
         }
@@ -339,6 +354,7 @@ public class ToolManager : MonoBehaviour
         s_liUsers = saveData.liUsers;
         s_liFavoriteGUIDs = saveData.liFavoriteGUIDs;
         paletteView.Set(saveData.palette);
+        sliderUIScale.value = s_settings.fUIScale;
 
         Directory.CreateDirectory(s_settings.strInputDirectory);
         Directory.CreateDirectory(s_settings.strOutputDirectory);
@@ -406,6 +422,7 @@ public class ToolManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        Setup.RenewDesktopShortcut();
         Save();
     }
 
@@ -455,6 +472,15 @@ public class ToolManager : MonoBehaviour
         {
             textVersion.text = $"<color=#00FF00>NEW AVAILABLE</color> - v{Application.version}";
         }
+    }
+
+    public void SetUIScale(float _fScale)
+    {
+        s_settings.fUIScale = _fScale;
+        canvasMain.scaleFactor = _fScale;
+        canvasTitle.scaleFactor = _fScale;
+
+        endlessHistory.OnScaleUpdate();
     }
 
     public void LoadDefaultStyles()

@@ -58,6 +58,7 @@ public class Settings
     public bool bIsFirstStart = true;
     public bool bDidSetup = false;
     public bool bFullPrecision = false;
+    public float fUIScale = 1f;
 
     private static string strSettingsName = "settings.json";
     private static string strSettingsPath = "";

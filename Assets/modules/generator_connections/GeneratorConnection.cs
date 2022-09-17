@@ -7,6 +7,7 @@ using System.Diagnostics;
 using TMPro;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.Events;
 
 /// <summary>
 /// Prompts go in, textures come out.
@@ -25,8 +26,9 @@ public class GeneratorConnection : MonoBehaviour
     private List<string> liErrors = new List<string>();
 
     private int iLastFileCount = -1;
-    private bool bOutputDone = false;
-    private bool bBroken = false;
+    private OutputStatus outputStatus = OutputStatus.Unfinished;
+
+    private enum OutputStatus { Unfinished, Broken, BrokenNeedsRestart, FinishedSuccessfully  }
 
     private Coroutine coRequestImage;
 
@@ -102,11 +104,11 @@ public class GeneratorConnection : MonoBehaviour
 
     public void RequestImage(ImageInfo _output, Action<Texture2D, string, bool> _actionTextureReturn)
     {
-        bBroken = false;
+        outputStatus = OutputStatus.Unfinished;
         coRequestImage = StartCoroutine(ieRequestImage(_output, _actionTextureReturn));
     }
 
-    public IEnumerator ieRequestImage(ImageInfo _output, Action<Texture2D, string, bool> _actionTextureReturn)
+    private IEnumerator ieRequestImage(ImageInfo _output, Action<Texture2D, string, bool> _actionTextureReturn)
     {
         bProcessing = true;
 
@@ -115,10 +117,18 @@ public class GeneratorConnection : MonoBehaviour
         yield return new WaitUntil(() => streamWriter.BaseStream.CanWrite);
         streamWriter.WriteLine(_output.prompt.strToString());
 
-        yield return new WaitUntil(() => bOutputDone || bBroken);
+        yield return new WaitUntil(() => outputStatus != OutputStatus.Unfinished);
 
-        if (bBroken)
+        if (outputStatus == OutputStatus.Broken || outputStatus == OutputStatus.BrokenNeedsRestart)
         {
+            Debug.Log("Could not generate image. Please use a smaller image.");
+
+            if (outputStatus == OutputStatus.BrokenNeedsRestart)
+            {
+                Close();
+                Init();
+            }
+
             _actionTextureReturn.Invoke(null, "", false);
         }
         else
@@ -144,10 +154,13 @@ public class GeneratorConnection : MonoBehaviour
 
         if (_strOutput.StartsWith("* Initialization done!"))
             bInitialized = true;
-        if (!bBroken && _strOutput.StartsWith("Outputs:"))
-            bOutputDone = true;
-        if (_strOutput.StartsWith("dream> CUDA out of memory"))
-            HandleCudaCrash();
+        else if (outputStatus == OutputStatus.Unfinished && _strOutput.StartsWith("Outputs:"))
+            outputStatus = OutputStatus.FinishedSuccessfully;
+        else if (_strOutput.StartsWith(">> Could not generate image."))
+            outputStatus = OutputStatus.Broken;
+        else if (_strOutput.StartsWith("dream> CUDA out of memory"))
+            outputStatus = OutputStatus.BrokenNeedsRestart;
+            
     }
 
     private void OnOutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -166,25 +179,13 @@ public class GeneratorConnection : MonoBehaviour
 
     private void Update()
     {
-        bOutputDone = false;
-
         foreach (string strLine in liLines)
             ProcessOutput(strLine);
         liLines.Clear();
 
-        if (liErrors.Count > 0 && coRequestImage != null)
-        {
-            StopCoroutine(coRequestImage);
-            coRequestImage = null;
-            bProcessing = false;
-        }
-    }
-
-    private void HandleCudaCrash()
-    {
-        bBroken = true;
-        Close();
-        Init();
+        foreach (string strError in liErrors)
+            Debug.Log(strError);
+        liErrors.Clear();
     }
 
     public bool bNewFileAppeared()

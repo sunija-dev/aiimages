@@ -254,6 +254,8 @@ public class EndlessHistory : MonoBehaviour
 
     public void OnScaleUpdate()
     {
+        s_fHistoryWidth = GetComponent<RectTransform>().GetWidth();
+
         s_iPixelTarget = (int)Mathf.Pow(Mathf.Lerp(fMinScale, fMaxScale, sliderScale.value), 2);
         foreach (GridBoxDisplay gridBoxDisplay in liGridBoxDisplays)
             gridBoxDisplay.UpdateCellSize();

@@ -49,10 +49,20 @@ public class OptionStartImage : MonoBehaviour
         UpdateDisplay();
     }
 
-    public void LoadImageFromHistory(ImageInfo _output)
+    public void LoadImageFromHistory(ImageInfo _img)
     {
-        if (_output != null && !string.IsNullOrEmpty(_output.strGUID))
-            LoadImageFromHistory(_output.strGUID);
+        if (_img != null)
+        {
+            if (!string.IsNullOrEmpty(_img.strGUID))
+            {
+                LoadImageFromHistory(_img.strGUID);
+            }
+            else if (!string.IsNullOrEmpty(_img.strFilePathFull()))
+            {
+                LoadImageFromFileName(_img.strFilePathFull());
+            }
+        }
+            
     }
 
     public void LoadImageFromFileName(string _strFilePathFull)
