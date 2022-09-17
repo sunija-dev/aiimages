@@ -10,19 +10,20 @@ public class EndlessHistory : MonoBehaviour
     public static int s_iPixelTarget = 150 * 150;
     public static float s_fHistoryWidth = 1000;
 
-    public float fUpdateEvery = 0.3f;
     public float fDisplayRange = 2000;
 
     public float fMaxScale = 300f;
     public float fMinScale = 100f;
     public int iMaxItemsPerGridBox = 30;
 
+    public Scrollbar scrollbar;
+    //public Transform transScrollContent;
+    public RectTransform rectContent;
+    //public RectTransform rectContentDisplay;
+    public RectTransform rectOffsetter;
+
     public List<SectionData> liSections = new List<SectionData>();
     public GameObject goGridBoxPrefab;
-    public Transform transScrollContent;
-    public Scrollbar scrollbar;
-    public RectTransform rectContent;
-    public RectTransform rectContentDisplay;
     public Slider sliderScale;
 
     private History history;
@@ -44,7 +45,7 @@ public class EndlessHistory : MonoBehaviour
         history = ToolManager.s_history;
         liSections = ToolManager.s_history.liSections;
 
-        // old version taht didn't save sections? generate them
+        // old version that didn't save sections? generate them
         liSections.Clear();
         if (true) //(liSections.Count == 0)
         {
@@ -169,9 +170,13 @@ public class EndlessHistory : MonoBehaviour
     {
         float fPosition = 1f - scrollbar.value;
 
-        float fPositionInHistory = fGetHeight() * fPosition;
-        float fMinDisplay = fPositionInHistory - fDisplayRange / 2f;
-        float fMaxDisplay = fPositionInHistory + fDisplayRange / 2f;
+        float fHistoryHeight = fGetHeight();
+        rectContent.sizeDelta = new Vector2(rectContent.sizeDelta.x, fHistoryHeight);
+
+        float fPositionInHistory = fHistoryHeight * fPosition;
+        float fAdjustedDisplayRange = fDisplayRange / 1080f * Screen.height;
+        float fMinDisplay = fPositionInHistory - fAdjustedDisplayRange / 2f;
+        float fMaxDisplay = fPositionInHistory + fAdjustedDisplayRange / 2f;
 
         // go through sections. If in visible range, do the same for gridboxes inside them.
         liSectionsVisible.Clear();
@@ -209,7 +214,7 @@ public class EndlessHistory : MonoBehaviour
                         if (bIsFirstElement)
                         {
                             bIsFirstElement = false;
-                            fFirstElementPosition = fStartInside - fMinDisplay;
+                            fFirstElementPosition = fStartInside;
                             //Debug.Log($"UPDATED {fFirstElementPosition} : {Utility.fOverlap(fStartInside, fEndInside, fMinDisplay, fMaxDisplay)} // {fStartInside} - {fMinDisplay} ({fEndInside}, {fMaxDisplay})");
                         }
                     }
@@ -240,7 +245,7 @@ public class EndlessHistory : MonoBehaviour
                 gridboxDisplay.transform.SetAsLastSibling(); // make sure sorting works
             else
             {
-                GridBoxDisplay gridboxDisplayNew = Instantiate(goGridBoxPrefab, transScrollContent).GetComponent<GridBoxDisplay>();
+                GridBoxDisplay gridboxDisplayNew = Instantiate(goGridBoxPrefab, rectContent.transform).GetComponent<GridBoxDisplay>();
                 gridboxDisplayNew.SetData(gridboxData);
                 gridboxDisplayNew.UpdateDisplay();
                 gridboxDisplayNew.transform.SetAsLastSibling();
@@ -249,7 +254,8 @@ public class EndlessHistory : MonoBehaviour
             }
         }
 
-        rectContentDisplay.position = new Vector2(rectContentDisplay.position.x, fDisplayRange / 2f - fFirstElementPosition);
+        rectOffsetter.SetHeight(rectOffsetter.GetHeight());
+        //rectContentDisplay.position = new Vector2(rectContentDisplay.position.x, fDisplayRange / 2f - fFirstElementPosition);
     }
 
     public void OnScaleUpdate()

@@ -14,8 +14,8 @@ public class GridBoxDisplay : MonoBehaviour
     public void SetData(GridBoxData _gridboxData)
     {
         gridboxData = _gridboxData;
-        gridboxData.oliImgs.Updated += UpdateDisplay;
         UpdateCellSize();
+        gridboxData.oliImgs.Updated += UpdateDisplay;
     }
 
     public void UpdateCellSize()
@@ -52,7 +52,6 @@ public class GridBoxDisplay : MonoBehaviour
             }
 
             // neither of both? spawn (if it exists)
-
             GameObject goPreview = Instantiate(ToolManager.Instance.goImagePreviewPrefab, grid.transform);
             imagePreview = goPreview.GetComponent<ImagePreview>();
             imagePreview.DisplayImage(output);
