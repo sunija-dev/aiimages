@@ -15,6 +15,7 @@ public class OptionStartImage : MonoBehaviour
     public OptionSlider optionSlider;
     public ImagePreview imagePreviewInput;
     public Texture2D texDefault;
+    public DrawWindow drawWindow;
 
     private ImageInfo imgPreview = new ImageInfo();
 
@@ -126,7 +127,11 @@ public class OptionStartImage : MonoBehaviour
         LoadImageFromFileName(arPaths[0]);
     }
 
-
+    public void OpenDrawWindow()
+    {
+        if (imgPreview != null)
+            drawWindow.OpenImage(imgPreview);
+    }
 
     public void Remove()
     {

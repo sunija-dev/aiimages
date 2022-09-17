@@ -7,9 +7,8 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
     public DrawSettings drawSettings;
 
     // The image we are going to edit at runtime
-    Image drawImage;
-    // The sprite that the Image component references
-    Sprite drawSprite;
+    RawImage drawImage;
+
     // The texture of the drawSprite, the actual .png you are editing
     Texture2D drawTexture;
 
@@ -30,7 +29,7 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
     void Awake() 
     {
         rectTransform = GetComponent<RectTransform>();
-        drawImage = GetComponent<Image>();
+        drawImage = GetComponent<RawImage>();
 
         resetColor = new Color(0, 0, 0, 0);
 
@@ -43,11 +42,10 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
     //Call this whenever the image this script is attached has changed
     //most uses can probably simply call initalize at the beginning
     public void Initialize() {
-        drawSprite = drawImage.sprite;
-        drawTexture = drawSprite.texture;
+        drawTexture = (Texture2D)drawImage.texture;
 
         // fill the array with our reset color so it can be easily reset later on
-        resetColorsArray = new Color[(int)drawSprite.rect.width * (int)drawSprite.rect.height];
+        resetColorsArray = new Color[(int)drawImage.texture.width * (int)drawImage.texture.height];
         for (int x = 0; x < resetColorsArray.Length; x++)
             resetColorsArray[x] = resetColor;
     }
@@ -121,7 +119,7 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
 
         for (int x = centerX - drawSettings.lineWidth; x <= centerX + drawSettings.lineWidth; x++) {
             // Check if the X wraps around the image, so we don't draw pixels on the other side of the image
-            if (x >= (int)drawSprite.rect.width || x < 0)
+            if (x >= (int)drawImage.texture.width || x < 0)
                 continue;
 
             for (int y = centerY - drawSettings.lineWidth; y <= centerY + drawSettings.lineWidth; y++) {
@@ -148,7 +146,7 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
 
     public void MarkPixelToChange(int x, int y) {
         // Need to transform x and y coordinates to flat coordinates of array
-        int arrayPosition = (y * (int)drawSprite.rect.width) + x;
+        int arrayPosition = (y * (int)drawImage.texture.width) + x;
 
         // Check if this is a valid position
         if (arrayPosition > currentColors.Length || arrayPosition < 0) {
@@ -187,7 +185,7 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
             localCursor.y < rectTransform.rect.height &&
             localCursor.x > 0 &&
             localCursor.y > 0) {
-            float rectToPixelScale = drawImage.sprite.rect.width / rectTransform.rect.width;
+            float rectToPixelScale = drawImage.rectTransform.rect.width / rectTransform.rect.width;
             localCursor = new Vector2(localCursor.x * rectToPixelScale, localCursor.y * rectToPixelScale);
             Paint(localCursor);
             previousDragPosition = localCursor;
