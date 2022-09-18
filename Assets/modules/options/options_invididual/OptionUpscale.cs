@@ -11,7 +11,7 @@ public class OptionUpscale : MonoBehaviour
     public OptionSlider optionSliderRedo;
 
     public float fUpscaleStrengthPreview { get => optionSliderStrengthPreview.fValue; }
-    public float fUpscaleStrengthRedo { get => (int)optionSliderStrengthRedo.fValue; }
+    public float fUpscaleStrengthRedo { get => optionSliderStrengthRedo.fValue; }
 
     public OptionSlider optionSliderStrengthPreview;
     public OptionSlider optionSliderStrengthRedo;

@@ -186,7 +186,7 @@ public class EndlessHistory : MonoBehaviour
         rectContent.sizeDelta = new Vector2(rectContent.sizeDelta.x, fHistoryHeight);
 
         float fPositionInHistory = fHistoryHeight * fPosition;
-        float fAdjustedDisplayRange = fDisplayRange / 1080f * Screen.height;
+        float fAdjustedDisplayRange = fDisplayRange / 1080f * Screen.height / ToolManager.s_settings.fUIScale;
         float fMinDisplay = fPositionInHistory - fAdjustedDisplayRange / 2f;
         float fMaxDisplay = fPositionInHistory + fAdjustedDisplayRange / 2f;
 
