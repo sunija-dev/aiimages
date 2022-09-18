@@ -110,6 +110,15 @@ public class ToolManager : MonoBehaviour
             textGPUWarning.text += "\n" + strGetGPUText();
         }
 
+        // backward comp
+        string strSettingsPath = Path.Combine(Application.persistentDataPath, Settings.strSettingsName);
+        if (File.Exists(strSettingsPath) && !File.ReadAllText(strSettingsPath).Contains("bUseBackgroundTexture"))
+        {
+            Debug.Log("Found old settings file. Setting firstStart again.");
+            s_settings.bIsFirstStart = true;
+        }
+            
+
         Startup();
 
         StartCoroutine(ieAutoSave(120f));

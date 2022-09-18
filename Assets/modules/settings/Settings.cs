@@ -62,7 +62,7 @@ public class Settings
     public int iGPU = 0;
     public bool bUseBackgroundTexture = true;
 
-    private static string strSettingsName = "settings.json";
+    public static string strSettingsName = "settings.json";
     private static string strSettingsPath = "";
 
     public static Settings Load()
