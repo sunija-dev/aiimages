@@ -43,7 +43,7 @@ public class OptionsVisualizer : MonoBehaviour
         optionSeamless.Set(_output.prompt.bSeamless);
     }
 
-    public Prompt promptGet(bool _bIsPreview)
+    public Prompt promptGet(bool _bPreviewSteps, bool _bPreviewUpscale, bool _bPreviewFaceEnhance)
     {
         Prompt prompt = new Prompt()
         {
@@ -51,15 +51,15 @@ public class OptionsVisualizer : MonoBehaviour
             iHeight = optionDimensions.iHeight,
             startImage = optionStartImage.startImage,
             iSeed = optionSeed.iSeed,
-            iSteps = _bIsPreview ? optionSteps.iStepsPreview : optionSteps.iStepsRedo,
+            iSteps = _bPreviewSteps ? optionSteps.iStepsPreview : optionSteps.iStepsRedo,
             fCfgScale = optionAccuracy.fAccuracy + Random.Range(0f, optionAccuracy.fVariance),
             strContentPrompt = optionContent.strPrompt,
             strStylePrompt = optionStyle.strPrompt,
-            iVariationSeed = !optionSeed.bRandomSeed ? -1 : optionVariation.iSeed, // only use variation seed if seed is set
+            iVariationSeed = optionSeed.bRandomSeed ? -1 : optionVariation.iSeed, // only use variation seed if seed is set
             fVariationStrength = optionVariation.fStrength,
-            fUpscaleFactor = _bIsPreview ? optionUpscale.fUpscalePreview : optionUpscale.fUpscaleRedo,
-            fUpscaleStrength = _bIsPreview ? optionUpscale.fUpscaleStrengthPreview : optionUpscale.fUpscaleStrengthRedo,
-            fFaceEnhanceStrength = _bIsPreview ? optionFaceEnhance.fStrengthPreview : optionFaceEnhance.fStrengthRedo,
+            fUpscaleFactor = _bPreviewUpscale ? optionUpscale.fUpscalePreview : optionUpscale.fUpscaleRedo,
+            fUpscaleStrength = _bPreviewUpscale ? optionUpscale.fUpscaleStrengthPreview : optionUpscale.fUpscaleStrengthRedo,
+            fFaceEnhanceStrength = _bPreviewFaceEnhance ? optionFaceEnhance.fStrengthPreview : optionFaceEnhance.fStrengthRedo,
             bSeamless = optionSeamless.bSeamless
         };
 

@@ -225,12 +225,12 @@ public class ToolManager : MonoBehaviour
 
     public void RequestImage()
     {
-        UnityEngine.Debug.Log($"Starting preview for {options.promptGet(_bIsPreview: true).strToString()}");
+        UnityEngine.Debug.Log($"Starting preview for {options.promptGet(_bPreviewSteps:true, _bPreviewUpscale:true, _bPreviewFaceEnhance:true).strToString()}");
 
         ImageInfo outputNew = new ImageInfo()
         {
             strGUID = Guid.NewGuid().ToString(),
-            prompt = options.promptGet(_bIsPreview: true),
+            prompt = options.promptGet(_bPreviewSteps: true, _bPreviewUpscale: true, _bPreviewFaceEnhance: true),
             extraOptionsFull = options.extraOptionsGet(),
             userCreator = userActive
         };

@@ -5,7 +5,7 @@ using UnityEngine;
 public class OptionUpscale : MonoBehaviour
 {
     public float fUpscalePreview { get => Mathf.Max(1f, optionSliderPreview.fValue); }
-    public float fUpscaleRedo { get => optionSliderRedo.fValue; }
+    public float fUpscaleRedo { get => Mathf.Max(1f, optionSliderRedo.fValue); }
 
     public OptionSlider optionSliderPreview;
     public OptionSlider optionSliderRedo;

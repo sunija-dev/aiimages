@@ -203,13 +203,36 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
     }
 
-    public void RequestRedo()
+    public void RequestStepRedo()
     {
-        Debug.Log($"Requesting HD version for seed {imgDisplayed.prompt.iSeed}");
+        Debug.Log($"Requesting step redo version for seed {imgDisplayed.prompt.iSeed}");
 
         ImageInfo outputNew = imgDisplayed.outputCopy();
         outputNew.prompt.iSteps = OptionsVisualizer.instance.optionSteps.iStepsRedo;
         DisplayImage(outputNew, _bAddtive:true);
+
+        ToolManager.Instance.RequestImage(outputNew);
+    }
+
+    public void RequestUpscaleRedo()
+    {
+        Debug.Log($"Requesting upscale redo version for seed {imgDisplayed.prompt.iSeed}");
+
+        ImageInfo outputNew = imgDisplayed.outputCopy();
+        outputNew.prompt.fUpscaleFactor = OptionsVisualizer.instance.optionUpscale.fUpscaleRedo;
+        outputNew.prompt.fUpscaleStrength = OptionsVisualizer.instance.optionUpscale.fUpscaleStrengthRedo;
+        DisplayImage(outputNew, _bAddtive: true);
+
+        ToolManager.Instance.RequestImage(outputNew);
+    }
+
+    public void RequestFaceEnhanceRedo()
+    {
+        Debug.Log($"Requesting face_enhance redo version for seed {imgDisplayed.prompt.iSeed}");
+
+        ImageInfo outputNew = imgDisplayed.outputCopy();
+        outputNew.prompt.fFaceEnhanceStrength = OptionsVisualizer.instance.optionFaceEnhance.fStrengthRedo;
+        DisplayImage(outputNew, _bAddtive: true);
 
         ToolManager.Instance.RequestImage(outputNew);
     }

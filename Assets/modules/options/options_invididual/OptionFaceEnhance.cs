@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OptionFaceEnhance : MonoBehaviour
 {
-    public float fStrengthPreview { get => Mathf.Max(1f, optionSliderPreview.fValue); }
+    public float fStrengthPreview { get => optionSliderPreview.fValue; }
     public float fStrengthRedo { get => optionSliderRedo.fValue; }
 
     public OptionSlider optionSliderPreview;
