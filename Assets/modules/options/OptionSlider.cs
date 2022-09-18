@@ -40,7 +40,7 @@ public class OptionSlider : MonoBehaviour
     public void OnValueChangedSlider()
     {
         fValue = fMin + slider.value * fStepSize;
-        textValue.text = bUseInt ? ((int)fValue).ToString() : fValue.ToString();
+        textValue.text = bUseInt ? ((int)fValue).ToString(System.Globalization.CultureInfo.InvariantCulture) : fValue.ToString(System.Globalization.CultureInfo.InvariantCulture);
         eventValueChanged.Invoke(fValue);
     }
 

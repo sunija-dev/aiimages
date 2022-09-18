@@ -113,6 +113,12 @@ public class Prompt
     public int iHeight = 512;
     public StartImage startImage = new StartImage();
     public int iSeed = -1;
+    public int iVariationSeed = -1;
+    public float fVariationStrength = 0.1f;
+    public float fUpscaleFactor = 1f;
+    public float fUpscaleStrength = 0.75f;
+    public float fFaceEnhanceStrength = 0.5f;
+    public bool bSeamless = false;
     public int iSteps = 50;
     public float fCfgScale = 7.5f;
     public string strContentPrompt = "";
@@ -121,11 +127,20 @@ public class Prompt
     public string strToString()
     {
         string strPrompt = strWithoutOptions();
-        string strWidthHeight = $"-W {iWidth} -H {iHeight}";
-        strPrompt += $" -s {iSteps} -S {iSeed} {(string.IsNullOrEmpty(startImage.strFilePath) ? strWidthHeight : "")} -C {fCfgScale.ToString("0.0", CultureInfo.InvariantCulture)}";
+        strPrompt += $" -s {iSteps}" +
+            $" -S {iSeed}" +
+            $" -C {fCfgScale.ToString("0.00", CultureInfo.InvariantCulture)}";
+
+        if (string.IsNullOrEmpty(startImage.strFilePath))
+            strPrompt += $" -W {iWidth} -H {iHeight}";
 
         if (!string.IsNullOrEmpty(startImage.strFilePath))
             strPrompt += $" --init_img=\"{startImage.strGetFullPath()}\" --strength={startImage.fStrength.ToString("0.0", CultureInfo.InvariantCulture)}";
+
+        if (iVariationSeed >= 0)
+            strPrompt += $"-V {iVariationSeed}:{fVariationStrength.ToString("0.00", CultureInfo.InvariantCulture)},0:0.0"; // HACK: use variation mixing, so we can define a variation seed
+
+
 
         return strPrompt;
     }
