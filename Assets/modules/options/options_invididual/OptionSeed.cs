@@ -8,8 +8,8 @@ public class OptionSeed : MonoBehaviour
 {
     public bool bRandomSeed = true;
 
-    public GameObject goNumber;
-    public GameObject goSlider;
+    public CanvasGroup canvasGroupVariation;
+    public OptionVariation optionVariation;
 
     public int iSeed 
     { 
@@ -52,12 +52,14 @@ public class OptionSeed : MonoBehaviour
 
     void UpdateDisplay()
     {
-        goNumber.SetActive(!bRandomSeed);
-        goSlider.SetActive(!bRandomSeed);
+        canvasGroupVariation.alpha = bRandomSeed ? 0.3f : 1f;
+        canvasGroupVariation.interactable = bRandomSeed ? false : true;
     }
 
     public void Set(ImageInfo _img)
     {
         input.text = _img.prompt.iSeed.ToString();
+        optionSlider.Set(_img.prompt.iSeed);
+        optionVariation.Set(_img);
     }
 }

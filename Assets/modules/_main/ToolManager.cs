@@ -100,9 +100,9 @@ public class ToolManager : MonoBehaviour
     {
         Debug.Log(strGetGPUText());
 
-        if (s_history.liOutputs.Count > 0)
-            options.LoadOptions(s_history.liOutputs.Last());
         Startup();
+
+        StartCoroutine(ieStartDelayed());
     }
 
     private void Startup()
@@ -135,6 +135,12 @@ public class ToolManager : MonoBehaviour
         s_settings.Save();
     }
 
+    public IEnumerator ieStartDelayed()
+    {
+        yield return null; // delay, so options don't overwrite it with their own init
+        if (s_history.liOutputs.Count > 0)
+            options.LoadOptions(s_history.liOutputs.Last());
+    }
 
     void Update()
     {

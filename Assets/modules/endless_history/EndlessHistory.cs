@@ -108,7 +108,6 @@ public class EndlessHistory : MonoBehaviour
             return;
 
         // start new section?
-        
         if (imgLast != null && !_img.prompt.bEqualContentStyle(imgLast.prompt))
         {
             sectionCurrent = new SectionData();

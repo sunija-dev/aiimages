@@ -44,12 +44,14 @@ public class GridBoxDisplay : MonoBehaviour
             }
 
             // is it just a step variation?
+            /*
             imagePreview = liImagePreviews.FirstOrDefault(x => x.liOutputs.Any(y => y.prompt.bEqualExceptSteps(output.prompt)));
             if (imagePreview != default) 
             {
                 imagePreview.liOutputs.Add(output);
                 continue;
             }
+            */
 
             // neither of both? spawn (if it exists)
             GameObject goPreview = Instantiate(ToolManager.Instance.goImagePreviewPrefab, grid.transform);

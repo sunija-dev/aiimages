@@ -13,6 +13,10 @@ public class OptionsVisualizer : MonoBehaviour
     public OptionDimensions optionDimensions;
     public OptionPrompt optionContent;
     public OptionPrompt optionStyle;
+    public OptionVariation optionVariation;
+    public OptionUpscale optionUpscale;
+    public OptionFaceEnhance optionFaceEnhance;
+    public OptionSeamless optionSeamless;
 
     private void Start()
     {
@@ -33,6 +37,10 @@ public class OptionsVisualizer : MonoBehaviour
         optionDimensions.Set(prompt.iWidth, prompt.iHeight);
         optionContent.Set(_output);
         optionStyle.Set(_output);
+        optionVariation.Set(_output);
+        optionUpscale.Set(_output.extraOptionsFull.fUpscalePreview, _output.extraOptionsFull.fUpscaleRedo, _output.extraOptionsFull.fUpscaleStrengthPreview, _output.extraOptionsFull.fUpscaleStrengthRedo);
+        optionFaceEnhance.Set(_output.extraOptionsFull.fFaceEnhancePreview, _output.extraOptionsFull.fFaceEnhanceRedo);
+        optionSeamless.Set(_output.prompt.bSeamless);
     }
 
     public Prompt promptGet(bool _bIsPreview)
@@ -46,7 +54,13 @@ public class OptionsVisualizer : MonoBehaviour
             iSteps = _bIsPreview ? optionSteps.iStepsPreview : optionSteps.iStepsRedo,
             fCfgScale = optionAccuracy.fAccuracy + Random.Range(0f, optionAccuracy.fVariance),
             strContentPrompt = optionContent.strPrompt,
-            strStylePrompt = optionStyle.strPrompt
+            strStylePrompt = optionStyle.strPrompt,
+            iVariationSeed = !optionSeed.bRandomSeed ? -1 : optionVariation.iSeed, // only use variation seed if seed is set
+            fVariationStrength = optionVariation.fStrength,
+            fUpscaleFactor = _bIsPreview ? optionUpscale.fUpscalePreview : optionUpscale.fUpscaleRedo,
+            fUpscaleStrength = _bIsPreview ? optionUpscale.fUpscaleStrengthPreview : optionUpscale.fUpscaleStrengthRedo,
+            fFaceEnhanceStrength = _bIsPreview ? optionFaceEnhance.fStrengthPreview : optionFaceEnhance.fStrengthRedo,
+            bSeamless = optionSeamless.bSeamless
         };
 
         return prompt;
@@ -60,7 +74,15 @@ public class OptionsVisualizer : MonoBehaviour
             fCfgScaleVariance = optionAccuracy.fVariance,
             bRandomSeed = optionSeed.bRandomSeed,
             iStepsPreview = optionSteps.iStepsPreview,
-            iStepsRedo = optionSteps.iStepsRedo
+            iStepsRedo = optionSteps.iStepsRedo,
+            iVariationSeed = optionVariation.iSeed,
+            fVariationStrength = optionVariation.fStrength,
+            fUpscalePreview = optionUpscale.fUpscalePreview,
+            fUpscaleRedo = optionUpscale.fUpscaleRedo,
+            fUpscaleStrengthPreview = optionUpscale.fUpscaleStrengthPreview,
+            fUpscaleStrengthRedo = optionUpscale.fUpscaleStrengthRedo,
+            fFaceEnhancePreview = optionFaceEnhance.fStrengthPreview,
+            fFaceEnhanceRedo = optionFaceEnhance.fStrengthRedo
         };
     }
 
@@ -71,7 +93,7 @@ public class OptionsVisualizer : MonoBehaviour
     {
         Vector2Int v2iNewSize = Utility.v2iLimitPixelSize(_iWidth, _iHeight, 512 * 512);
 
-        optionDimensions.Set(_iWidth, _iHeight);
+        optionDimensions.Set(v2iNewSize.x, v2iNewSize.y);
     }
 
 }

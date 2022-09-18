@@ -117,7 +117,7 @@ public class Prompt
     public float fVariationStrength = 0.1f;
     public float fUpscaleFactor = 1f;
     public float fUpscaleStrength = 0.75f;
-    public float fFaceEnhanceStrength = 0.5f;
+    public float fFaceEnhanceStrength = 0.0f;
     public bool bSeamless = false;
     public int iSteps = 50;
     public float fCfgScale = 7.5f;
@@ -137,10 +137,17 @@ public class Prompt
         if (!string.IsNullOrEmpty(startImage.strFilePath))
             strPrompt += $" --init_img=\"{startImage.strGetFullPath()}\" --strength={startImage.fStrength.ToString("0.0", CultureInfo.InvariantCulture)}";
 
-        if (iVariationSeed >= 0)
-            strPrompt += $"-V {iVariationSeed}:{fVariationStrength.ToString("0.00", CultureInfo.InvariantCulture)},0:0.0"; // HACK: use variation mixing, so we can define a variation seed
+        if (iSeed >= 0 && iVariationSeed >= 0)
+            strPrompt += $" -V {iVariationSeed}:{fVariationStrength.ToString("0.00", CultureInfo.InvariantCulture)},0:0.0"; // HACK: use variation mixing, so we can define a variation seed
 
+        if (fUpscaleFactor > 1f)
+            strPrompt += $" -U {(int)fUpscaleFactor} {fUpscaleStrength.ToString("0.00", CultureInfo.InvariantCulture)}";
 
+        if (fFaceEnhanceStrength > 0f)
+            strPrompt += $" -G {fFaceEnhanceStrength.ToString("0.00", CultureInfo.InvariantCulture)}";
+
+        if (bSeamless)
+            strPrompt += $" --seamless";
 
         return strPrompt;
     }
@@ -206,6 +213,14 @@ public class ExtraOptions
     public bool bRandomSeed = true;
     public int iStepsPreview = 15;
     public int iStepsRedo = 50;
+    public int iVariationSeed = -1;
+    public float fVariationStrength = 0.1f;
+    public float fUpscalePreview = 1f;
+    public float fUpscaleRedo = 2f;
+    public float fUpscaleStrengthPreview = 0.5f;
+    public float fUpscaleStrengthRedo = 0.75f;
+    public float fFaceEnhancePreview = 0.0f;
+    public float fFaceEnhanceRedo = 0.75f;
 }
 
 [System.Serializable]
