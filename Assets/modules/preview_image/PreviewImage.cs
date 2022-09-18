@@ -8,17 +8,21 @@ public class PreviewImage : MonoBehaviour
 {
     public static PreviewImage Instance;
 
+    public float fWaitBeforeFade = 0.1f;
     public float fFadeSpeed = 5f;
 
     public RawImage rawimageBigPreview;
     public TMP_Text textPrompt;
     public Transform transPreviewRight;
     public Transform transPreviewLeft;
+    public Transform transPreviewSmall;
     public CanvasGroup canvasGroup;
 
     private Vector2 v2MaxSize = Vector2.zero;
     private Coroutine coSetVisible = null;
     public RectTransform rtrans;
+
+    private bool bBig = false;
 
     private void Awake()
     {
@@ -29,10 +33,17 @@ public class PreviewImage : MonoBehaviour
 
     void Update()
     {
-        if (Input.mousePosition.x > Camera.main.scaledPixelWidth / 2f)
-            transform.position = transPreviewLeft.transform.position;
+        if (bBig)
+        {
+            if (Input.mousePosition.x > Camera.main.scaledPixelWidth / 2f)
+                transform.position = transPreviewLeft.transform.position;
+            else
+                transform.position = transPreviewRight.transform.position;
+        }
         else
-            transform.position = transPreviewRight.transform.position;
+        {
+            transform.position = transPreviewSmall.transform.position;
+        }
     }
 
     public void SetVisible(bool _bVisible, Texture _tex, string _strPrompt = "")
@@ -50,6 +61,9 @@ public class PreviewImage : MonoBehaviour
 
         if (_bVisible)
             ApplyImage(_tex, _strPrompt);
+
+        if (!_bVisible)
+            yield return new WaitForSeconds(fWaitBeforeFade);
 
         while (Mathf.Abs(canvasGroup.alpha - fTarget) > 0.05f)
         {
@@ -71,5 +85,16 @@ public class PreviewImage : MonoBehaviour
         textPrompt.text = _strPrompt;
         if (_tex != null)
             Utility.ScaleRectToImage(rtrans, v2MaxSize, new Vector2(_tex.width, _tex.height));
+    }
+
+    public void SetScale(bool _bBig)
+    {
+        bBig = _bBig;
+        transform.localScale = Vector3.one * (_bBig ? 1f : 0.55f);
+    }
+
+    public void ToggleScale()
+    {
+        SetScale(!bBig);
     }
 }

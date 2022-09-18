@@ -318,6 +318,11 @@ public class ToolManager : MonoBehaviour
         Application.OpenURL($"file://{s_settings.strOutputDirectory}");
     }
 
+    public void OpenTrashFolder()
+    {
+        Application.OpenURL($"file://{Path.Combine(s_settings.strOutputDirectory, "trashcan")}");
+    }
+
     public void SetAboutPage(bool _bActive)
     {
         goAboutPage.SetActive(_bActive);
@@ -372,12 +377,28 @@ public class ToolManager : MonoBehaviour
         Application.OpenURL("https://huggingface.co/spaces/CompVis/stable-diffusion-license");
     }
 
+    public void DeleteImage(ImageInfo _img)
+    {
+        MoveToTrashFolder(_img);
+        DeleteFromHistory(_img);
+    }
+
+    public void MoveToTrashFolder(ImageInfo _img)
+    {
+        string strTrashFolder = Path.Combine(s_settings.strOutputDirectory, "trashcan");
+        Directory.CreateDirectory(strTrashFolder);
+
+        if (File.Exists(_img.strFilePathFull()))
+            File.Move(_img.strFilePathFull(), Path.Combine(strTrashFolder, Path.GetFileName(_img.strFilePathFull())));
+    }
+
     public void DeleteFromHistory(ImageInfo _img)
     {
         s_history.liOutputs.Remove(_img);
         eventHistoryElementDeleted.Invoke(_img);
         eventHistoryUpdated.Invoke();
     }
+
     public void SaveTemplate(ImageInfo _output, bool _bContent)
     {
         Template template = new Template()

@@ -21,7 +21,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public bool bIsInput = false;
     public float fDisplayDelay = 0.1f; // how long curser has to be over image to display big view
     public float fDisplayThreshold = 5f; // how little cursor has to move to display big view
-    
+
+    public static ImagePreview s_imgHovering = null;
 
     [Header("References")]
     public TMP_Text textQueueNumber;
@@ -314,6 +315,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerEnter(PointerEventData eventData)
     {
         bMouseCursorHovers = true;
+        s_imgHovering = this;
 
         if (bShowHoverMenu)
         {
@@ -344,6 +346,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (s_imgHovering == this)
+            s_imgHovering = null;
         bMouseCursorHovers = false;
         goHoverOverlay.SetActive(false);
         PreviewImage.Instance.SetVisible(false, null);
@@ -393,6 +397,19 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             eventDraggedOnEmpty.Invoke(this);
     }
 
+    public void OpenImage()
+    {
+        try
+        {
+            Application.OpenURL($"file://{strGetFilePath()}");
+        }
+        catch
+        {
+            Debug.Log($"Could not open file {strGetFilePath()}.");
+        }
+        
+    }
+
     private Vector2 v2GetDimensions()
     {
         if (imgDisplayed.prompt != null)
@@ -410,6 +427,11 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             ToolManager.RemoveDisplayer(imgDisplayed, this);
         }
         liOutputs.Clear();
+    }
+
+    public void TogglePreviewScale()
+    {
+        PreviewImage.Instance.ToggleScale();
     }
 
     void OnDestroy()
