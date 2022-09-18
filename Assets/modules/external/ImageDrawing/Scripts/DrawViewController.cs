@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+// adapted by Sunija
+public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler {
     //This is the data model used to store our draw settings
     public DrawSettings drawSettings;
 
@@ -23,6 +24,8 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
     //The color array of the changes to be applied
     Color32[] arCurrentPixels;
 
+    Color32[] arBrush;
+
     //The rectTransform of the GameObject this script is attached to
     RectTransform rectTransform;
 
@@ -37,6 +40,8 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
 
         //Toggle this off to prevent the texture from getting cleared
         ResetTexture();
+
+        arBrush = drawSettings.texBrush.GetPixels32();
     }
 
     //Call this whenever the image this script is attached has changed
@@ -116,16 +121,33 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
     public void MarkPixelsToColour(Vector2 centerPixel) {
         int centerX = (int)centerPixel.x;
         int centerY = (int)centerPixel.y;
+        Vector2 v2PositionLocal = Vector2.zero;
 
-        for (int x = centerX - drawSettings.lineWidth; x <= centerX + drawSettings.lineWidth; x++) {
+        for (int x = centerX - drawSettings.lineWidth; x <= centerX + drawSettings.lineWidth; x++) 
+        {
             // Check if the X wraps around the image, so we don't draw pixels on the other side of the image
             if (x >= (int)drawImage.texture.width || x < 0)
                 continue;
 
-            for (int y = centerY - drawSettings.lineWidth; y <= centerY + drawSettings.lineWidth; y++) {
-                MarkPixelToChange(x, y);
+            for (int y = centerY - drawSettings.lineWidth; y <= centerY + drawSettings.lineWidth; y++) 
+            {
+                // check for brush
+                v2PositionLocal.x = (x - centerX + drawSettings.lineWidth) / (drawSettings.lineWidth * 2f); 
+                v2PositionLocal.y = (y - centerY + drawSettings.lineWidth) / (drawSettings.lineWidth * 2f);
+
+                if (bIsInBrush(v2PositionLocal))
+                    MarkPixelToChange(x, y);
             }
         }
+    }
+
+    private bool bIsInBrush(Vector2 _v2PositionLocal)
+    {
+        Vector2 v2Scaled = _v2PositionLocal * drawSettings.texBrush.width;
+        int iPositionInArray = ((int)v2Scaled.y * (int)drawSettings.texBrush.width) + (int)v2Scaled.x;
+        iPositionInArray = Mathf.Clamp(iPositionInArray, 0, drawSettings.texBrush.width * drawSettings.texBrush.width - 1);
+        return arBrush[iPositionInArray].r < 0.5f;
+        //return drawSettings.texBrush.GetPixel((int)v2Scaled.x, (int)v2Scaled.y).r < 0.5f;
     }
 
     // Mark the pixels to be changed from startPoint to endPoint
@@ -154,7 +176,7 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
         }
 
         Color colorAlpha = arCurrentPixels[arrayPosition];
-        colorAlpha.a = 0f;
+        colorAlpha.a = drawSettings.drawColor.a;
         arCurrentPixels[arrayPosition] = colorAlpha;
 
         /*
@@ -182,7 +204,7 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
 
     //We started a new drag, save the current state so we can go back to this state
     public void OnBeginDrag(PointerEventData eventData) {
-        drawSettings.AddUndo(drawTexture.GetPixels32());
+        
     }
 
     public void OnDrag(PointerEventData eventData) {
@@ -198,15 +220,13 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
             localCursor.y < rectTransform.rect.height &&
             localCursor.x > 0 &&
             localCursor.y > 0) {
-            float rectToPixelScale = drawImage.rectTransform.rect.width / rectTransform.rect.width;
+            float rectToPixelScale = drawImage.texture.width / rectTransform.rect.width;
             localCursor = new Vector2(localCursor.x * rectToPixelScale, localCursor.y * rectToPixelScale);
             Paint(localCursor);
             previousDragPosition = localCursor;
         } else {
             previousDragPosition = Vector2.zero;
         }
-
-
     }
 
     //Reset the previosDragPosition so that our brush knows the next drag is a new line
@@ -237,6 +257,22 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
 
     public float GetDrawTransparency() {
         return drawSettings.transparency;
+    }
+
+    void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+    {
+        OnDrag(eventData); // already work with first click
+        previousDragPosition = Vector2.zero;
+    }
+
+    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    {
+        drawSettings.AddUndo(drawTexture.GetPixels32());
+    }
+
+    void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
+    {
+        
     }
     #endregion
 }

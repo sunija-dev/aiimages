@@ -8,10 +8,18 @@ public class DrawWindow : MonoBehaviour
 {
     public RawImage rawimage;
     public DrawViewController drawView;
+    public AnimationCurve animBrushSize;
+    public Slider sliderBrushSize;
+    public Image imageBrushOutline;
 
     private Texture2D texDrawTexture;
     private ImageInfo img;
     private System.Action<string> actionFinished = null;
+
+    private void Update()
+    {
+        imageBrushOutline.transform.position = Input.mousePosition;
+    }
 
     public void OpenImage(ImageInfo _img, System.Action<string> _actionFinished)
     {
@@ -23,21 +31,41 @@ public class DrawWindow : MonoBehaviour
         // apply picture to drawing space
         rawimage.texture = texDrawTexture;
 
+        SetBrushSize(sliderBrushSize.value);
+
         drawView.Initialize();
     }
 
-    public void CloseImage()
+    public void CloseImage(bool _bApply)
     {
         gameObject.SetActive(false);
 
         // save image, set as input
-        string strGUID = System.Guid.NewGuid().ToString();
-        string strPath = Path.Combine(ToolManager.s_settings.strInputDirectory, $"{Path.GetFileNameWithoutExtension(img.strFilePathRelative)}_{strGUID.Replace("-", "_")}.png");
+        if (_bApply)
+        {
+            string strGUID = System.Guid.NewGuid().ToString();
+            string strPath = Path.Combine(ToolManager.s_settings.strInputDirectory, $"{Path.GetFileNameWithoutExtension(img.strFilePathRelative)}_{strGUID.Replace("-", "_")}.png");
 
-        File.WriteAllBytes(strPath, texDrawTexture.EncodeToPNG());
+            File.WriteAllBytes(strPath, texDrawTexture.EncodeToPNG());
 
-        if (actionFinished != null)
-            actionFinished.Invoke(strPath);
+            if (actionFinished != null)
+                actionFinished.Invoke(strPath);
+        }
+    }
+
+    public void SetDrawingMode(bool _bFill)
+    {
+        drawView.drawSettings.SetAlpha(_bFill ? 1f : 0f);
+        Color colorNew = drawView.drawSettings.drawColor;
+        colorNew.a = _bFill ? 1f : 0f;
+        drawView.drawSettings.SetDrawColour(colorNew);
+    }
+
+    public void SetBrushSize(float _fSize)
+    {
+        int iValue = (int)animBrushSize.Evaluate(_fSize);
+        drawView.drawSettings.SetLineWidth(iValue);
+        imageBrushOutline.transform.localScale = Vector3.one * iValue / imageBrushOutline.rectTransform.rect.width * 3f; // don't know why the 3 works
     }
 
 

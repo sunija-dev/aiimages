@@ -14,6 +14,8 @@ public class DrawSettings
     // The transparency of the current draw color
     public float transparency = 1;
 
+    public Texture2D texBrush;
+
     // These are the stacks used to manage undo/redo
     public Stack<Color32[]> undos;
     public Stack<Color32[]> redos;
@@ -35,7 +37,7 @@ public class DrawSettings
         Color c = drawColor;
         c.a = amount;
         drawColor = c;
-        //transparency = amount;
+        transparency = amount;
     }
 
     public void AddUndo(Color32[] undo) {
