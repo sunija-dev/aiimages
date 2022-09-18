@@ -174,13 +174,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow often the AI improves the image.\r\nGrey bar: Used
-    for previewing.\r\nWhite bar: Used if you press the redo-arrow when hovering
-    an image.\n\r\n<u>Tips:\r</u>\n- Needs more steps: Long prompts, realistic images,
-    high accuracy value\r\n- Needs less steps: cute watercolor paintings\r\n- Diminishing
-    returns! The first 50 steps change a lot, the next 50 much less.\r\n- If a preview
-    has less than 20 steps, the higher-step-version looks vastly different (different
-    pose, etc).\r"
+  strText: "<u>Effect:\r</u>\nMakes the image tileable (= you won't see a seam between
+    images, if you put the image next to itself). \n\nUseful for game textures or
+    backgrounds."
 --- !u!114 &47486316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1204,7 +1200,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5545647827159465149, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5545647827159465149, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1807,6 +1803,24 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8011172492458312046, guid: dc6744841a8b99c4a9992abe143ebdb2, type: 3}
   m_PrefabInstance: {fileID: 190112098}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &195440935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5545647827159465148, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+  m_PrefabInstance: {fileID: 2057058315}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &195440936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195440935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: Open output folder.
 --- !u!1 &197029225
 GameObject:
   m_ObjectHideFlags: 0
@@ -5568,9 +5582,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   strText: "<u>Effect:\r</u>\nDetermines the image. Same seed (and other settings)
-    = same image. Default: Empty (random seed).\n\nIf a seed is entered, golden bar
-    appears. Golden bar randomizes the seed by the given number, as an alternative
-    way to create variations.\r\n\r\n<u>Usage:\r</u>\nRight-click on images to copy
+    = same image. Default: Empty (random seed).\n\nIf you set a seed, the variation
+    options appear. With those you can create slightly different images.\n\n<u>Usage:\r</u>\nA)
+    Drag'n'drop an image here to use its seed.\nB) Right-click on images to copy
     the seed (or directly lock it)."
 --- !u!1 &481934777
 GameObject:
@@ -5774,7 +5788,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5545647827159465149, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5545647827159465149, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
       propertyPath: m_AnchorMax.x
@@ -6155,6 +6169,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 529237868}
   m_CullTransparentMesh: 1
+--- !u!1 &534673841 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5545647827159465148, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+  m_PrefabInstance: {fileID: 1840229365}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &534673842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534673841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: Leave aiimages. See you soon! <3
 --- !u!1001 &539042171
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6502,8 +6534,8 @@ RectTransform:
   - {fileID: 6289760372592846994}
   - {fileID: 616530627}
   - {fileID: 1380630118}
-  - {fileID: 505300170}
   - {fileID: 164468689}
+  - {fileID: 505300170}
   m_Father: {fileID: 268569550}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6755,10 +6787,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   strText: "<u>Effect:\r</u>\nBasis for the picture. Default: Empty.\r\n\r\n<u>Usage:\r</u>\nA)
-    Click button on image.\r\nB) Right click image -> Create variations\r\n\r\n<u>Tips:\r</u>\n-
-    Great to fix a picture that is almost good\r\n- You can still change the prompt!
-    Or seed! Anything! E.g. you can first get a good pose, then add the \"with red
-    hair\" or whatever you want.\r"
+    Click button on image.\r\nB) Drag'n'drop an image in here.\nC) Drag'n'drop an
+    image from your PC here.\n\r\n<u>Tips:\r</u>\n- Great to fix a picture that is
+    almost good\r\n- You can still change the prompt! Or seed! Anything! E.g. you
+    can first get a good pose, then add the \"with red hair\" or whatever you want.\r\n-
+    Large images can overflow your VRAM, causing the model to reload."
 --- !u!1 &564132381
 GameObject:
   m_ObjectHideFlags: 0
@@ -7030,10 +7063,10 @@ RectTransform:
   m_Father: {fileID: 1081336137}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 445.72}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 737.1, y: -222.86}
+  m_SizeDelta: {x: 1474.2, y: 445.72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &593425056
 GameObject:
@@ -7834,11 +7867,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow much the AI tries to follow your prompt. Default:
-    7.5\r\nToo low and it ignores your prompt, too high and pics might look glitchy.\r\nOrange
-    bar: randomizes it a bit for every image. Not very helpful.\n\r\n<u>Tips:\r</u>\n-
-    Needs high acc: Realistic prompts (e.g. 13), weird stuff \r\n- Does not affect
-    computation time"
+  strText: "<u>Effect:\r</u>\nHow much the AI tries to follow your prompt. \n0 =
+    AI ignores your prompt\n20 = AI exactly follow your prompt, but results might
+    look glitchy\nDefault: 7.5\r\n\nDoes NOT increase painting time. <3\n\r\n<u>Tips:\r</u>\n-
+    Images that needs high acc: Realistic prompts (e.g. 13), weird stuff \r\n\n<u>Orange
+    bar</u>\nRandomizes it a bit for every image. Not very helpful. \nFull left:
+    no randomization\nFull right: adds a random value between 0 and 20 to the accuracy"
 --- !u!1001 &668661849
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9577,13 +9611,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow often the AI improves the image.\r\nGrey bar: Used
-    for previewing.\r\nWhite bar: Used if you press the redo-arrow when hovering
-    an image.\n\r\n<u>Tips:\r</u>\n- Needs more steps: Long prompts, realistic images,
-    high accuracy value\r\n- Needs less steps: cute watercolor paintings\r\n- Diminishing
-    returns! The first 50 steps change a lot, the next 50 much less.\r\n- If a preview
-    has less than 20 steps, the higher-step-version looks vastly different (different
-    pose, etc).\r"
+  strText: "<u>Effect:\r</u>\nHow strong the upscaling AI is applied.\n0 = blurry
+    result\n1 = sharp result, but maybe showing edges that you don't want to have\nDefault:
+    0.75\n"
 --- !u!114 &805517202 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1584195473371130347, guid: f1564b253d67333419421cb1315f7a31, type: 3}
@@ -9975,6 +10005,7 @@ GameObject:
   - component: {fileID: 859975731}
   - component: {fileID: 859975733}
   - component: {fileID: 859975732}
+  - component: {fileID: 859975734}
   m_Layer: 5
   m_Name: name (1)
   m_TagString: Untagged
@@ -10098,6 +10129,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 859975730}
   m_CullTransparentMesh: 1
+--- !u!114 &859975734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859975730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: 'Drag''n''drop images here so they don''t get burried by the history.
+
+
+    To
+    remove images, drag them on some open space (not the trash can, thought :X).
+
+
+    <u>Tips:</u>
+
+    -
+    When you create image variations, drop your current favorites here.
+
+    - Right-click
+    an image -> "Use these options" to continue where you left off!'
 --- !u!114 &873826477 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4801221228029570629, guid: 889c56f4352ede54db68811a3c3d46dc, type: 3}
@@ -12009,12 +12066,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nWhat is shown in your image.\r\n\r\n<u>Tips:\r</u>\n-
-    The AI doesn't differentiate between content and style. The separation is only
-    for your overview and to save templates..\r\n- If a prompt gets too long, it
-    will ignore the ending (I think?). But they can get very long.\r\n- You can weight
-    prompts, e.g. by writing \"cat:0.25 dragon:0.5 hybrid\". Numbers <b>don't</b>
-    need to add up to 1.\n- Find good prompts on: lexica.art"
+  strText: "<u>Effect:\r</u>\nWhat is shown in your image.\r\n\r\nVery long prompts
+    increase painting time.\n\n<u>Tips:\r</u>\n- The AI doesn't differentiate between
+    content and style. The separation is only for your overview and to save templates..\r\n-
+    If a prompt gets too long, it will ignore the ending (I think?). But they can
+    get very long.\r\n- You can weight prompts, e.g. by writing \"cat:0.25 dragon:0.5
+    hybrid\". Numbers <b>don't</b> need to add up to 1.\n- Find good prompts on:
+    lexica.art"
 --- !u!1 &1059836033
 GameObject:
   m_ObjectHideFlags: 0
@@ -13495,13 +13553,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow often the AI improves the image.\r\nGrey bar: Used
-    for previewing.\r\nWhite bar: Used if you press the redo-arrow when hovering
-    an image.\n\r\n<u>Tips:\r</u>\n- Needs more steps: Long prompts, realistic images,
-    high accuracy value\r\n- Needs less steps: cute watercolor paintings\r\n- Diminishing
-    returns! The first 50 steps change a lot, the next 50 much less.\r\n- If a preview
-    has less than 20 steps, the higher-step-version looks vastly different (different
-    pose, etc).\r"
+  strText: "<u>Effect:\r</u>\nHow often the AI improves the image.\r\nGrey bar: Applied
+    to all images.\r Default: 15\nWhite bar: Used if you press the \"circle arrow\"
+    icon when hovering an image. Default: 50.\n\r\nHigh step counts increase painting
+    time.\n\n<u>Tips:\r</u>\n- Leave the grey slider at around 20 to generate a lot
+    of \"previews\". When you like an image, use the \"circle arrow\" on it to run
+    it again with more steps.\n- If you see colorful noise in your output, increase
+    the step count.\n- Diminishing returns! More than 50 steps rarely changes much.\n-
+    If an image has less than 20 steps, the higher-step-version looks vastly different
+    (different pose, etc).\r"
 --- !u!1 &1114171952
 GameObject:
   m_ObjectHideFlags: 0
@@ -13771,6 +13831,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1080a0a83d897684fa66084569191ad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1115852176 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5545647827159465148, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+  m_PrefabInstance: {fileID: 7717204903145483733}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1115852177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115852176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: Open options
 --- !u!1 &1133148696
 GameObject:
   m_ObjectHideFlags: 0
@@ -16667,11 +16745,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow much the AI tries to follow your prompt. Default:
-    7.5\r\nToo low and it ignores your prompt, too high and pics might look glitchy.\r\nOrange
-    bar: randomizes it a bit for every image. Not very helpful.\n\r\n<u>Tips:\r</u>\n-
-    Needs high acc: Realistic prompts (e.g. 13), weird stuff \r\n- Does not affect
-    computation time"
+  strText: "<u>Effect:\r</u>\nAdapts the seed a bit, so you get a variation of your
+    image. Same seed = same variation. Default: random.\n\r\n<u>Tips:\r</u>\n- You
+    usually don't have to set the variation seed. Except if you want to replicate
+    an image."
 --- !u!114 &1473918101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17435,6 +17512,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1518788220 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2125861437210456242, guid: fd5ed745583037648b509f6ab71f307e, type: 3}
+  m_PrefabInstance: {fileID: 916638320}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1518788221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518788220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: 'Load prompts that you saved earlier.
+
+
+    To save a prompt:
+
+    A)
+    Drag''n''drop the image here.
+
+    B) Right click an image -> Save style as template.
+
+
+    <u>Tips:</u>
+
+    -
+    Check out cool prompts on lexica.art, create one image with it and save it as
+    a template! That way, you got a huge collection of styles to try.'
 --- !u!1 &1521564371
 GameObject:
   m_ObjectHideFlags: 0
@@ -18786,6 +18896,33 @@ MonoBehaviour:
     Great to fix a picture that is almost good\r\n- You can still change the prompt!
     Or seed! Anything! E.g. you can first get a good pose, then add the \"with red
     hair\" or whatever you want.\r"
+--- !u!1 &1600465453 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2125861437210456242, guid: fd5ed745583037648b509f6ab71f307e, type: 3}
+  m_PrefabInstance: {fileID: 6065831563057966425}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1600465454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600465453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: 'Load prompts that you saved earlier.
+
+
+    To save a prompt:
+
+    A)
+    Drag''n''drop the image here.
+
+    B) Right click an image -> Save content as
+    template.'
 --- !u!1 &1601938426
 GameObject:
   m_ObjectHideFlags: 0
@@ -20421,7 +20558,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1796584808
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20747,6 +20884,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1819665601}
   m_CullTransparentMesh: 1
+--- !u!1 &1828572276 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5545647827159465148, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+  m_PrefabInstance: {fileID: 164468688}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1828572277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828572276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: "<u>Inpainting\r</u>\nErase parts of the image, so only those are replaced.
+    It's awesome to fix errors in the image!"
 --- !u!1 &1828780258
 GameObject:
   m_ObjectHideFlags: 0
@@ -22535,13 +22691,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow often the AI improves the image.\r\nGrey bar: Used
-    for previewing.\r\nWhite bar: Used if you press the redo-arrow when hovering
-    an image.\n\r\n<u>Tips:\r</u>\n- Needs more steps: Long prompts, realistic images,
-    high accuracy value\r\n- Needs less steps: cute watercolor paintings\r\n- Diminishing
-    returns! The first 50 steps change a lot, the next 50 much less.\r\n- If a preview
-    has less than 20 steps, the higher-step-version looks vastly different (different
-    pose, etc).\r"
+  strText: "<u>Effect:\r</u>\nEnhances faces with the GFPGAN AI.\nGrey bar: Applied
+    to all images. Default: 0.\nWhite bar: Applied to an image if you click the \"head\"
+    icon in its hover menu. Default: 0.75.\n\r\n<u>Tips:\r</u>\n- Leave the grey
+    bar at 0. If you like an image with a broken face, hover it and click the \"head\"
+    icon to fix the face."
 --- !u!1 &1941836036
 GameObject:
   m_ObjectHideFlags: 0
@@ -22593,11 +22747,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow much the AI tries to follow your prompt. Default:
-    7.5\r\nToo low and it ignores your prompt, too high and pics might look glitchy.\r\nOrange
-    bar: randomizes it a bit for every image. Not very helpful.\n\r\n<u>Tips:\r</u>\n-
-    Needs high acc: Realistic prompts (e.g. 13), weird stuff \r\n- Does not affect
-    computation time"
+  strText: "<u>Effect:\r</u>\nHow strong the variation is applied. \n0.0 = variation
+    is not applied at all\n1.0 = basically ignores your seed image and just uses
+    the variation\nDefault: 0.1\n"
 --- !u!114 &1941836039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23382,13 +23534,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow often the AI improves the image.\r\nGrey bar: Used
-    for previewing.\r\nWhite bar: Used if you press the redo-arrow when hovering
-    an image.\n\r\n<u>Tips:\r</u>\n- Needs more steps: Long prompts, realistic images,
-    high accuracy value\r\n- Needs less steps: cute watercolor paintings\r\n- Diminishing
-    returns! The first 50 steps change a lot, the next 50 much less.\r\n- If a preview
-    has less than 20 steps, the higher-step-version looks vastly different (different
-    pose, etc).\r"
+  strText: "<u>Effect:\r</u>\nScales the image up by the given factor.\nGrey bar:
+    Applied to all images. Default: 0.\nWhite bar: Applied to an image if you click
+    the \"arrow up\" icon in its hover menu. Default: 2.\n\r\n<u>Tips:\r</u>\n- Leave
+    the grey bar at 0. If you like an image, hover it and click the \"arrow up\"
+    icon to upscale it."
 --- !u!1001 &1960417855
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24254,12 +24404,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nThe style of your image.\n\r\n<u>Tips:\r</u>\n- The
-    AI doesn't differentiate between content and style. The separation is only for
-    your overview and to save templates..\r\n- If a prompt gets too long, it will
-    ignore the ending (I think?). But they can get very long.\r\n- You can weight
-    prompts, e.g. by writing \"cat:0.25 dragon:0.5 hybrid\". Numbers <b>don't</b>
-    need to add up to 1.\n- Find good prompts on: lexica.art"
+  strText: "<u>Effect:\r</u>\nThe style of your image.\n\nVery long prompts increase
+    painting time.\n\r\n<u>Tips:\r</u>\n- The AI doesn't differentiate between content
+    and style. The separation is only for your overview and to save templates..\r\n-
+    If a prompt gets too long, it will ignore the ending (I think?). But they can
+    get very long.\r\n- You can weight prompts, e.g. by writing \"cat:0.25 dragon:0.5
+    hybrid\". Numbers <b>don't</b> need to add up to 1.\n- Find good prompts on:
+    lexica.art"
 --- !u!1 &2030788025
 GameObject:
   m_ObjectHideFlags: 0
