@@ -12,12 +12,12 @@ public class TrashCan : MonoBehaviour
         if (bTrashModeActive)
         {
             goTrashModeIcon.transform.position = Input.mousePosition;
-            if (Input.GetMouseButton(0) && ImagePreview.s_imgHovering != null)
+            if (Input.GetMouseButtonDown(0) && ImagePreview.s_imgHovering != null)
             {
                 ToolManager.Instance.DeleteImage(ImagePreview.s_imgHovering.imgDisplayed);
             }
 
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButtonDown(1))
                 SetTrashMode(false);
         }
     }

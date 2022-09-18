@@ -64,4 +64,9 @@ public class OptionVariation : MonoBehaviour
     {
         Set(_img.prompt.iVariationSeed, _img.prompt.iVariationSeed < 0, _img.prompt.fVariationStrength);
     }
+
+    public void Clear()
+    {
+        input.text = "";
+    }
 }

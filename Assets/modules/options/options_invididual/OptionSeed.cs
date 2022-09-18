@@ -62,4 +62,9 @@ public class OptionSeed : MonoBehaviour
         optionSlider.Set(_img.prompt.iSeed);
         optionVariation.Set(_img);
     }
+
+    public void Clear()
+    {
+        input.text = "";
+    }
 }

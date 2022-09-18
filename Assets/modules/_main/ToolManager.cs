@@ -31,6 +31,7 @@ public class ToolManager : MonoBehaviour
 
     public Canvas canvasMain;
     public Canvas canvasTitle;
+    public Canvas canvasTooltips;
 
     public static Texture2D s_texDefaultMissing { get => Instance.texDefaultMissing; }
     public Texture2D texDefaultMissing;
@@ -127,7 +128,7 @@ public class ToolManager : MonoBehaviour
                 s_settings.Save();
             }
 
-            s_settings.fUIScale = Screen.height / 1080f;
+            SetUIScale(Camera.main.pixelHeight / 1080f * 0.8f);
             Setup.CreateDesktopShortcut();
 
             LoadDefaultStyles();
@@ -395,6 +396,12 @@ public class ToolManager : MonoBehaviour
 
     public void DeleteImage(ImageInfo _img)
     {
+        if (s_liFavoriteGUIDs.Contains(_img.strGUID))
+        {
+            Debug.Log("Cannot delete favorite images.");
+            return;
+        }
+
         MoveToTrashFolder(_img);
         DeleteFromHistory(_img);
     }
@@ -530,6 +537,7 @@ public class ToolManager : MonoBehaviour
         s_settings.fUIScale = _fScale;
         canvasMain.scaleFactor = _fScale;
         canvasTitle.scaleFactor = _fScale;
+        canvasTooltips.scaleFactor = _fScale;
 
         endlessHistory.OnScaleUpdate();
     }

@@ -58,7 +58,7 @@ public class Settings
     public bool bIsFirstStart = true;
     public bool bDidSetup = false;
     public bool bFullPrecision = false;
-    public float fUIScale = 1f;
+    public float fUIScale = 0.8f;
     public int iGPU = 0;
     public bool bUseBackgroundTexture = true;
 

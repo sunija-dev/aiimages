@@ -23,6 +23,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public float fDisplayThreshold = 5f; // how little cursor has to move to display big view
 
     public static ImagePreview s_imgHovering = null;
+    public static ImagePreview s_imgDragging = null;
 
     [Header("References")]
     public TMP_Text textQueueNumber;
@@ -239,7 +240,6 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         ToolManager.Instance.RequestImage(outputNew);
     }
 
-
     public void ToggleFavorite()
     {
         bool bFavorite = !ToolManager.s_liFavoriteGUIDs.Any(x => x == imgDisplayed.strGUID);
@@ -323,7 +323,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             goHoverOverlay.SetActive(true);
         }
 
-        if (liOutputs.Any(x => !string.IsNullOrEmpty(x.strFilePathRelative)))
+        if (s_imgDragging == null && liOutputs.Any(x => !string.IsNullOrEmpty(x.strFilePathRelative)))
         {
             coDisplayDelay = StartCoroutine(ieDisplayDelay());
         }
@@ -371,8 +371,11 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         imagePreview.canvasGroup.blocksRaycasts = false;
         imagePreview.bShowHoverMenu = false;
         imagePreview.DisplayImage(imgDisplayed);
-        
+
+        goDragPreview.transform.localScale = Vector3.one * 0.5f; // HACKFIX, because the image is somehow too big
         goDragPreview.transform.position = transform.position;
+
+        s_imgDragging = this;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -388,6 +391,9 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if (!bAllowDragging)
             return;
+
+        if (s_imgDragging == this)
+            s_imgDragging = null;
 
         Destroy(goDragPreview);
         goDragPreview = null;

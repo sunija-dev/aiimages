@@ -88,10 +88,10 @@ public class DrawViewController : MonoBehaviour, IBeginDragHandler, IDragHandler
         if (isControlHeldDown && isZHeldDown) {
             if (Input.GetKey(KeyCode.LeftShift) && 
                 drawSettings.CanRedo()) {
-                currentColors = drawSettings.Redo(drawTexture.GetPixels32());
+                arCurrentPixels = drawSettings.Redo(drawTexture.GetPixels32());
                 ApplyCurrentColors();
             } else if (drawSettings.CanUndo()) {
-                currentColors = drawSettings.Undo(drawTexture.GetPixels32());
+                arCurrentPixels = drawSettings.Undo(drawTexture.GetPixels32());
                 ApplyCurrentColors();
             }
         }

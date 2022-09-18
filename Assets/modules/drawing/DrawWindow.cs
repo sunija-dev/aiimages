@@ -16,6 +16,8 @@ public class DrawWindow : MonoBehaviour
     private ImageInfo img;
     private System.Action<string> actionFinished = null;
 
+    public Vector2 v2MaxSize = Vector2.zero;
+
     private void Update()
     {
         imageBrushOutline.transform.position = Input.mousePosition;
@@ -23,10 +25,16 @@ public class DrawWindow : MonoBehaviour
 
     public void OpenImage(ImageInfo _img, System.Action<string> _actionFinished)
     {
+        if (v2MaxSize == Vector2.zero)
+            v2MaxSize = rawimage.rectTransform.GetSize();
+
         img = _img;
         actionFinished = _actionFinished;
         gameObject.SetActive(true);
         texDrawTexture = texDuplicateTexture(_img.texGet());
+
+        if (texDrawTexture != null)
+            Utility.ScaleRectToImage(rawimage.rectTransform, v2MaxSize, new Vector2(texDrawTexture.width, texDrawTexture.height));
 
         // apply picture to drawing space
         rawimage.texture = texDrawTexture;

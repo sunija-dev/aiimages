@@ -84,22 +84,33 @@ public class EndlessHistory : MonoBehaviour
         liGridboxDataVisible.ForEach(grid => grid.oliImgs.RemoveAll(x => x.strGUID == _img.strGUID));
 
         List<GridBoxDisplay> liGridDisplayWithImage = liGridBoxDisplays.Where(gridDisplay => gridDisplay.liImagePreviews.Any(x => x.imgDisplayed == _img)).ToList();
+        // in each gridbox that contains the image...
         foreach (GridBoxDisplay gridDisplay in liGridDisplayWithImage)
         {
+            // destroy/remove the image
+            List<ImagePreview> liPreviewsOfImage = gridDisplay.liImagePreviews.Where(imgPreview => imgPreview.liOutputs.Any(x => x == _img)).ToList();
+            liPreviewsOfImage.ForEach(x => Destroy(x.gameObject));
+            gridDisplay.liImagePreviews.RemoveAll(x => liPreviewsOfImage.Any(y => y == x));
+
+            /*
             foreach (ImagePreview imagePreview in gridDisplay.liImagePreviews)
             {
                 if (imagePreview.liOutputs.Any(x => x == _img))
                     Destroy(imagePreview.gameObject);
             }
             gridDisplay.liImagePreviews.RemoveAll(x => x == null);
+            */
 
             if (gridDisplay.liImagePreviews.Count == 0)
             {
+                Debug.Log("Gridbox was empty. Deleting it.");
                 liGridboxDataVisible.Remove(gridDisplay.gridboxData);
                 Destroy(gridDisplay.gameObject);
             }     
         }
         liGridBoxDisplays.RemoveAll(x => x == null);
+
+        UpdateView();
     }
 
     private void UpdateSections(ImageInfo _img, bool _bUpdateView = true)
@@ -279,44 +290,5 @@ public class EndlessHistory : MonoBehaviour
             fHeight += section.fGetHeight();
 
         return fHeight;
-    }
-
-    public void UpdateDisplayedIcons(bool _bForceUpdate = false)
-    {
-
-        /*
-        int iStartIndex = (int)((1f - (float)scrollRect.verticalScrollbar.value) * liIconIdsFound.Count);
-        iStartIndex = (int)Mathf.Round(iStartIndex / 10) * 10;
-        iStartIndex = Mathf.Clamp(iStartIndex, 0, liIconIdsFound.Count);
-
-        int iEndIndex = iStartIndex + iDisplayedIcons;
-        iEndIndex = Mathf.Clamp(iEndIndex, 0, liIconIdsFound.Count);
-
-        if (!_bForceUpdate && iStartIndex == iLastStartIndex) // don't update if index didn't change
-            return;
-
-        liGridIcons.ForEach(x => Destroy(x));
-        liGridIcons.Clear();
-
-        for (int i = iStartIndex; i < iEndIndex; i++)
-        {
-            int iIconId = liIconIdsFound[i];
-            GameObject goGridIcon = Instantiate(goGridIconPrefab, goGrid.transform);
-            goGridIcon.GetComponentInChildren<Image>().sprite = IconUtility.spriteLoadIcon(iIconId);
-            GridIcon gridIcon = goGridIcon.GetComponent<GridIcon>();
-            gridIcon.iIcon = iIconId;
-            gridIcon.tooltip.strText = iIconId + "\n" + string.Join(", ", IconDB.s_dictIcons[iIconId].liTags.Select(x => IconDB.s_liTags[x].Item2));
-
-            // add callback to tell us that is was selected
-            gridIcon.eOnClick += (e, _iIcon) => SelectIcon(_iIcon);
-
-            liGridIcons.Add(goGridIcon);
-        }
-
-        iLastStartIndex = iStartIndex;
-
-        StartCoroutine(coMoveHighlightDelayed());
-
-        */
     }
 }
