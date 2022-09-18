@@ -99,7 +99,10 @@ public class GeneratorConnection : MonoBehaviour
 
 
         UnityEngine.Debug.Log("Writing: " + "python scripts/dream.py");
-        streamWriter.WriteLine($"python scripts/dream.py -o {ToolManager.s_settings.strOutputDirectory} {(ToolManager.s_settings.bFullPrecision ? "--full_precision" : "")}");
+        streamWriter.WriteLine($"python scripts/dream.py" +
+            $" -o {ToolManager.s_settings.strOutputDirectory}" +
+            $" {(ToolManager.s_settings.bFullPrecision ? "--full_precision" : "")}" +
+            $" {(ToolManager.s_settings.iGPU > 0 ? $"-d cuda:{ToolManager.s_settings.iGPU}" : "")}");
     }
 
     public void RequestImage(ImageInfo _output, Action<Texture2D, string, bool> _actionTextureReturn)
@@ -123,13 +126,12 @@ public class GeneratorConnection : MonoBehaviour
         {
             Debug.Log("Could not generate image. Please use a smaller image.");
 
+            _actionTextureReturn.Invoke(null, "", false);
             if (outputStatus == OutputStatus.BrokenNeedsRestart)
             {
-                Close();
-                Init();
+                Restart();
+                yield break;
             }
-
-            _actionTextureReturn.Invoke(null, "", false);
         }
         else
         {
@@ -148,6 +150,17 @@ public class GeneratorConnection : MonoBehaviour
         bProcessing = false;
     }
 
+    public void Restart()
+    {
+        bProcessing = false;
+
+        if (coRequestImage != null)
+            StopCoroutine(coRequestImage);
+
+        Close();
+        Init();
+    }
+
     private void ProcessOutput(string _strOutput)
     {
         UnityEngine.Debug.Log(">>>>>>>> " + _strOutput);
@@ -160,7 +173,6 @@ public class GeneratorConnection : MonoBehaviour
             outputStatus = OutputStatus.Broken;
         else if (_strOutput.StartsWith("dream> CUDA out of memory"))
             outputStatus = OutputStatus.BrokenNeedsRestart;
-            
     }
 
     private void OnOutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -205,10 +217,8 @@ public class GeneratorConnection : MonoBehaviour
         return false;
     }
 
-
     private void OnProcessExit(object sender, EventArgs e)
     {
-        //processing = false;
     }
 
     private void OnApplicationQuit()

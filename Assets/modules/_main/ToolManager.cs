@@ -34,6 +34,10 @@ public class ToolManager : MonoBehaviour
 
     public static Texture2D s_texDefaultMissing { get => Instance.texDefaultMissing; }
     public Texture2D texDefaultMissing;
+    public GameObject goGPUWarning;
+    public TMP_Text textGPUWarning;
+
+    public GameObject goTextureBackground;
 
     public GameObject goContextMenuWindowPrefab;
     public Transform transContextMenuCanvas;
@@ -99,9 +103,15 @@ public class ToolManager : MonoBehaviour
     private void Start()
     {
         Debug.Log(strGetGPUText());
+        if (strGetGPUText().Contains("Won't work")) // HACK
+        {
+            goGPUWarning.SetActive(true);
+            textGPUWarning.text += "\n" + strGetGPUText();
+        }
 
         Startup();
 
+        StartCoroutine(ieAutoSave(120f));
         StartCoroutine(ieStartDelayed());
     }
 
@@ -178,6 +188,7 @@ public class ToolManager : MonoBehaviour
             else
             {
                 textFeedback.text = "Ready!";
+                fLoadingTime = 0f;
             }
         }
     }
@@ -278,8 +289,6 @@ public class ToolManager : MonoBehaviour
         else if (iWorks == 0)
             strOutput += "Won't work, most likely. :(" + strProblem;
 
-        UnityEngine.Debug.Log(strOutput);
-
         return strOutput;
     }
 
@@ -367,9 +376,16 @@ public class ToolManager : MonoBehaviour
         paletteView.Set(saveData.palette);
         sliderUIScale.value = s_settings.fUIScale;
 
+        UpdateBackgroundTexture();
+
         Directory.CreateDirectory(s_settings.strInputDirectory);
         Directory.CreateDirectory(s_settings.strOutputDirectory);
         Directory.CreateDirectory(Path.Combine(s_settings.strOutputDirectory, "favorites"));
+    }
+
+    public void UpdateBackgroundTexture()
+    {
+        goTextureBackground.SetActive(s_settings.bUseBackgroundTexture);
     }
 
     public void OpenLicense()
@@ -499,6 +515,14 @@ public class ToolManager : MonoBehaviour
         {
             textVersion.text = $"<color=#00FF00>NEW AVAILABLE</color> - v{Application.version}";
         }
+    }
+
+    private IEnumerator ieAutoSave(float _fEvery)
+    {
+        yield return new WaitForSeconds(_fEvery);
+        s_settings.Save();
+
+        StartCoroutine(ieAutoSave(_fEvery));
     }
 
     public void SetUIScale(float _fScale)

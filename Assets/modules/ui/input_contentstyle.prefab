@@ -801,6 +801,22 @@ PrefabInstance:
       propertyPath: m_Text
       value: cute owl
       objectReference: {fileID: 0}
+    - target: {fileID: 9215924734321592507, guid: c3cfc745e74fa8b42bdf744701b82e02, type: 3}
+      propertyPath: m_LineType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9215924734321592507, guid: c3cfc745e74fa8b42bdf744701b82e02, type: 3}
+      propertyPath: m_ContentType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9215924734321592507, guid: c3cfc745e74fa8b42bdf744701b82e02, type: 3}
+      propertyPath: m_KeyboardType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9215924734321592507, guid: c3cfc745e74fa8b42bdf744701b82e02, type: 3}
+      propertyPath: m_CharacterValidation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9215924735015487700, guid: c3cfc745e74fa8b42bdf744701b82e02, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -816,6 +832,10 @@ PrefabInstance:
     - target: {fileID: 9215924735015487700, guid: c3cfc745e74fa8b42bdf744701b82e02, type: 3}
       propertyPath: m_characterSpacing
       value: -2.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9215924735015487700, guid: c3cfc745e74fa8b42bdf744701b82e02, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3cfc745e74fa8b42bdf744701b82e02, type: 3}

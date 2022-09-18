@@ -68,6 +68,6 @@ public class GridBoxData
 
     public Vector2Int v2iGetElementSize()
     {
-        return Utility.v2iLimitPixelSize(oliImgs[0].prompt.iWidth, oliImgs[0].prompt.iHeight, EndlessHistory.s_iPixelTarget);
+        return Utility.v2iLimitPixelSize(oliImgs[0].texGet().width, oliImgs[0].texGet().height, EndlessHistory.s_iPixelTarget);
     }
 }

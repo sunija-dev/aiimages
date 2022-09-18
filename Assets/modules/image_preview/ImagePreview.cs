@@ -64,7 +64,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             v2MaxSize = rawimage.GetComponent<RectTransform>().sizeDelta;
 
         contextMenu.AddOptions(
-            new ContextMenu.Option("Create variations!", () => SetAsInputImage()),
+            new ContextMenu.Option("Create variations!", () => OptionsVisualizer.instance.optionSeed.Set(imgDisplayed)),
+            new ContextMenu.Option("Set as input image", () => SetAsInputImage()),
             new ContextMenu.Option("Use these options", () =>
             {
                 OptionsVisualizer.instance.LoadOptions(imgDisplayed);
