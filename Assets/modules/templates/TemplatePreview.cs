@@ -10,6 +10,7 @@ public class TemplatePreview : MonoBehaviour
     public System.Action<Template> actionOnClick;
     public WindowTemplate windowTemplateParent;
     public RectTransform rtrans;
+    public Tooltip tooltip;
 
     private Vector2 v2MaxSize = Vector2.zero;
 
@@ -23,6 +24,7 @@ public class TemplatePreview : MonoBehaviour
         template = _template;
         rawimage.texture = template.outputTemplate.texGet();
         Utility.ScaleRectToImage(rtrans, v2MaxSize, new Vector2(template.outputTemplate.prompt.iWidth, template.outputTemplate.prompt.iHeight));
+        tooltip.UpdateText(windowTemplateParent.bContent ? template.outputTemplate.prompt.strContentPrompt : template.outputTemplate.prompt.strStylePrompt);
     }
 
     public void OnClick()

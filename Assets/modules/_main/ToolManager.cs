@@ -86,8 +86,11 @@ public class ToolManager : MonoBehaviour
     private float fProcessingTime = 0f;
     private float fLoadingTime = 0f;
 
-    private bool bCalculating = false;
     private bool bKeepRequesting = false;
+
+    private string strGPUText = "";
+    private string strSpaceWarning = "";
+    private bool bWontWork = false;
 
 
     void Awake()
@@ -104,11 +107,14 @@ public class ToolManager : MonoBehaviour
     private void Start()
     {
         Debug.Log(strGetGPUText());
-        if (strGetGPUText().Contains("Won't work")) // HACK
+        bWontWork = strGetGPUText().Contains("Won't work");
+        if (bWontWork) // HACK
         {
             goGPUWarning.SetActive(true);
             textGPUWarning.text += "\n" + strGetGPUText();
         }
+
+        strSpaceWarning = Application.dataPath.Contains(" ") ? $"Won't work, path contains space! Make sure all folders above aiimages don't contain spaces. Path: {Application.dataPath}" : "";
 
         // backward comp
         string strSettingsPath = Path.Combine(Application.persistentDataPath, Settings.strSettingsName);
@@ -117,7 +123,6 @@ public class ToolManager : MonoBehaviour
             Debug.Log("Found old settings file. Setting firstStart again.");
             s_settings.bIsFirstStart = true;
         }
-            
 
         Startup();
 
@@ -172,9 +177,9 @@ public class ToolManager : MonoBehaviour
         {
             fLoadingTime += Time.deltaTime;
             if (fLoadingTime < 200f)
-                textFeedback.text = $"Loading model. Please wait... ({fLoadingTime.ToString("0")}s)";
+                textFeedback.text = $"Loading model. Please wait... ({fLoadingTime.ToString("0")}s) {(bWontWork ? strGetGPUText() : "")} {strSpaceWarning}";
             else
-                textFeedback.text = $"<color=#FF0000>Loading model... ({fLoadingTime.ToString("0")}s) - Ask for Discord support!</color>";
+                textFeedback.text = $"<color=#FF0000>Loading model... ({fLoadingTime.ToString("0")}s) {(bWontWork ? strGetGPUText() : "")} {strSpaceWarning} - Ask for Discord support!</color>";
         }
         else if (genConnection.bProcessing)
         {
@@ -266,6 +271,9 @@ public class ToolManager : MonoBehaviour
 
     public string strGetGPUText()
     {
+        if (!string.IsNullOrEmpty(strGPUText))
+            return strGPUText;
+
         string strOutput = "";
         strOutput += $"<b>Your graphics card</b>: {SystemInfo.graphicsDeviceName} ({Mathf.RoundToInt(SystemInfo.graphicsMemorySize / 1000f)} GB)\n";
 
@@ -282,7 +290,7 @@ public class ToolManager : MonoBehaviour
             || SystemInfo.graphicsDeviceName.ToLower().Contains("radeon"))
         {
             iWorks = 0;
-            strProblem += "\nAMD cards are not supported yet. :(";
+            strProblem += "\nAMD graphic cards won't work (yet). :(";
         }
         else if (!SystemInfo.graphicsDeviceName.ToLower().Contains("rtx 30")
             && !SystemInfo.graphicsDeviceName.ToLower().Contains("rtx 20")
@@ -298,6 +306,8 @@ public class ToolManager : MonoBehaviour
             strOutput += "Might work! <3" + strProblem;
         else if (iWorks == 0)
             strOutput += "Won't work, most likely. :(" + strProblem;
+
+        strGPUText = strOutput;
 
         return strOutput;
     }

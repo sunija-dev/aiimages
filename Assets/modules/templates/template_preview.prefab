@@ -112,6 +112,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8600294620271549052}
   - component: {fileID: 6870889769254176232}
+  - component: {fileID: -2872610539194661564}
   m_Layer: 5
   m_Name: template_preview
   m_TagString: Untagged
@@ -158,7 +159,7 @@ MonoBehaviour:
     strGUID: 
     outputTemplate:
       strGUID: 
-      strFilePath: 
+      strFilePathRelative: 
       prompt:
         iWidth: 512
         iHeight: 512
@@ -167,17 +168,31 @@ MonoBehaviour:
           fStrength: 0.75
           strGUID: 
         iSeed: -1
+        fUpscaleFactor: 1
+        fUpscaleStrength: 0.75
+        fFaceEnhanceStrength: 0
+        bSeamless: 0
         iSteps: 50
         fCfgScale: 7.5
         strContentPrompt: 
         strStylePrompt: 
       extraOptionsFull:
         fStartImageStrengthVariance: 0
-        iSeedVariance: 0
+        fStartImageScaling: 512
+        strStartImageOriginalName: 
+        v2iOriginalSize: {x: 0, y: 0}
         fCfgScaleVariance: 0
         bRandomSeed: 1
+        strSeedReferenceGUID: 
         iStepsPreview: 15
         iStepsRedo: 50
+        fVariationStrength: 0.1
+        fUpscalePreview: 1
+        fUpscaleRedo: 2
+        fUpscaleStrengthPreview: 0.5
+        fUpscaleStrengthRedo: 0.75
+        fFaceEnhancePreview: 0
+        fFaceEnhanceRedo: 0.75
       strGpuModel: 
       userCreator:
         strGUID: 
@@ -191,6 +206,20 @@ MonoBehaviour:
           m_Calls: []
   windowTemplateParent: {fileID: 0}
   rtrans: {fileID: 2686186716342580040}
+  tooltip: {fileID: -2872610539194661564}
+--- !u!114 &-2872610539194661564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3918395566215534574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: 
 --- !u!1001 &8063643267105696922
 PrefabInstance:
   m_ObjectHideFlags: 0

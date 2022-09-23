@@ -65,7 +65,7 @@ public class GeneratorConnection : MonoBehaviour
         {
 #if !UNITY_EDITOR
             
-            streamWriter.WriteLine($"call \"{ToolManager.s_settings.strAnacondaBatPath}\"");
+            streamWriter.WriteLine($"call {ToolManager.s_settings.strAnacondaBatPath}");
 #else
             streamWriter.WriteLine($"\"{ToolManager.s_settings.strAnacondaBatPath}\"");
 #endif
@@ -92,15 +92,15 @@ public class GeneratorConnection : MonoBehaviour
 
 #if !UNITY_EDITOR
         UnityEngine.Debug.Log("Writing: " + $"set TRANSFORMERS_CACHE={Application.dataPath}/../ai_cache/huggingface/transformers");
-        streamWriter.WriteLine($"set TRANSFORMERS_CACHE={Application.dataPath}/../ai_cache/huggingface/transformers");
-        UnityEngine.Debug.Log("Writing: " + $"set TORCH_HOME={Application.dataPath}/../ai_cache/torch");
-        streamWriter.WriteLine($"set TORCH_HOME={Application.dataPath}/../ai_cache/torch");
+        streamWriter.WriteLine($"set \"TRANSFORMERS_CACHE={Application.dataPath}/../ai_cache/huggingface/transformers\"");
+        UnityEngine.Debug.Log("Writing: " + $"set TORCH_HOME=\"{Application.dataPath}/../ai_cache/torch\"");
+        streamWriter.WriteLine($"set \"TORCH_HOME={Application.dataPath}/../ai_cache/torch\"");
 #endif
 
 
         UnityEngine.Debug.Log("Writing: " + "python scripts/dream.py");
         streamWriter.WriteLine($"python scripts/dream.py" +
-            $" -o {ToolManager.s_settings.strOutputDirectory}" +
+            $" -o \"{ToolManager.s_settings.strOutputDirectory}\"" +
             $" {(ToolManager.s_settings.bFullPrecision ? "--full_precision" : "")}" +
             $" {(ToolManager.s_settings.iGPU > 0 ? $"-d cuda:{ToolManager.s_settings.iGPU}" : "")}");
     }

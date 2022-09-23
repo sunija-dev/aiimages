@@ -37,7 +37,7 @@ public class WindowTooltip : MonoBehaviour
         Vector2 v2MousePos = Input.mousePosition;
         Vector2 v2Position = v2MousePos;
         v2Position.y -= iYOffset;
-        float fScaling = (float)Screen.width / 1920f;
+        float fScaling = (float)Screen.width / 1920f * canvasScaler.scaleFactor;
 
         if (v2Position.x + rect.sizeDelta.x * fScaling > Screen.width) 
             v2Position.x = v2MousePos.x - rect.sizeDelta.x * fScaling;

@@ -3757,8 +3757,8 @@ RectTransform:
   - {fileID: 983908282}
   - {fileID: 182714355}
   - {fileID: 12229412}
-  - {fileID: 1646075562}
   - {fileID: 523501815}
+  - {fileID: 1646075562}
   m_Father: {fileID: 1067637389}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6538,10 +6538,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   strText: "<u>Effect:\r</u>\nDetermines the image. Same seed (and other settings)
-    = same image. Default: Empty (random seed).\n\nIf you set a seed, the variation
-    options appear. With those you can create slightly different images.\n\n<u>Usage:\r</u>\nA)
-    Drag'n'drop an image here to use its seed.\nB) Right-click on images to copy
-    the seed (or directly lock it)."
+    = same image. Default: Empty (random seed).\n\nIf you set a seed, the \"+ Random\"
+    option appears which lets you create variations.\n\n<u>Usage:\r</u>\nA) Drag'n'drop
+    an image here to use its seed.\nB) Right-click on images to copy the seed (or
+    directly lock it)."
 --- !u!1 &481934777
 GameObject:
   m_ObjectHideFlags: 0
@@ -7132,7 +7132,6 @@ GameObject:
   - component: {fileID: 523501815}
   - component: {fileID: 523501818}
   - component: {fileID: 523501817}
-  - component: {fileID: 523501816}
   m_Layer: 0
   m_Name: text_gpu
   m_TagString: Untagged
@@ -7152,29 +7151,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 295381235}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -719}
-  m_SizeDelta: {x: 1415.7407, y: 531.9918}
+  m_AnchoredPosition: {x: -142.44, y: -525.97125}
+  m_SizeDelta: {x: 1130.9, y: 145.9343}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &523501816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 523501814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65d245ad00b4df94381063f9e210103f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  doesColorChangeOnHover: 1
-  hoverColor: {r: 0.23529412, g: 0.47058824, b: 1, a: 1}
-  strLinkColor: '#CCCC66'
-  bChangeLinkColorOnStart: 1
 --- !u!114 &523501817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8133,9 +8116,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow strong the upscaling AI is applied.\n0 = blurry
-    result\n1 = sharp result, but maybe showing edges that you don't want to have\nDefault:
-    0.75\n"
+  strText: "<u>Effect:\r</u>\nSets the size for input images. \nE.g. 512 makes sure
+    that all input images have a size of 512*512 pixels, no matter their aspect ratio.\n\nToo
+    small images will lead to bad results.\nToo big images will overflow your graphic
+    card memory.\n"
 --- !u!1 &618441971
 GameObject:
   m_ObjectHideFlags: 0
@@ -8833,9 +8817,7 @@ MonoBehaviour:
   strText: "<u>Effect:\r</u>\nHow much the AI tries to follow your prompt. \n0 =
     AI ignores your prompt\n20 = AI exactly follow your prompt, but results might
     look glitchy\nDefault: 7.5\r\n\nDoes NOT increase painting time. <3\n\r\n<u>Tips:\r</u>\n-
-    Images that needs high acc: Realistic prompts (e.g. 13), weird stuff \r\n\n<u>Orange
-    bar</u>\nRandomizes it a bit for every image. Not very helpful. \nFull left:
-    no randomization\nFull right: adds a random value between 0 and 20 to the accuracy"
+    Images that needs high acc: Realistic prompts (e.g. 13), weird stuff \r\n"
 --- !u!1001 &668661849
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10587,7 +10569,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<color=red><b>Your graphics card is not supported (yet) :(</b></color>
+  m_text: '<color=red><b>Aiimag.es doesn''t work with your graphics card (yet) :(</b></color>
 
 
     We
@@ -12578,7 +12560,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5577478757768211638, guid: fd5ed745583037648b509f6ab71f307e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fd5ed745583037648b509f6ab71f307e, type: 3}
 --- !u!224 &916638321 stripped
 RectTransform:
@@ -14691,7 +14674,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   goDebugWindow: {fileID: 1646075561}
   inputGPU: {fileID: 182714356}
-  textGPU: {fileID: 0}
+  textGPU: {fileID: 523501817}
   toggle: {fileID: 1600076711}
 --- !u!1 &1068789780
 GameObject:
@@ -15695,8 +15678,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow often the AI improves the image.\nGrey bar: Applied
-    to all images. Default: 15\nWhite bar: Used if you press the \"circle arrow\"
+  strText: "<u>Effect:\r</u>\nHow often the AI improves the image.\nWhite bar: Applied
+    to all images. Default: 15\nGolden dot: Used if you press the \"circle arrow\"
     icon when hovering an image. Default: 50.\n\r\nHigh step counts increase painting
     time.\n\n<u>Tips:\r</u>\n- Leave the grey slider at around 20 to generate a lot
     of \"previews\". When you like an image, use the \"circle arrow\" on it to run
@@ -17352,12 +17335,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nDimension of your picture. Green height, red width.\r\n\r\n<u>Tips:\r</u>\n-
-    Changes the motive! The AI will try to \"fill\" your image with the prompt! So...\r\n-
-    ...wide prompts are good for: Landscapes, multiple people\r\n- ...high prompts
-    are good for: Fullbody character shots\r\n- If you only want to upscale your
-    image, rather put it in an online upscale AI.\r\n- Increases computation time
-    exponentially!\n- Too big and the AI will die! (Model will be reloaded then.)"
+  strText: "<u>Effect:\r</u>\nDimension of your picture. Green height, red width.\r
+    Ignored if you use an input image.\n\r\n<u>Tips:\r</u>\n- Changes the motive!
+    The AI will try to \"fill\" your image with the prompt! So...\r\n- ...wide prompts
+    are good for: Landscapes, multiple people\r\n- ...high prompts are good for:
+    Fullbody character shots\r\n- If you only want to upscale your image, rather
+    put it in an online upscale AI.\r\n- Increases computation time exponentially!\n-
+    Too big and the AI will die! (Model will be reloaded then.)"
 --- !u!1 &1341957662
 GameObject:
   m_ObjectHideFlags: 0
@@ -19791,11 +19775,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1514602184 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2877551301263479047, guid: d40a84376187202409d6eb925752f431, type: 3}
+  m_PrefabInstance: {fileID: 417763240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1514602185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514602184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: 'Mark parts of the image, so only those are re-painted.
+
+    Perfect to
+    correct errors in the image.'
 --- !u!1 &1518788220 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2125861437210456242, guid: fd5ed745583037648b509f6ab71f307e, type: 3}
   m_PrefabInstance: {fileID: 916638320}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1518788221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518788220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 916638327}
+          m_TargetAssemblyTypeName: OptionPrompt, Assembly-CSharp
+          m_MethodName: OpenTemplateWindow
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &1518788223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21638,6 +21672,35 @@ MonoBehaviour:
 
     B) Right click an image -> Save content as
     template.'
+--- !u!114 &1600465457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600465453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6065831563057966428}
+          m_TargetAssemblyTypeName: OptionInput, Assembly-CSharp
+          m_MethodName: OpenTemplateWindow
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1601938426
 GameObject:
   m_ObjectHideFlags: 0
@@ -22095,7 +22158,7 @@ RectTransform:
   - {fileID: 1365254591}
   - {fileID: 1140608364}
   m_Father: {fileID: 295381235}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -25705,11 +25768,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nEnhances faces with the GFPGAN AI.\nGrey bar: Applied
-    to all images. Default: 0.\nWhite bar: Applied to an image if you click the \"head\"
-    icon in its hover menu. Default: 0.75.\n\r\n<u>Tips:\r</u>\n- Leave the grey
-    bar at 0. If you like an image with a broken face, hover it and click the \"head\"
-    icon to fix the face."
+  strText: "<u>Effect:\r</u>\nEnhances faces with the GFPGAN AI.\nWhite bar: Applied
+    to all images. Default: 0.\nGolden dot: Applied to an image if you click the
+    \"head\" icon in its hover menu. Default: 0.75.\n\r\n<u>Tips:\r</u>\n- Leave
+    the grey bar at 0. If you like an image with a broken face, hover it and click
+    the \"head\" icon to fix the face."
 --- !u!1 &1938122288
 GameObject:
   m_ObjectHideFlags: 0
@@ -25796,9 +25859,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow strong the variation is applied. \n0.0 = variation
-    is not applied at all\n1.0 = basically ignores your seed image and just uses
-    the variation\nDefault: 0.1\n"
+  strText: "<u>Effect:\r</u>\nCreate variations by adding some randomness to the
+    seed.\n0.0 = No randomness applied. Use it if you want to tweak other values.\n0.2
+    = Apply some randomness. Use it if you want slight variations of the seed image.\n1.0
+    = Basically ignores your seed image.\n"
 --- !u!114 &1939066162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25947,9 +26011,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nHow strong the variation is applied. \n0.0 = variation
-    is not applied at all\n1.0 = basically ignores your seed image and just uses
-    the variation\nDefault: 0.1\n"
+  strText: "<u>Effect:\r</u>\nAdds some randomness to the accuracy. Helpful to find
+    a good accuracy value.\n"
 --- !u!114 &1941836039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26989,8 +27052,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strText: "<u>Effect:\r</u>\nScales the image up by the given factor.\nGrey bar:
-    Applied to all images. Default: 0.\nWhite bar: Applied to an image if you click
+  strText: "<u>Effect:\r</u>\nScales the image up by the given factor.\nWhite bar:
+    Applied to all images. Default: 0.\nGolden dot: Applied to an image if you click
     the \"arrow up\" icon in its hover menu. Default: 2.\n\r\n<u>Tips:\r</u>\n- Leave
     the grey bar at 0. If you like an image, hover it and click the \"arrow up\"
     icon to upscale it."
@@ -31027,7 +31090,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5577478757768211638, guid: fd5ed745583037648b509f6ab71f307e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fd5ed745583037648b509f6ab71f307e, type: 3}
 --- !u!114 &6065831563057966428 stripped
 MonoBehaviour:

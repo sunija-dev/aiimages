@@ -39,8 +39,8 @@ public class WindowTemplate : MonoBehaviour
             liEntries.Add(goEntry);
             TemplatePreview templatePreview = goEntry.GetComponent<TemplatePreview>();
             templatePreview.actionOnClick = OnClick;
+            templatePreview.windowTemplateParent = this; 
             templatePreview.SetTemplate(template);
-            templatePreview.windowTemplateParent = this;
             // todo: tooltips? with prompts
         }
     }
@@ -48,6 +48,7 @@ public class WindowTemplate : MonoBehaviour
     public void OnClick(Template _template)
     {
         actionOnClick.Invoke(_template);
+        Close();
     }
 
 }
