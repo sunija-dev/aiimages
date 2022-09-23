@@ -120,7 +120,7 @@ namespace B83.TextureTools
             tex.Apply(true);
             return tex;
         }
-        public static Texture2D ResampleAndLetterbox(this Texture2D source, int targetWidth, int targetHeight, Color aBackground)
+        public static Texture2D ResampleAndLetterbox(this Texture2D source, int targetWidth, int targetHeight, Color aBackground, bool _bNoAlpha)
         {
             int sourceWidth = source.width;
             int sourceHeight = source.height;
@@ -196,7 +196,7 @@ namespace B83.TextureTools
                     data2[index].r = (byte)r;
                     data2[index].g = (byte)g;
                     data2[index].b = (byte)b;
-                    data2[index].a = (byte)a;
+                    data2[index].a = _bNoAlpha ? (byte)255f : (byte)a;
                 }
             }
 

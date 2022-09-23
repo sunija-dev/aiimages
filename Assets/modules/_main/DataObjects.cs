@@ -154,7 +154,7 @@ public class Prompt
         return strGetSeed(iSeed, liVariations);
     }
 
-    public static string strGetSeed(int _iSeed, List<System.Tuple<int, float>>  _liVariations)
+    public static string strGetSeed(int _iSeed, List<System.Tuple<int, float>> _liVariations)
     {
         string strOutput = "";
 
@@ -230,6 +230,9 @@ public class User
 public class ExtraOptions
 {
     public float fStartImageStrengthVariance = 0f;
+    public float fStartImageScaling = 512f;
+    public string strStartImageOriginalName = "";
+    public Vector2Int v2iOriginalSize = Vector2Int.zero;
     public float fCfgScaleVariance = 0f;
     public bool bRandomSeed = true;
     public string strSeedReferenceGUID = "";

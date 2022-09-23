@@ -304,7 +304,7 @@ public class Utility : MonoBehaviour
     /// <summary>
     /// Adapts the width/height to fit the aspect ratio and a maximum amount of pixels.
     /// </summary>
-    public static Vector2Int v2iLimitPixelSize(int _iWidth, int _iHeight, int _iPixelTarget)
+    public static Vector2Int v2iGetPixelSize(int _iWidth, int _iHeight, int _iPixelTarget)
     {
         float fAspectRatio = (float)_iWidth / (float)_iHeight;
 

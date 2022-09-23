@@ -22,23 +22,20 @@ public class OptionsVisualizer : MonoBehaviour
         instance = this;
     }
 
-    public void LoadOptions(ImageInfo _output)
+    public void LoadOptions(ImageInfo _img)
     {
-        Prompt prompt = _output.prompt;
+        Prompt prompt = _img.prompt;
 
-        if (!string.IsNullOrEmpty(prompt.startImage.strFilePath))
-            optionStartImage.LoadImageFromFileName(optionStartImage.strGetFullFilePath(System.IO.Path.GetFileName(prompt.startImage.strFilePath)));
-        optionStartImage.UpdateDisplay();
-        optionStartImage.optionSlider.Set(_output.extraOptionsFull.fStartImageStrengthVariance);
-        optionSeed.Set(_output, _output.extraOptionsFull.strSeedReferenceGUID, _output.extraOptionsFull.bRandomSeed);
-        optionSteps.Set(_output.extraOptionsFull.iStepsPreview, _output.extraOptionsFull.iStepsRedo);
-        optionAccuracy.Set(prompt.fCfgScale, _output.extraOptionsFull.fCfgScaleVariance);
+        optionStartImage.Set(_img);
+        optionSeed.Set(_img, _img.extraOptionsFull.strSeedReferenceGUID, _img.extraOptionsFull.bRandomSeed);
+        optionSteps.Set(_img.extraOptionsFull.iStepsPreview, _img.extraOptionsFull.iStepsRedo);
+        optionAccuracy.Set(prompt.fCfgScale, _img.extraOptionsFull.fCfgScaleVariance);
         optionDimensions.Set(prompt.iWidth, prompt.iHeight);
-        optionContent.Set(_output);
-        optionStyle.Set(_output);
-        optionUpscale.Set(_output.extraOptionsFull.fUpscalePreview, _output.extraOptionsFull.fUpscaleRedo, _output.extraOptionsFull.fUpscaleStrengthPreview, _output.extraOptionsFull.fUpscaleStrengthRedo);
-        optionFaceEnhance.Set(_output.extraOptionsFull.fFaceEnhancePreview, _output.extraOptionsFull.fFaceEnhanceRedo);
-        optionSeamless.Set(_output.prompt.bSeamless);
+        optionContent.Set(_img);
+        optionStyle.Set(_img);
+        optionUpscale.Set(_img.extraOptionsFull.fUpscalePreview, _img.extraOptionsFull.fUpscaleRedo, _img.extraOptionsFull.fUpscaleStrengthPreview, _img.extraOptionsFull.fUpscaleStrengthRedo);
+        optionFaceEnhance.Set(_img.extraOptionsFull.fFaceEnhancePreview, _img.extraOptionsFull.fFaceEnhanceRedo);
+        optionSeamless.Set(_img.prompt.bSeamless);
     }
 
     public Prompt promptGet(bool _bPreviewSteps, bool _bPreviewUpscale, bool _bPreviewFaceEnhance)
@@ -47,9 +44,9 @@ public class OptionsVisualizer : MonoBehaviour
         {
             iWidth = optionDimensions.iWidth,
             iHeight = optionDimensions.iHeight,
-            startImage = optionStartImage.startImage,
+            startImage = optionStartImage.startimageGet(),
             iSeed = optionSeed.iSeed,
-            liVariations = optionSeed.liGetNextVariationList(),
+            liVariations = !optionSeed.bRandomSeed ? optionSeed.liGetNextVariationList() : new List<System.Tuple<int, float>>(),
             iSteps = _bPreviewSteps ? optionSteps.iStepsPreview : optionSteps.iStepsRedo,
             fCfgScale = optionAccuracy.fAccuracy + Random.Range(0f, optionAccuracy.fVariance),
             strContentPrompt = optionContent.strPrompt,
@@ -67,7 +64,10 @@ public class OptionsVisualizer : MonoBehaviour
     {
         return new ExtraOptions()
         {
-            fStartImageStrengthVariance = optionStartImage.startImage.fStrength,
+            fStartImageStrengthVariance = optionStartImage.optionSliderStrength.fValue,
+            fStartImageScaling = optionStartImage.optionSliderScaling.fValue,
+            strStartImageOriginalName = optionStartImage.strOriginalFile,
+            v2iOriginalSize = optionStartImage.v2iOriginalSize,
             fCfgScaleVariance = optionAccuracy.fVariance,
             bRandomSeed = optionSeed.bRandomSeed,
             strSeedReferenceGUID = optionSeed.imgReference != null ? optionSeed.imgReference.strGUID : "",
@@ -88,7 +88,7 @@ public class OptionsVisualizer : MonoBehaviour
     /// </summary>
     public void SetAspectRatio(int _iWidth, int _iHeight)
     {
-        Vector2Int v2iNewSize = Utility.v2iLimitPixelSize(_iWidth, _iHeight, 512 * 512);
+        Vector2Int v2iNewSize = Utility.v2iGetPixelSize(_iWidth, _iHeight, 512 * 512);
 
         optionDimensions.Set(v2iNewSize.x, v2iNewSize.y);
     }
