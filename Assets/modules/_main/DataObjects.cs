@@ -113,8 +113,7 @@ public class Prompt
     public int iHeight = 512;
     public StartImage startImage = new StartImage();
     public int iSeed = -1;
-    public int iVariationSeed = -1;
-    public float fVariationStrength = 0.1f;
+    public List<System.Tuple<int, float>> liVariations = new List<System.Tuple<int, float>>();
     public float fUpscaleFactor = 1f;
     public float fUpscaleStrength = 0.75f;
     public float fFaceEnhanceStrength = 0.0f;
@@ -128,17 +127,15 @@ public class Prompt
     {
         string strPrompt = strWithoutOptions();
         strPrompt += $" -s {iSteps}" +
-            $" -S {iSeed}" +
             $" -C {fCfgScale.ToString("0.00", CultureInfo.InvariantCulture)}";
 
         if (string.IsNullOrEmpty(startImage.strFilePath))
             strPrompt += $" -W {iWidth} -H {iHeight}";
 
         if (!string.IsNullOrEmpty(startImage.strFilePath))
-            strPrompt += $" --init_img=\"{startImage.strGetFullPath()}\" --strength={startImage.fStrength.ToString("0.0", CultureInfo.InvariantCulture)}";
+            strPrompt += $" --init_img=\"{startImage.strGetFullPath()}\" --strength={startImage.fStrength.ToString("0.000", CultureInfo.InvariantCulture)}";
 
-        if (iSeed >= 0 && iVariationSeed >= 0)
-            strPrompt += $" -V {iVariationSeed}:{fVariationStrength.ToString("0.00", CultureInfo.InvariantCulture)},0:0.0"; // HACK: use variation mixing, so we can define a variation seed
+        strPrompt += strGetSeed();
 
         if (fUpscaleFactor > 1f)
             strPrompt += $" -U {(int)fUpscaleFactor} {fUpscaleStrength.ToString("0.00", CultureInfo.InvariantCulture)}";
@@ -150,6 +147,30 @@ public class Prompt
             strPrompt += $" --seamless";
 
         return strPrompt;
+    }
+
+    public string strGetSeed()
+    {
+        return strGetSeed(iSeed, liVariations);
+    }
+
+    public static string strGetSeed(int _iSeed, List<System.Tuple<int, float>>  _liVariations)
+    {
+        string strOutput = "";
+
+        strOutput += $" -S {_iSeed}";
+
+        if (_iSeed >= 0 && _liVariations.Count() > 0)
+        {
+            strOutput += $" -V ";
+            for (int iVariation = 0; iVariation < _liVariations.Count; iVariation++)
+            {
+                System.Tuple<int, float> tuVariation = _liVariations[iVariation];
+                strOutput += $"{tuVariation.Item1}:{ tuVariation.Item2.ToString("0.000", CultureInfo.InvariantCulture)}{(iVariation + 1 < _liVariations.Count ? "," : "")}";
+            }
+        }
+
+        return strOutput;
     }
 
     public string strWithoutOptions()
@@ -211,9 +232,9 @@ public class ExtraOptions
     public float fStartImageStrengthVariance = 0f;
     public float fCfgScaleVariance = 0f;
     public bool bRandomSeed = true;
+    public string strSeedReferenceGUID = "";
     public int iStepsPreview = 15;
     public int iStepsRedo = 50;
-    public int iVariationSeed = -1;
     public float fVariationStrength = 0.1f;
     public float fUpscalePreview = 1f;
     public float fUpscaleRedo = 2f;

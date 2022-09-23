@@ -13,7 +13,6 @@ public class OptionsVisualizer : MonoBehaviour
     public OptionDimensions optionDimensions;
     public OptionPrompt optionContent;
     public OptionPrompt optionStyle;
-    public OptionVariation optionVariation;
     public OptionUpscale optionUpscale;
     public OptionFaceEnhance optionFaceEnhance;
     public OptionSeamless optionSeamless;
@@ -31,13 +30,12 @@ public class OptionsVisualizer : MonoBehaviour
             optionStartImage.LoadImageFromFileName(optionStartImage.strGetFullFilePath(System.IO.Path.GetFileName(prompt.startImage.strFilePath)));
         optionStartImage.UpdateDisplay();
         optionStartImage.optionSlider.Set(_output.extraOptionsFull.fStartImageStrengthVariance);
-        optionSeed.Set(prompt.iSeed, _output.extraOptionsFull.bRandomSeed);
+        optionSeed.Set(_output, _output.extraOptionsFull.strSeedReferenceGUID, _output.extraOptionsFull.bRandomSeed);
         optionSteps.Set(_output.extraOptionsFull.iStepsPreview, _output.extraOptionsFull.iStepsRedo);
         optionAccuracy.Set(prompt.fCfgScale, _output.extraOptionsFull.fCfgScaleVariance);
         optionDimensions.Set(prompt.iWidth, prompt.iHeight);
         optionContent.Set(_output);
         optionStyle.Set(_output);
-        optionVariation.Set(_output);
         optionUpscale.Set(_output.extraOptionsFull.fUpscalePreview, _output.extraOptionsFull.fUpscaleRedo, _output.extraOptionsFull.fUpscaleStrengthPreview, _output.extraOptionsFull.fUpscaleStrengthRedo);
         optionFaceEnhance.Set(_output.extraOptionsFull.fFaceEnhancePreview, _output.extraOptionsFull.fFaceEnhanceRedo);
         optionSeamless.Set(_output.prompt.bSeamless);
@@ -51,12 +49,11 @@ public class OptionsVisualizer : MonoBehaviour
             iHeight = optionDimensions.iHeight,
             startImage = optionStartImage.startImage,
             iSeed = optionSeed.iSeed,
+            liVariations = optionSeed.liGetNextVariationList(),
             iSteps = _bPreviewSteps ? optionSteps.iStepsPreview : optionSteps.iStepsRedo,
             fCfgScale = optionAccuracy.fAccuracy + Random.Range(0f, optionAccuracy.fVariance),
             strContentPrompt = optionContent.strPrompt,
             strStylePrompt = optionStyle.strPrompt,
-            iVariationSeed = optionSeed.bRandomSeed ? -1 : optionVariation.iSeed, // only use variation seed if seed is set
-            fVariationStrength = optionVariation.fStrength,
             fUpscaleFactor = _bPreviewUpscale ? optionUpscale.fUpscalePreview : optionUpscale.fUpscaleRedo,
             fUpscaleStrength = _bPreviewUpscale ? optionUpscale.fUpscaleStrengthPreview : optionUpscale.fUpscaleStrengthRedo,
             fFaceEnhanceStrength = _bPreviewFaceEnhance ? optionFaceEnhance.fStrengthPreview : optionFaceEnhance.fStrengthRedo,
@@ -73,10 +70,10 @@ public class OptionsVisualizer : MonoBehaviour
             fStartImageStrengthVariance = optionStartImage.startImage.fStrength,
             fCfgScaleVariance = optionAccuracy.fVariance,
             bRandomSeed = optionSeed.bRandomSeed,
+            strSeedReferenceGUID = optionSeed.imgReference != null ? optionSeed.imgReference.strGUID : "",
             iStepsPreview = optionSteps.iStepsPreview,
             iStepsRedo = optionSteps.iStepsRedo,
-            iVariationSeed = optionVariation.iSeed,
-            fVariationStrength = optionVariation.fStrength,
+            fVariationStrength = optionSeed.fStrength,
             fUpscalePreview = optionUpscale.fUpscalePreview,
             fUpscaleRedo = optionUpscale.fUpscaleRedo,
             fUpscaleStrengthPreview = optionUpscale.fUpscaleStrengthPreview,

@@ -97,7 +97,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             new ContextMenu.Option("Lock seed", () =>
             {
                 if (imgDisplayed != null)
-                    ToolManager.Instance.options.optionSeed.Set(imgDisplayed.prompt.iSeed, _bRandomSeed: false);
+                    ToolManager.Instance.options.optionSeed.Set(imgDisplayed, _bRandomSeed: false);
             })
             );
 
@@ -114,6 +114,9 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void DisplayImage(ImageInfo _output, bool _bAddtive = false, bool _bDontInit = false)
     {
         bDontInit = _bDontInit;
+
+        if (_output == null)
+            DisplayEmpty();
 
         StartCoroutine(ieDisplayImage(_output));
     }
@@ -363,6 +366,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (goDragPreview != null)
             Destroy(goDragPreview);
+
+        PreviewImage.Instance.SetVisible(false, null);
 
         goDragPreview = Instantiate(goDragPreviewPrefab, ToolManager.Instance.transContextMenuCanvas.transform);
         ImagePreview imagePreview = goDragPreview.GetComponent<ImagePreview>();
