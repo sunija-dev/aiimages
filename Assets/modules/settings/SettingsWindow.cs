@@ -8,12 +8,14 @@ public class SettingsWindow: MonoBehaviour
 {
     public GameObject goDebugWindow;
     public TMP_InputField inputGPU;
+    public TMP_Text textGPU;
     public Toggle toggle;
 
     public void Start()
     {
         toggle.SetIsOnWithoutNotify(ToolManager.s_settings.bUseBackgroundTexture);
         inputGPU.SetTextWithoutNotify(ToolManager.s_settings.iGPU.ToString());
+        textGPU.text = ToolManager.Instance.strGetGPUText();
     }
 
     public void SetDebugWindowVisible(bool _bVisible)

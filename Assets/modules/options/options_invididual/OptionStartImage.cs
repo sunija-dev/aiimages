@@ -26,7 +26,6 @@ public class OptionStartImage : MonoBehaviour
     public bool bIsExternalImage = false;
 
     private ImageInfo imgPreview = new ImageInfo();
-    private ImageInfo imgLastInpaintingDone = null;
 
     private void Awake()
     {
@@ -71,8 +70,8 @@ public class OptionStartImage : MonoBehaviour
             File.Copy(strPathInOutput, strGetFullFilePath());
 
         // reset original settings, as those only apply to external images
-        strOriginalFile = "";
-        v2iOriginalSize = Vector2Int.zero;
+        strOriginalFile = imgPreview.strFilePathRelative;
+        v2iOriginalSize = new Vector2Int(imgPreview.texGet().width, imgPreview.texGet().height);
 
         UpdateDisplay();
     }
@@ -151,7 +150,8 @@ public class OptionStartImage : MonoBehaviour
             imgPreview.strFilePathRelative = strGetFullFilePath();
             imgPreview.SetTex(texInputImage);
 
-            UpdateStartImageScaling();
+            if (!imgPreview.strFilePathRelative.Contains("_masked")) // don't update masked images, so the mask is not removed
+                UpdateStartImageScaling();
         }
         catch (System.Exception _ex)
         {
@@ -185,11 +185,10 @@ public class OptionStartImage : MonoBehaviour
         if (imgPreview == null)
             return;
 
-        UpdateStartImageScaling();
+        UpdateStartImageScaling(_b64Multiple:true, _bForceUpdate:true);
 
-        if (imgLastInpaintingDone != imgPreview)
+        if (!imgPreview.strFilePathRelative.Contains("_masked"))
             optionSliderStrength.Set(0.1f); // turn down influence if inpainting is started. Usually it's not wanted.
-        imgLastInpaintingDone = imgPreview;
 
         drawWindow.OpenImage(imgPreview, LoadImageFromFileName);
     }
@@ -231,9 +230,9 @@ public class OptionStartImage : MonoBehaviour
     /// <summary>
     /// If necessary, replaces the StartImage with a downscaled version of the original. Only for external images.
     /// </summary>
-    private void UpdateStartImageScaling()
+    private void UpdateStartImageScaling(bool _b64Multiple = false, bool _bForceUpdate = false)
     {
-        if (!bIsExternalImage)
+        if (!_bForceUpdate && !bIsExternalImage)
             return;
 
         // check if scaling is necessary (+-32)
@@ -246,6 +245,18 @@ public class OptionStartImage : MonoBehaviour
 
         // pixel size was wrong, so scale original pixel to correct size
 
+        // scale down
+        int iPixelBudget = (int)Mathf.Pow(optionSliderScaling.fValue, 2); // basis: 512x512 image
+        Vector2Int v2iPixelSize = Utility.v2iGetPixelSize(v2iOriginalSize.x, v2iOriginalSize.y, iPixelBudget);
+        if (_b64Multiple)
+        {
+            v2iPixelSize.x = Mathf.RoundToInt((float)v2iPixelSize.x / 64f) * 64;
+            v2iPixelSize.y = Mathf.RoundToInt((float)v2iPixelSize.y / 64f) * 64;
+        }
+
+        if (imgPreview.texGet().width == v2iPixelSize.x && imgPreview.texGet().height == v2iPixelSize.y) // don't update image if it already has right size. Might slip through pixel budget check because of rounding
+            return; 
+
         try
         {
             // load original texture
@@ -253,9 +264,6 @@ public class OptionStartImage : MonoBehaviour
             byte[] arBytes = File.ReadAllBytes(strGetFullFilePath(strOriginalFile));
             texOriginal.LoadImage(arBytes);
 
-            // scale down
-            int iPixelBudget = (int)Mathf.Pow(optionSliderScaling.fValue, 2); // basis: 512x512 image
-            Vector2Int v2iPixelSize = Utility.v2iGetPixelSize(v2iOriginalSize.x, v2iOriginalSize.y, iPixelBudget);
             Texture2D texNew = texOriginal.ResampleAndLetterbox(v2iPixelSize.x, v2iPixelSize.y, Color.black, _bNoAlpha:true);
             Destroy(texOriginal);
 

@@ -411,6 +411,8 @@ public class ToolManager : MonoBehaviour
             return;
         }
 
+        PreviewImage.Instance.SetVisible(false, null);
+
         MoveToTrashFolder(_img);
         DeleteFromHistory(_img);
     }

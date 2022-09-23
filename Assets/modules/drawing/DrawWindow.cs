@@ -52,7 +52,7 @@ public class DrawWindow : MonoBehaviour
         if (_bApply)
         {
             string strGUID = System.Guid.NewGuid().ToString();
-            string strPath = Path.Combine(ToolManager.s_settings.strInputDirectory, $"{Path.GetFileNameWithoutExtension(img.strFilePathRelative)}_{strGUID.Replace("-", "_")}.png");
+            string strPath = Path.Combine(ToolManager.s_settings.strInputDirectory, $"{Path.GetFileNameWithoutExtension(img.strFilePathRelative)}_{strGUID.Replace("-", "_")}_masked.png");
 
             File.WriteAllBytes(strPath, texDrawTexture.EncodeToPNG());
 
