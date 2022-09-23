@@ -70,6 +70,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             new ContextMenu.Option("Use these options", () =>
             {
                 OptionsVisualizer.instance.LoadOptions(imgDisplayed);
+                ToolManager.Instance.options.optionSeed.Set(imgDisplayed, _bRandomSeed: false);
             }),
             new ContextMenu.Option("Copy prompt (only text)", () =>
             {
@@ -88,11 +89,6 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             new ContextMenu.Option("Save style as template", () =>
             {
                 SaveAsTemplate(_bContent:false);
-            }),
-            new ContextMenu.Option("Copy seed", () =>
-            {
-                if (imgDisplayed != null)
-                    Utility.CopyToClipboard(imgDisplayed.prompt.iSeed.ToString());
             }),
             new ContextMenu.Option("Lock seed", () =>
             {

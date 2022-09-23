@@ -104,6 +104,7 @@ public class EndlessHistory : MonoBehaviour
             if (gridDisplay.liImagePreviews.Count == 0)
             {
                 Debug.Log("Gridbox was empty. Deleting it.");
+                liSections.RemoveAll(section => section.liGridBoxes.Count == 1 && section.liGridBoxes[0] == gridDisplay.gridboxData);
                 liGridboxDataVisible.Remove(gridDisplay.gridboxData);
                 Destroy(gridDisplay.gameObject);
             }     
@@ -236,11 +237,19 @@ public class EndlessHistory : MonoBehaviour
             fSectionStart = fSectionEnd;
         }
 
+        bool bBoxesAppearedOrDisappeared = false;
+
         // remove all disappeared gridboxes
         foreach (GridBoxDisplay gridboxDisplay in liGridBoxDisplays)
         {
             if (!liGridboxDataVisible.Any(x => x == gridboxDisplay.gridboxData))
+            {
                 Destroy(gridboxDisplay.gameObject);
+                bBoxesAppearedOrDisappeared = true;
+
+                if (gridboxDisplay.liImagePreviews.Count == 1)
+                    Debug.Log($"Deleted preview with 1 image {gridboxDisplay.liImagePreviews[0].imgDisplayed.strGUID}");
+            }    
         }
         //Debug.Log($"Destroyed {liGridBoxDisplays.Count(display => !liGridboxDataVisible.Any(x => x == display.gridboxData))}");
         liGridBoxDisplays.RemoveAll(display => !liGridboxDataVisible.Any(x => x == display.gridboxData));
@@ -261,10 +270,15 @@ public class EndlessHistory : MonoBehaviour
                 gridboxDisplayNew.transform.SetAsLastSibling();
 
                 liGridBoxDisplays.Add(gridboxDisplayNew);
+                bBoxesAppearedOrDisappeared = true;
+
+                if (gridboxDisplayNew.liImagePreviews.Count == 1)
+                    Debug.Log($"Added preview with 1 image {gridboxDisplayNew.liImagePreviews[0].imgDisplayed.strGUID}");
             }
         }
 
-        //LayoutRebuilder.ForceRebuildLayoutImmediate(rectContent);
+        if (bBoxesAppearedOrDisappeared)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectContent);
         rectOffsetter.SetHeight(fFirstElementPosition);
     }
 
