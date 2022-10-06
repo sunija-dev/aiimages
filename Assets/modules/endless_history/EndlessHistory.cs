@@ -39,6 +39,8 @@ public class EndlessHistory : MonoBehaviour
     GridBoxData gridboxCurrent = new GridBoxData();
     ImageInfo imgLast = null;
 
+    private bool bDeletedImage = false;
+
     IEnumerator Start()
     {
         // get history
@@ -57,7 +59,6 @@ public class EndlessHistory : MonoBehaviour
                 UpdateSections(output, false);
             }
         }
-        
 
         OnScaleUpdate();
 
@@ -81,10 +82,12 @@ public class EndlessHistory : MonoBehaviour
 
     private void OnElementDeleted(ImageInfo _img)
     {
+        // remove image from all visible gridDatas
+        bDeletedImage = true;
         liGridboxDataVisible.ForEach(grid => grid.oliImgs.RemoveAll(x => x.strGUID == _img.strGUID));
 
+        // remove image from all visible gridDisplays
         List<GridBoxDisplay> liGridDisplayWithImage = liGridBoxDisplays.Where(gridDisplay => gridDisplay.liImagePreviews.Any(x => x.imgDisplayed == _img)).ToList();
-        // in each gridbox that contains the image...
         foreach (GridBoxDisplay gridDisplay in liGridDisplayWithImage)
         {
             // destroy/remove the image
@@ -92,20 +95,11 @@ public class EndlessHistory : MonoBehaviour
             liPreviewsOfImage.ForEach(x => Destroy(x.gameObject));
             gridDisplay.liImagePreviews.RemoveAll(x => liPreviewsOfImage.Any(y => y == x));
 
-            /*
-            foreach (ImagePreview imagePreview in gridDisplay.liImagePreviews)
-            {
-                if (imagePreview.liOutputs.Any(x => x == _img))
-                    Destroy(imagePreview.gameObject);
-            }
-            gridDisplay.liImagePreviews.RemoveAll(x => x == null);
-            */
-
-            if (gridDisplay.liImagePreviews.Count == 0)
+            if (gridDisplay.gridboxData != gridboxCurrent && gridDisplay.liImagePreviews.Count == 0)
             {
                 Debug.Log("Gridbox was empty. Deleting it.");
                 liSections.RemoveAll(section => section.liGridBoxes.Count == 1 && section.liGridBoxes[0] == gridDisplay.gridboxData);
-                liGridboxDataVisible.Remove(gridDisplay.gridboxData);
+                //liGridboxDataVisible.Remove(gridDisplay.gridboxData);
                 Destroy(gridDisplay.gameObject);
             }     
         }
@@ -119,8 +113,28 @@ public class EndlessHistory : MonoBehaviour
         if (!System.IO.File.Exists(_img.strFilePathFull()))
             return;
 
+        if (bDeletedImage) // HACKFIX so after deleting image not a new one is added
+        {
+            bDeletedImage = false;
+            return;
+        }
+
+        // for simplicity now: just add a new section+gridbox if size changed
+        // each section only contains one gridbox for now
+        bool bStartNew = false;
+        if (imgLast != null)
+        {
+            int iCurrWidth = _img.iActualWidth > -1 ? _img.iActualWidth : _img.prompt.iWidth;
+            int iCurrHeight = _img.iActualHeight > -1 ? _img.iActualHeight : _img.prompt.iHeight;
+            int iLastWidth = imgLast.iActualWidth > -1 ? imgLast.iActualWidth : imgLast.prompt.iWidth;
+            int iLastHeight = imgLast.iActualHeight > -1 ? imgLast.iActualHeight : imgLast.prompt.iHeight;
+
+            bStartNew = iCurrWidth != iLastWidth || iCurrHeight != iLastHeight || 
+                (sectionCurrent.liGridBoxes.Count > 0 && sectionCurrent.liGridBoxes[0].liOutputIDs.Count > 40); // start new section every x images, so vram doesn't overflow
+        }
+        
         // start new section?
-        if (imgLast != null && !_img.prompt.bEqualContentStyle(imgLast.prompt))
+        if (bStartNew)
         {
             sectionCurrent = new SectionData();
             liSections.Add(sectionCurrent);
@@ -129,6 +143,7 @@ public class EndlessHistory : MonoBehaviour
         }
 
         // start new gridbox?
+        /*
         if (gridboxCurrent.oliImgs.Count != 0
             && imgLast != null
             && (imgLast.prompt.iWidth != _img.prompt.iWidth
@@ -138,6 +153,7 @@ public class EndlessHistory : MonoBehaviour
             gridboxCurrent = new GridBoxData();
             sectionCurrent.liGridBoxes.Add(gridboxCurrent);
         }
+        */
 
         // add
         gridboxCurrent.oliImgs.Add(_img);

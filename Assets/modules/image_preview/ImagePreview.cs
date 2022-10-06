@@ -65,7 +65,11 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             v2MaxSize = rawimage.GetComponent<RectTransform>().sizeDelta;
 
         contextMenu.AddOptions(
-            new ContextMenu.Option("Create variations!", () => OptionsVisualizer.instance.optionSeed.Set(imgDisplayed)),
+            new ContextMenu.Option("Create variations!", () =>
+            {
+                OptionsVisualizer.instance.LoadOptions(imgDisplayed);
+                ToolManager.Instance.options.optionSeed.Set(imgDisplayed);
+            }),
             new ContextMenu.Option("Set as input image", () => SetAsInputImage()),
             new ContextMenu.Option("Use these options", () =>
             {
@@ -221,9 +225,20 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         Debug.Log($"Requesting upscale redo version for seed {imgDisplayed.prompt.iSeed}");
 
         ImageInfo outputNew = imgDisplayed.outputCopy();
-        outputNew.prompt.fUpscaleFactor = OptionsVisualizer.instance.optionUpscale.fUpscaleRedo;
-        outputNew.prompt.fUpscaleStrength = OptionsVisualizer.instance.optionUpscale.fUpscaleStrengthRedo;
-        DisplayImage(outputNew, _bAddtive: true);
+        OptionUpscale optionUpscale = OptionsVisualizer.instance.optionUpscale;
+        if (optionUpscale.toggleHD.isOn)
+        {
+            outputNew.prompt.fEmbiggen = optionUpscale.fEmbiggenFactorRedo;
+            outputNew.extraOptionsFull.bRedoEmbiggen = true;
+        }
+        else
+        {
+            outputNew.prompt.fUpscaleFactor = optionUpscale.fUpscaleRedo;
+            outputNew.prompt.fUpscaleStrength = optionUpscale.fUpscaleStrengthRedo;
+            outputNew.extraOptionsFull.bRedoUpscale = true;
+        }
+
+        //DisplayImage(outputNew, _bAddtive: false);
 
         ToolManager.Instance.RequestImage(outputNew);
     }
@@ -234,7 +249,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         ImageInfo outputNew = imgDisplayed.outputCopy();
         outputNew.prompt.fFaceEnhanceStrength = OptionsVisualizer.instance.optionFaceEnhance.fStrengthRedo;
-        DisplayImage(outputNew, _bAddtive: true);
+        outputNew.extraOptionsFull.bRedoFaceEnhance = true;
+        //DisplayImage(outputNew, _bAddtive: false);
 
         ToolManager.Instance.RequestImage(outputNew);
     }

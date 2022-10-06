@@ -16,4 +16,13 @@ public class OptionSteps : MonoBehaviour
         optionSliderRedo.Set(_iRedo);
     }
 
+    public void UpdateLimit()
+    {
+        // Hacky
+        if (ToolManager.s_settings != null)
+        {
+            optionSliderPreview.fMax = ToolManager.s_settings.iMaxStepCount;
+            optionSliderRedo.fMax = ToolManager.s_settings.iMaxStepCount;
+        }
+    }
 }

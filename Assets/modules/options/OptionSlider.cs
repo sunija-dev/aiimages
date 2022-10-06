@@ -24,17 +24,17 @@ public class OptionSlider : MonoBehaviour
     private void Start()
     {
         Init();
-        Set(fValue);
 
         slider.onValueChanged.AddListener((float _f) => OnValueChangedSlider());
         OnValueChangedSlider();
     }
 
-    private void Init()
+    public void Init()
     {
         int iSteps = Mathf.RoundToInt((fMax - fMin) / fStepSize);
         slider.minValue = 0;
         slider.maxValue = iSteps;
+        Set(fValue);
     }
 
     public void OnValueChangedSlider()

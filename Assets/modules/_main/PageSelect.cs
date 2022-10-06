@@ -9,7 +9,7 @@ public class PageSelect : MonoBehaviour
 
     void Start()
     {
-        textGPU.text = ToolManager.Instance.strGetGPUText();
+        textGPU.text = ToolManager.Instance.strGetWarningText();
     }
 
 }

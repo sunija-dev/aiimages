@@ -8,10 +8,21 @@ public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [TextArea(15, 20)]
     public string strText = "HoverInfo";
 
+    private float fWaitTime = 0.2f;
+
     private WindowTooltip windowTooltip;
+    private Coroutine coDisplayDelayed = null;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (coDisplayDelayed != null)
+            StopCoroutine(coDisplayDelayed);
+        coDisplayDelayed = StartCoroutine(ieDisplayDelayed());
+    }
+
+    private IEnumerator ieDisplayDelayed()
+    {
+        yield return new WaitForSeconds(fWaitTime);
         GameObject goTooltip = Instantiate(ToolManager.Instance.goTooltipPrefab, ToolManager.Instance.transTooltipCanvas);
         windowTooltip = goTooltip.GetComponent<WindowTooltip>();
         windowTooltip.Setup(strText);
@@ -27,6 +38,8 @@ public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        StopCoroutine(coDisplayDelayed);
+        coDisplayDelayed = null;
         DestroySave();
     }
 

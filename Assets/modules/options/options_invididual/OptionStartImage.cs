@@ -40,7 +40,12 @@ public class OptionStartImage : MonoBehaviour
     public void Set(ImageInfo _img)
     {
         if (!string.IsNullOrEmpty(_img.prompt.startImage.strFilePath))
-            LoadImageFromFileName(_img.prompt.startImage.strFilePath, _bIsOriginal: true, _bMightBeExternal:false);
+            LoadImageFromFileName(_img.prompt.startImage.strFilePath, _bIsOriginal: true, _bMightBeExternal: false);
+        else
+        {
+            startImage.strFilePath = "";
+            startImage.strGUID = "";
+        }
 
         strOriginalFile = _img.extraOptionsFull.strStartImageOriginalName;
         v2iOriginalSize = _img.extraOptionsFull.v2iOriginalSize;

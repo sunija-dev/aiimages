@@ -16,6 +16,8 @@ public class OptionsVisualizer : MonoBehaviour
     public OptionUpscale optionUpscale;
     public OptionFaceEnhance optionFaceEnhance;
     public OptionSeamless optionSeamless;
+    public OptionSampler optionSampler;
+    public OptionExtraParams optionExtraParams;
 
     private void Start()
     {
@@ -33,9 +35,14 @@ public class OptionsVisualizer : MonoBehaviour
         optionDimensions.Set(prompt.iWidth, prompt.iHeight);
         optionContent.Set(_img);
         optionStyle.Set(_img);
-        optionUpscale.Set(_img.extraOptionsFull.fUpscalePreview, _img.extraOptionsFull.fUpscaleRedo, _img.extraOptionsFull.fUpscaleStrengthPreview, _img.extraOptionsFull.fUpscaleStrengthRedo);
+        optionUpscale.Set(_img.extraOptionsFull.strUpscaleMethod, 
+            _img.extraOptionsFull.fUpscalePreview, _img.extraOptionsFull.fUpscaleRedo, 
+            _img.extraOptionsFull.fUpscaleStrengthPreview, _img.extraOptionsFull.fUpscaleStrengthRedo,
+            _img.extraOptionsFull.fEmbiggenPreview, _img.extraOptionsFull.fEmbiggenRedo);
         optionFaceEnhance.Set(_img.extraOptionsFull.fFaceEnhancePreview, _img.extraOptionsFull.fFaceEnhanceRedo);
         optionSeamless.Set(_img.prompt.bSeamless);
+        optionSampler.Set(_img.prompt.strSampler);
+        optionExtraParams.Set(_img.prompt.strExtraParams);
     }
 
     public Prompt promptGet(bool _bPreviewSteps, bool _bPreviewUpscale, bool _bPreviewFaceEnhance)
@@ -51,10 +58,13 @@ public class OptionsVisualizer : MonoBehaviour
             fCfgScale = optionAccuracy.fAccuracy + Random.Range(0f, optionAccuracy.fVariance),
             strContentPrompt = optionContent.strPrompt,
             strStylePrompt = optionStyle.strPrompt,
-            fUpscaleFactor = _bPreviewUpscale ? optionUpscale.fUpscalePreview : optionUpscale.fUpscaleRedo,
+            fUpscaleFactor = optionUpscale.toggleHD ? 1f : (_bPreviewUpscale ? optionUpscale.fUpscalePreview : optionUpscale.fUpscaleRedo),
             fUpscaleStrength = _bPreviewUpscale ? optionUpscale.fUpscaleStrengthPreview : optionUpscale.fUpscaleStrengthRedo,
+            fEmbiggen = !optionUpscale.toggleHD ? 1f : (_bPreviewUpscale ? optionUpscale.fEmbiggenFactorPreview : optionUpscale.fEmbiggenFactorRedo),
             fFaceEnhanceStrength = _bPreviewFaceEnhance ? optionFaceEnhance.fStrengthPreview : optionFaceEnhance.fStrengthRedo,
-            bSeamless = optionSeamless.bSeamless
+            bSeamless = optionSeamless.bSeamless,
+            strSampler = optionSampler.dropdown.options[optionSampler.dropdown.value].text,
+            strExtraParams = optionExtraParams.strExtraOptions
         };
 
         return prompt;
@@ -78,6 +88,9 @@ public class OptionsVisualizer : MonoBehaviour
             fUpscaleRedo = optionUpscale.fUpscaleRedo,
             fUpscaleStrengthPreview = optionUpscale.fUpscaleStrengthPreview,
             fUpscaleStrengthRedo = optionUpscale.fUpscaleStrengthRedo,
+            fEmbiggenPreview = optionUpscale.fEmbiggenFactorPreview,
+            fEmbiggenRedo = optionUpscale.fEmbiggenFactorRedo,
+            strUpscaleMethod = optionUpscale.strMethod,
             fFaceEnhancePreview = optionFaceEnhance.fStrengthPreview,
             fFaceEnhanceRedo = optionFaceEnhance.fStrengthRedo
         };

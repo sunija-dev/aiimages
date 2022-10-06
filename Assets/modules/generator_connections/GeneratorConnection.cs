@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.Events;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// Prompts go in, textures come out.
@@ -85,23 +86,30 @@ public class GeneratorConnection : MonoBehaviour
         File.WriteAllText(Path.Combine(ToolManager.s_settings.strEnvPath, "Lib/site-packages/easy-install.pth"), strEasyInstallContent);
 #endif
 
+        // change drive
+        UnityEngine.Debug.Log("Writing: " + $"{ToolManager.s_settings.strSDDirectory.Substring(0, 2)}");
+        streamWriter.WriteLine(ToolManager.s_settings.strSDDirectory.Substring(0, 2)); 
+        // open sd directory
         UnityEngine.Debug.Log("Writing: " + $"cd \"{ToolManager.s_settings.strSDDirectory}\"");
         streamWriter.WriteLine($"cd \"{ToolManager.s_settings.strSDDirectory}\"");
+        // activate environment
         UnityEngine.Debug.Log("Writing: " + "activate ldm");
         streamWriter.WriteLine("activate ldm");
 
 #if !UNITY_EDITOR
         UnityEngine.Debug.Log("Writing: " + $"set TRANSFORMERS_CACHE={Application.dataPath}/../ai_cache/huggingface/transformers");
         streamWriter.WriteLine($"set \"TRANSFORMERS_CACHE={Application.dataPath}/../ai_cache/huggingface/transformers\"");
+
         UnityEngine.Debug.Log("Writing: " + $"set TORCH_HOME=\"{Application.dataPath}/../ai_cache/torch\"");
         streamWriter.WriteLine($"set \"TORCH_HOME={Application.dataPath}/../ai_cache/torch\"");
 #endif
 
-
+        // start ai
         UnityEngine.Debug.Log("Writing: " + "python scripts/dream.py");
         streamWriter.WriteLine($"python scripts/dream.py" +
             $" -o \"{ToolManager.s_settings.strOutputDirectory}\"" +
-            $" {(ToolManager.s_settings.bFullPrecision ? "--full_precision" : "")}" +
+            $" {(ToolManager.s_settings.bFullPrecision ? "--precision=float32" : "")}" +
+            $" {(ToolManager.s_settings.bFreeGPUMemory ? "--free_gpu_mem" : "")}" +
             $" {(ToolManager.s_settings.iGPU > 0 ? $"-d cuda:{ToolManager.s_settings.iGPU}" : "")}");
     }
 
@@ -111,14 +119,18 @@ public class GeneratorConnection : MonoBehaviour
         coRequestImage = StartCoroutine(ieRequestImage(_output, _actionTextureReturn));
     }
 
-    private IEnumerator ieRequestImage(ImageInfo _output, Action<Texture2D, string, bool> _actionTextureReturn)
+    private IEnumerator ieRequestImage(ImageInfo _img, Action<Texture2D, string, bool> _actionTextureReturn)
     {
         bProcessing = true;
 
-        UnityEngine.Debug.Log($"Requesting {_output.prompt.strToString()}");
+        UnityEngine.Debug.Log($"Requesting {_img.prompt.strToString()}");
 
         yield return new WaitUntil(() => streamWriter.BaseStream.CanWrite);
-        streamWriter.WriteLine(_output.prompt.strToString());
+
+        if (_img.bIsRedo())
+            streamWriter.WriteLine(_img.strGetRedoPrompt());
+        else
+            streamWriter.WriteLine(_img.prompt.strToString());
 
         yield return new WaitUntil(() => outputStatus != OutputStatus.Unfinished);
 
@@ -169,7 +181,7 @@ public class GeneratorConnection : MonoBehaviour
             bInitialized = true;
         else if (outputStatus == OutputStatus.Unfinished && _strOutput.StartsWith("Outputs:"))
             outputStatus = OutputStatus.FinishedSuccessfully;
-        else if (_strOutput.StartsWith(">> Could not generate image."))
+        else if (_strOutput.StartsWith("dream> >> Could not generate image."))
             outputStatus = OutputStatus.Broken;
         else if (_strOutput.StartsWith("dream> CUDA out of memory"))
             outputStatus = OutputStatus.BrokenNeedsRestart;

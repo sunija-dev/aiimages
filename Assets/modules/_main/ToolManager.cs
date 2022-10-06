@@ -35,8 +35,9 @@ public class ToolManager : MonoBehaviour
 
     public static Texture2D s_texDefaultMissing { get => Instance.texDefaultMissing; }
     public Texture2D texDefaultMissing;
-    public GameObject goGPUWarning;
-    public TMP_Text textGPUWarning;
+    public GameObject goWarning;
+    public TMP_Text textWarning;
+    public GameObject goWarningTriangle;
 
     public GameObject goTextureBackground;
 
@@ -71,7 +72,6 @@ public class ToolManager : MonoBehaviour
     public OptionsVisualizer options;
 
     public GameObject goSelectPage;
-    public GameObject goInstallPage;
     public GameObject goLicensePage;
     public GameObject goAboutPage;
 
@@ -88,8 +88,7 @@ public class ToolManager : MonoBehaviour
 
     private bool bKeepRequesting = false;
 
-    private string strGPUText = "";
-    private string strSpaceWarning = "";
+    private string strWarningText = "";
     private bool bWontWork = false;
 
 
@@ -106,19 +105,20 @@ public class ToolManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log(strGetGPUText());
-        bWontWork = strGetGPUText().Contains("Won't work");
+        Debug.Log(strGetWarningText());
+        bWontWork = strGetWarningText().Contains("Won't work");
         if (bWontWork) // HACK
         {
-            goGPUWarning.SetActive(true);
-            textGPUWarning.text += "\n" + strGetGPUText();
-        }
+            goWarning.SetActive(true);
+            textWarning.text += "\n" + strGetWarningText();
 
-        strSpaceWarning = Application.dataPath.Contains(" ") ? $"Won't work, path contains space! Make sure all folders above aiimages don't contain spaces. Path: {Application.dataPath}" : "";
+            goWarningTriangle.SetActive(true);
+            goWarningTriangle.GetComponent<Tooltip>().strText = strWarningText;
+        }
 
         // backward comp
         string strSettingsPath = Path.Combine(Application.persistentDataPath, Settings.strSettingsName);
-        if (File.Exists(strSettingsPath) && !File.ReadAllText(strSettingsPath).Contains("bUseBackgroundTexture"))
+        if (File.Exists(strSettingsPath) && !File.ReadAllText(strSettingsPath).Contains("bFreeGPUMemory"))
         {
             Debug.Log("Found old settings file. Setting firstStart again.");
             s_settings.bIsFirstStart = true;
@@ -135,10 +135,10 @@ public class ToolManager : MonoBehaviour
         // FIRST STARTUP
         if (s_settings.bIsFirstStart)
         {
-            if (SystemInfo.graphicsDeviceName.ToLower().Contains("gtx 16") && SystemInfo.graphicsMemorySize > 4500)
+            if (SystemInfo.graphicsDeviceName.ToLower().Contains("gtx 16") && SystemInfo.graphicsMemorySize < 4500)
             {
-                UnityEngine.Debug.Log("Detected RTX 16XX. Switching to full precision.");
-                s_settings.bFullPrecision = true;
+                UnityEngine.Debug.Log("Detected GTX 16XX with low VRAM. Switching to using FreeMemory mode.");
+                s_settings.bFreeGPUMemory = true;
                 s_settings.Save();
             }
 
@@ -150,14 +150,13 @@ public class ToolManager : MonoBehaviour
 
         if (!s_settings.bAcceptedLicense)
             OpenPage(Page.License);
-        else if(!Application.isEditor 
-            && (!setup.bEverythingIsThere()))
-            OpenPage(Page.Select);
         else
             OpenPage(Page.Main);
 
         s_settings.bIsFirstStart = false;
         s_settings.Save();
+
+        CreateWebBat();
     }
 
     public IEnumerator ieStartDelayed()
@@ -177,9 +176,9 @@ public class ToolManager : MonoBehaviour
         {
             fLoadingTime += Time.deltaTime;
             if (fLoadingTime < 200f)
-                textFeedback.text = $"Loading model. Please wait... ({fLoadingTime.ToString("0")}s) {(bWontWork ? strGetGPUText() : "")} {strSpaceWarning}";
+                textFeedback.text = $"Loading model. Please wait... ({fLoadingTime.ToString("0")}s) {(bWontWork ? strGetWarningText() : "")}";
             else
-                textFeedback.text = $"<color=#FF0000>Loading model... ({fLoadingTime.ToString("0")}s) {(bWontWork ? strGetGPUText() : "")} {strSpaceWarning} - Ask for Discord support!</color>";
+                textFeedback.text = $"<color=#FF0000>Loading model... ({fLoadingTime.ToString("0")}s) {(bWontWork ? strGetWarningText() : "")} - Ask for Discord support!</color>";
         }
         else if (genConnection.bProcessing)
         {
@@ -216,6 +215,8 @@ public class ToolManager : MonoBehaviour
         outputRequested.dateCreation = DateTime.UtcNow;
         outputRequested.strFilePathRelative = _strFilePathFull.Replace(s_settings.strOutputDirectory, "");
         outputRequested.strGpuModel = $"{SystemInfo.graphicsDeviceName} ({Mathf.RoundToInt(SystemInfo.graphicsMemorySize)} MB)";
+        outputRequested.iActualWidth = _tex.width;
+        outputRequested.iActualHeight = _tex.height;
 
         if (_bWorked)
         {
@@ -269,20 +270,32 @@ public class ToolManager : MonoBehaviour
         eventQueueUpdated.Invoke();
     }
 
-    public string strGetGPUText()
+    public string strGetWarningText()
     {
-        if (!string.IsNullOrEmpty(strGPUText))
-            return strGPUText;
+        if (!string.IsNullOrEmpty(strWarningText))
+            return strWarningText;
 
         string strOutput = "";
         strOutput += $"<b>Your graphics card</b>: {SystemInfo.graphicsDeviceName} ({Mathf.RoundToInt(SystemInfo.graphicsMemorySize / 1000f)} GB)\n";
 
         int iWorks = 2; // yes, maybe, no
         string strProblem = "";
-        if (SystemInfo.graphicsMemorySize < 4000)
+        if (SystemInfo.graphicsMemorySize < 3900)
         {
             iWorks = 0;
             strProblem += "\nNot enough GPU memory. Needs at least 4 GB.";
+        }
+
+        if (SystemInfo.systemMemorySize < 11000)
+        {
+            iWorks = 0;
+            strProblem += "\nAI images needs at least 12 GB of memory (RAM).";
+        }
+
+        if (Application.dataPath.Contains(" "))
+        {
+            iWorks = 0;
+            strProblem += $"\nPath contains space! Make sure all folders above aiimages don't contain spaces. Path: {Application.dataPath}";
         }
 
         if (SystemInfo.graphicsDeviceName.ToLower().Contains("amd")
@@ -292,13 +305,25 @@ public class ToolManager : MonoBehaviour
             iWorks = 0;
             strProblem += "\nAMD graphic cards won't work (yet). :(";
         }
+        else if(SystemInfo.graphicsDeviceName.ToLower().Contains("intel"))
+        {
+            iWorks = 0;
+            strProblem += "\nYour PC appears to not have a dedicated graphics card. :(";
+        }
         else if (!SystemInfo.graphicsDeviceName.ToLower().Contains("rtx 30")
             && !SystemInfo.graphicsDeviceName.ToLower().Contains("rtx 20")
             && !SystemInfo.graphicsDeviceName.ToLower().Contains("gtx 1"))
         {
-            iWorks = 1;
+            iWorks = Mathf.Min(iWorks, 1);
             strProblem += "\nGPU is not the newest.";
         }
+
+        if (!setup.bEverythingIsThere())
+        {
+            strProblem += "There are files missing. Try reinstalling the application if you encounter issues.";
+            iWorks = Mathf.Min(iWorks, 1);
+        }
+            
 
         if (iWorks == 2)
             strOutput += "Should work! <3";
@@ -307,14 +332,13 @@ public class ToolManager : MonoBehaviour
         else if (iWorks == 0)
             strOutput += "Won't work, most likely. :(" + strProblem;
 
-        strGPUText = strOutput;
+        strWarningText = strOutput;
 
         return strOutput;
     }
 
     public void OpenPage(Page _page)
     {
-        goInstallPage.SetActive(false);
         goSelectPage.SetActive(false);
         goLicensePage.SetActive(false);
 
@@ -401,6 +425,8 @@ public class ToolManager : MonoBehaviour
         Directory.CreateDirectory(s_settings.strInputDirectory);
         Directory.CreateDirectory(s_settings.strOutputDirectory);
         Directory.CreateDirectory(Path.Combine(s_settings.strOutputDirectory, "favorites"));
+
+        options.optionSteps.UpdateLimit();
     }
 
     public void UpdateBackgroundTexture()
@@ -432,8 +458,16 @@ public class ToolManager : MonoBehaviour
         string strTrashFolder = Path.Combine(s_settings.strOutputDirectory, "trashcan");
         Directory.CreateDirectory(strTrashFolder);
 
-        if (File.Exists(_img.strFilePathFull()))
-            File.Move(_img.strFilePathFull(), Path.Combine(strTrashFolder, Path.GetFileName(_img.strFilePathFull())));
+        try
+        {
+            if (File.Exists(_img.strFilePathFull()))
+                File.Move(_img.strFilePathFull(), Path.Combine(strTrashFolder, Path.GetFileName(_img.strFilePathFull())));
+        }
+        catch
+        {
+            Debug.Log("Tried to delete file that is already in trash");
+        }
+        
     }
 
     public void DeleteFromHistory(ImageInfo _img)
@@ -568,5 +602,27 @@ public class ToolManager : MonoBehaviour
         List<Template> liDefaultStyles = JsonConvert.DeserializeObject<List<Template>>(textDefaultStyles.text);
         s_liStyleTemplates.AddRange(liDefaultStyles);
         //File.WriteAllText("default_styles_generated.txt", JsonConvert.SerializeObject(s_liStyleTemplates, Formatting.Indented));
+    }
+
+    public void CreateWebBat()
+    {
+        string strContent = "";
+        strContent += $"\"{ToolManager.s_settings.strAnacondaBatPath}\"";
+        strContent += $"{ToolManager.s_settings.strSDDirectory.Substring(0, 2)}";
+        strContent += $"cd \"{ToolManager.s_settings.strSDDirectory}\"";
+        strContent += "activate ldm";
+        strContent += $"set \"TRANSFORMERS_CACHE={Application.dataPath}/../ai_cache/huggingface/transformers\"";
+        strContent += $"set \"TORCH_HOME={Application.dataPath}/../ai_cache/torch\"";
+        strContent += $"python scripts/dream.py --web";
+        strContent += "start \"\" http://localhost:9090";
+
+        try
+        {
+            File.WriteAllText($"{Application.dataPath}../start_web_version.bat", strContent);
+        }
+        catch
+        {
+            Debug.Log("Could not create web bat.");
+        }
     }
 }

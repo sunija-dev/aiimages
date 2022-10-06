@@ -27,7 +27,8 @@ public class WindowTooltip : MonoBehaviour
         textInfo.SetText(_strText);
         //textInfo.ForceMeshUpdate();
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+        if (rect != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
     }
 
     private void Update()

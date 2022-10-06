@@ -48,6 +48,8 @@ public class ImageInfo
 
     // telemetry
     public System.DateTime dateCreation;
+    public int iActualWidth = -1;
+    public int iActualHeight = -1;
     public string strGpuModel = "";
     public User userCreator;
     public float fGenerationTime = 0f;
@@ -70,7 +72,15 @@ public class ImageInfo
     public Texture2D texGet()
     {
         if (tex == null)
+        {
             tex = Utility.texLoadImageSecure(strFilePathFull(), ToolManager.s_texDefaultMissing);
+            if (tex != ToolManager.s_texDefaultMissing && iActualWidth < 0) // update for old pictures
+            {
+                iActualWidth = tex.width;
+                iActualHeight = tex.height;
+            }   
+        }
+            
         return tex;
     }
 
@@ -101,6 +111,27 @@ public class ImageInfo
 
         return output;
     }
+
+    public bool bIsRedo()
+    {
+        return extraOptionsFull.bRedoEmbiggen || extraOptionsFull.bRedoFaceEnhance || extraOptionsFull.bRedoUpscale;
+    }
+
+    public string strGetRedoPrompt()
+    {
+        string strPrompt = $"!fix \"{strFilePathFull()}\"";
+
+        if (extraOptionsFull.bRedoUpscale && prompt.fUpscaleFactor > 1f)
+            strPrompt += $" -U {(int)prompt.fUpscaleFactor} {prompt.fUpscaleStrength.ToString("0.00", CultureInfo.InvariantCulture)}";
+
+        if (extraOptionsFull.bRedoEmbiggen && prompt.fEmbiggen > 1f)
+            strPrompt += $" --embiggen {prompt.fEmbiggen}";
+
+        if (extraOptionsFull.bRedoFaceEnhance && prompt.fFaceEnhanceStrength > 0f)
+            strPrompt += $" -G {prompt.fFaceEnhanceStrength.ToString("0.00", CultureInfo.InvariantCulture)}";
+
+        return strPrompt;
+    }
 }
 
 /// <summary>
@@ -116,16 +147,19 @@ public class Prompt
     public List<System.Tuple<int, float>> liVariations = new List<System.Tuple<int, float>>();
     public float fUpscaleFactor = 1f;
     public float fUpscaleStrength = 0.75f;
+    public float fEmbiggen = 1f;
     public float fFaceEnhanceStrength = 0.0f;
     public bool bSeamless = false;
     public int iSteps = 50;
     public float fCfgScale = 7.5f;
     public string strContentPrompt = "";
     public string strStylePrompt = "";
+    public string strSampler = "";
+    public string strExtraParams = "";
 
     public string strToString()
     {
-        string strPrompt = strWithoutOptions();
+        string strPrompt = $"\"{strWithoutOptions()}\"";
         strPrompt += $" -s {iSteps}" +
             $" -C {fCfgScale.ToString("0.00", CultureInfo.InvariantCulture)}";
 
@@ -135,16 +169,25 @@ public class Prompt
         if (!string.IsNullOrEmpty(startImage.strFilePath))
             strPrompt += $" --init_img=\"{startImage.strGetFullPath()}\" --strength={startImage.fStrength.ToString("0.000", CultureInfo.InvariantCulture)}";
 
+        if (!string.IsNullOrEmpty(strSampler))
+            strPrompt += $" --sampler {strSampler}";
+
         strPrompt += strGetSeed();
 
         if (fUpscaleFactor > 1f)
             strPrompt += $" -U {(int)fUpscaleFactor} {fUpscaleStrength.ToString("0.00", CultureInfo.InvariantCulture)}";
+
+        if (fEmbiggen > 1f)
+            strPrompt += $" --embiggen {fEmbiggen}";
 
         if (fFaceEnhanceStrength > 0f)
             strPrompt += $" -G {fFaceEnhanceStrength.ToString("0.00", CultureInfo.InvariantCulture)}";
 
         if (bSeamless)
             strPrompt += $" --seamless";
+
+        if (!string.IsNullOrEmpty(strExtraParams))
+            strPrompt += $" {strExtraParams}";
 
         return strPrompt;
     }
@@ -177,11 +220,9 @@ public class Prompt
     {
         string strPrompt = "";
 
-        strPrompt += "\"";
         strPrompt += strContentPrompt.Trim().Replace("\r", "").Replace("\n", "").Replace("\"", "");
         strPrompt += (!string.IsNullOrEmpty(strContentPrompt) && !string.IsNullOrEmpty(strStylePrompt)) ? ", " : "";
         strPrompt += strStylePrompt.Trim().Replace("\r", "").Replace("\n", "").Replace("\"", ""); ;
-        strPrompt += "\"";
 
         return strPrompt;
     }
@@ -243,8 +284,14 @@ public class ExtraOptions
     public float fUpscaleRedo = 2f;
     public float fUpscaleStrengthPreview = 0.5f;
     public float fUpscaleStrengthRedo = 0.75f;
+    public float fEmbiggenPreview = 0.0f;
+    public float fEmbiggenRedo = 2f;
+    public string strUpscaleMethod = "esrgan";
     public float fFaceEnhancePreview = 0.0f;
     public float fFaceEnhanceRedo = 0.75f;
+    public bool bRedoEmbiggen = false;
+    public bool bRedoUpscale = false;
+    public bool bRedoFaceEnhance = false;
 }
 
 [System.Serializable]

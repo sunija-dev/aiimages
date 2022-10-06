@@ -575,30 +575,42 @@ MonoBehaviour:
         fStrength: 0.75
         strGUID: 
       iSeed: -1
-      iVariationSeed: -1
-      fVariationStrength: 0.1
       fUpscaleFactor: 1
       fUpscaleStrength: 0.75
+      fEmbiggen: 1
       fFaceEnhanceStrength: 0
       bSeamless: 0
       iSteps: 50
       fCfgScale: 7.5
       strContentPrompt: 
       strStylePrompt: 
+      strSampler: 
+      strExtraParams: 
     extraOptionsFull:
       fStartImageStrengthVariance: 0
+      fStartImageScaling: 512
+      strStartImageOriginalName: 
+      v2iOriginalSize: {x: 0, y: 0}
       fCfgScaleVariance: 0
       bRandomSeed: 1
+      strSeedReferenceGUID: 
       iStepsPreview: 15
       iStepsRedo: 50
-      iVariationSeed: -1
       fVariationStrength: 0.1
       fUpscalePreview: 1
       fUpscaleRedo: 2
       fUpscaleStrengthPreview: 0.5
       fUpscaleStrengthRedo: 0.75
+      fEmbiggenPreview: 0
+      fEmbiggenRedo: 2
+      strUpscaleMethod: esrgan
       fFaceEnhancePreview: 0
       fFaceEnhanceRedo: 0.75
+      bRedoEmbiggen: 0
+      bRedoUpscale: 0
+      bRedoFaceEnhance: 0
+    iActualWidth: -1
+    iActualHeight: -1
     strGpuModel: 
     userCreator:
       strGUID: 
@@ -657,6 +669,19 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &2178261525972751174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428287694869659105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: Fixes faces with the golden values set in the Better Face option.
 --- !u!1 &4097613332249439859
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,6 +720,19 @@ RectTransform:
   m_AnchoredPosition: {x: 1.0001221, y: 0.000015258789}
   m_SizeDelta: {x: -10, y: -8}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6781213260726443755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5305957349552074155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: Repeats the image with teh golden step count.
 --- !u!1 &5655409529289381558
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,6 +798,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 1
+--- !u!114 &4796180029059854316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7150613289626151448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0924f1ddc98d23b47bdb7b842bf6bda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strText: Upscales the images with the golden values in the upscale option.
 --- !u!1001 &97292491968956563
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -987,14 +1038,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
---- !u!224 &5305957348221944037 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5545647827159465149, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
-  m_PrefabInstance: {fileID: 384096011236490328}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5305957348221944036 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5545647827159465148, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+  m_PrefabInstance: {fileID: 384096011236490328}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &5305957348221944037 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5545647827159465149, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
   m_PrefabInstance: {fileID: 384096011236490328}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &384096011402192535
@@ -1487,6 +1538,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+--- !u!1 &5305957349552074155 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5545647827159465148, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+  m_PrefabInstance: {fileID: 384096013128634647}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5305957349552074154 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5545647827159465149, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
@@ -1605,6 +1661,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+--- !u!1 &7150613289626151448 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5545647827159465148, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+  m_PrefabInstance: {fileID: 3443579947612575396}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7150613289626151449 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5545647827159465149, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
@@ -1787,14 +1848,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
---- !u!1 &9597785618946432 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5545647827159465148, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
-  m_PrefabInstance: {fileID: 5536050338168251708}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &9597785618946433 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5545647827159465149, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
+  m_PrefabInstance: {fileID: 5536050338168251708}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9597785618946432 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5545647827159465148, guid: 6c82b7bd08d7e3041a3109092cabc98c, type: 3}
   m_PrefabInstance: {fileID: 5536050338168251708}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7162306909143155037

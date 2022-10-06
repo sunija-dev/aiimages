@@ -42,7 +42,7 @@ public class Setup : MonoBehaviour
     {
         strDownloadFolder = Path.Combine(Application.dataPath, "../downloads");
 
-        textGraphicsDevice.text = toolmanager.strGetGPUText();
+        //textGraphicsDevice.text = toolmanager.strGetWarningText();
         textFeedback.text = "You will need <b>19 GB of space during installation (12 GB after)</b> whereever you put that exe.";
     }
 
