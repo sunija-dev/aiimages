@@ -69,6 +69,8 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             {
                 OptionsVisualizer.instance.LoadOptions(imgDisplayed);
                 ToolManager.Instance.options.optionSeed.Set(imgDisplayed);
+                if (ToolManager.Instance.options.optionSeed.optionSliderStrength.fValue == 0f) // set some variation
+                    ToolManager.Instance.options.optionSeed.optionSliderStrength.Set(0.2f);
             }),
             new ContextMenu.Option("Set as input image", () => SetAsInputImage()),
             new ContextMenu.Option("Use these options", () =>
@@ -225,6 +227,11 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         Debug.Log($"Requesting upscale redo version for seed {imgDisplayed.prompt.iSeed}");
 
         ImageInfo outputNew = imgDisplayed.outputCopy();
+
+        outputNew.extraOptionsFull.bRedoUpscale = false;
+        outputNew.extraOptionsFull.bRedoEmbiggen = false;
+        outputNew.extraOptionsFull.bRedoFaceEnhance = false;
+
         OptionUpscale optionUpscale = OptionsVisualizer.instance.optionUpscale;
         if (optionUpscale.toggleHD.isOn)
         {
@@ -248,6 +255,11 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         Debug.Log($"Requesting face_enhance redo version for seed {imgDisplayed.prompt.iSeed}");
 
         ImageInfo outputNew = imgDisplayed.outputCopy();
+
+        outputNew.extraOptionsFull.bRedoUpscale = false;
+        outputNew.extraOptionsFull.bRedoEmbiggen = false;
+        outputNew.extraOptionsFull.bRedoFaceEnhance = false;
+
         outputNew.prompt.fFaceEnhanceStrength = OptionsVisualizer.instance.optionFaceEnhance.fStrengthRedo;
         outputNew.extraOptionsFull.bRedoFaceEnhance = true;
         //DisplayImage(outputNew, _bAddtive: false);
