@@ -156,7 +156,7 @@ public class ToolManager : MonoBehaviour
         s_settings.bIsFirstStart = false;
         s_settings.Save();
 
-        CreateWebBat();
+        //CreateWebBat();
     }
 
     public IEnumerator ieStartDelayed()
@@ -323,7 +323,6 @@ public class ToolManager : MonoBehaviour
             strProblem += "There are files missing. Try reinstalling the application if you encounter issues.";
             iWorks = Mathf.Min(iWorks, 1);
         }
-            
 
         if (iWorks == 2)
             strOutput += "Should work! <3";
@@ -606,19 +605,19 @@ public class ToolManager : MonoBehaviour
 
     public void CreateWebBat()
     {
-        string strContent = "";
-        strContent += $"\"{ToolManager.s_settings.strAnacondaBatPath}\"";
-        strContent += $"{ToolManager.s_settings.strSDDirectory.Substring(0, 2)}";
-        strContent += $"cd \"{ToolManager.s_settings.strSDDirectory}\"";
-        strContent += "activate ldm";
-        strContent += $"set \"TRANSFORMERS_CACHE={Application.dataPath}/../ai_cache/huggingface/transformers\"";
-        strContent += $"set \"TORCH_HOME={Application.dataPath}/../ai_cache/torch\"";
-        strContent += $"python scripts/dream.py --web";
-        strContent += "start \"\" http://localhost:9090";
+        string strContent = "@echo off";
+        strContent += $"\ncall \"{ToolManager.s_settings.strAnacondaBatPath}\"";
+        strContent += $"\n{ToolManager.s_settings.strSDDirectory.Substring(0, 2)}";
+        strContent += $"\ncd \"{ToolManager.s_settings.strSDDirectory}\"";
+        strContent += "\nactivate ldm";
+        strContent += $"\nset \"TRANSFORMERS_CACHE={Application.dataPath}/../ai_cache/huggingface/transformers\"";
+        strContent += $"\nset \"TORCH_HOME={Application.dataPath}/../ai_cache/torch\"";
+        strContent += $"\npython scripts/dream.py --web";
+        strContent += "\nstart \"\" http://localhost:9090";
 
         try
         {
-            File.WriteAllText($"{Application.dataPath}../start_web_version.bat", strContent);
+            File.WriteAllText($"{Application.dataPath}/../start_web_version.bat", strContent);
         }
         catch
         {

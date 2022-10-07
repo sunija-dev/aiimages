@@ -74,8 +74,9 @@ public class Settings
         Settings settings = new Settings();
 
         strSettingsPath = Path.Combine(Application.persistentDataPath, strSettingsName);
-        if (File.Exists(strSettingsPath))
-            settings = JsonUtility.FromJson<Settings>(File.ReadAllText(strSettingsPath));
+        if (File.Exists(strSettingsPath) && !string.IsNullOrEmpty(File.ReadAllText(strSettingsPath)))
+                settings = JsonUtility.FromJson<Settings>(File.ReadAllText(strSettingsPath));
+           
 
         return settings;
     }

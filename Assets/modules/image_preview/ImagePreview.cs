@@ -74,7 +74,7 @@ public class ImagePreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             new ContextMenu.Option("Use these options", () =>
             {
                 OptionsVisualizer.instance.LoadOptions(imgDisplayed);
-                ToolManager.Instance.options.optionSeed.Set(imgDisplayed, _bRandomSeed: false);
+                ToolManager.Instance.options.optionSeed.Set(imgDisplayed, _bRandomSeed: true);
             }),
             new ContextMenu.Option("Copy prompt (only text)", () =>
             {
