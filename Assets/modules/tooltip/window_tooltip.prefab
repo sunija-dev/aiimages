@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000015258789, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0.000061035156}
   m_SizeDelta: {x: 0, y: 0.00016785}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2314404419008492571
@@ -111,8 +111,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.000044823}
+  m_SizeDelta: {x: 0, y: -0.000015259}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2314404419687587052
 CanvasRenderer:
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: 2, y: -2}
+  m_EffectDistance: {x: -2, y: -2}
   m_UseGraphicAlpha: 0
 --- !u!114 &265565953402742361
 MonoBehaviour:
@@ -559,7 +559,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3815447421105891109, guid: b92100178e5ed3a4ca133c9ffe7dd8b7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 40
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3815447421105891109, guid: b92100178e5ed3a4ca133c9ffe7dd8b7, type: 3}
       propertyPath: m_AnchoredPosition.y

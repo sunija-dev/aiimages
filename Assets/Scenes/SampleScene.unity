@@ -5803,7 +5803,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1584195473371130347, guid: f1564b253d67333419421cb1315f7a31, type: 3}
       propertyPath: fMax
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1584195473371130347, guid: f1564b253d67333419421cb1315f7a31, type: 3}
       propertyPath: fMin
@@ -5811,14 +5811,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1584195473371130347, guid: f1564b253d67333419421cb1315f7a31, type: 3}
       propertyPath: fValue
-      value: 0.11
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 1584195473371130347, guid: f1564b253d67333419421cb1315f7a31, type: 3}
       propertyPath: fStepSize
-      value: 0.01
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: 3908100351404425624, guid: f1564b253d67333419421cb1315f7a31, type: 3}
       propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3908100351404425624, guid: f1564b253d67333419421cb1315f7a31, type: 3}
+      propertyPath: m_enableWordWrapping
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5381597815911169293, guid: f1564b253d67333419421cb1315f7a31, type: 3}

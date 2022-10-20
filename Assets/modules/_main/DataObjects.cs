@@ -209,7 +209,7 @@ public class Prompt
             for (int iVariation = 0; iVariation < _liVariations.Count; iVariation++)
             {
                 System.Tuple<int, float> tuVariation = _liVariations[iVariation];
-                strOutput += $"{tuVariation.Item1}:{ tuVariation.Item2.ToString("0.000", CultureInfo.InvariantCulture)}{(iVariation + 1 < _liVariations.Count ? "," : "")}";
+                strOutput += $"{tuVariation.Item1}:{ tuVariation.Item2.ToString("0.0000", CultureInfo.InvariantCulture)}{(iVariation + 1 < _liVariations.Count ? "," : "")}";
             }
         }
 
