@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.Events;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class ToolManager : MonoBehaviour
 {
@@ -101,6 +102,84 @@ public class ToolManager : MonoBehaviour
 
         Instance = this;
         Load();
+
+    }
+
+    public void RestoreHistory()
+    {
+        Debug.Log("Start history restore...");
+        // TODO: extend history, not replace it
+        // TODO: if part of prompt is a template, use it as template, not as prompt
+
+        s_history.MakeBackup();
+
+        //List<string> liImageFiles = Directory.GetFiles("E:/outputs_collection/aiimages/ghibli_bg/").ToList();
+        List<string> liImageFiles = Directory.GetFiles(s_settings.strOutputDirectory).ToList();
+        foreach (string strFilePath in liImageFiles)
+        {
+            if (s_history.liOutputs.Any(x => x.strFilePathRelative == Path.GetFileName(strFilePath)))
+                continue;
+
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.Open(strFilePath, FileMode.Open)))
+                {
+                    // read the metadata by parsing the file as text, because reading the metafiles is surprisingly hard otherwise
+                    var data = br.ReadChars((int)br.BaseStream.Length);
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    foreach (char c in data)
+                        if ((int)c > 0) sb.Append(c.ToString()); else sb.Append(".");
+                    string strFileAsString = sb.ToString();
+                    int iStart = strFileAsString.IndexOf("{\"model\"");
+
+                    if (iStart == -1) // no meta data found?
+                        continue;
+
+                    int iEnd = iStart;
+                    int iBrackets = 0;
+                    for (int i = iStart; i < strFileAsString.Length; i++)
+                    {
+                        if (strFileAsString[i] == '{')
+                            iBrackets++;
+                        else if (strFileAsString[i] == '}')
+                            iBrackets--;
+
+                        if (iBrackets == 0)
+                        {
+                            iEnd = i;
+                            break;
+                        }
+
+                    }
+
+                    // parse metadata as json
+                    string strJson = strFileAsString.Substring(iStart, iEnd - iStart + 1);
+                    JObject jobjMetaData = JObject.Parse(strJson);
+                    JObject jobjImg = (JObject)jobjMetaData["image"];
+
+                    ImageInfo imgInfo = new ImageInfo();
+                    imgInfo.strGUID = Guid.NewGuid().ToString();
+                    imgInfo.strFilePathRelative = Path.GetFileName(strFilePath);
+                    imgInfo.prompt = new Prompt();
+                    imgInfo.prompt.iWidth = (int)jobjImg["width"];
+                    imgInfo.prompt.iHeight = (int)jobjImg["height"];
+                    imgInfo.prompt.iSeed = (int)jobjImg["seed"];
+                    imgInfo.prompt.strContentPrompt = jobjImg["prompt"][0]["prompt"].ToString();
+                    imgInfo.prompt.fCfgScale = (float)jobjImg["cfg_scale"];
+                    imgInfo.prompt.iSteps = (int)jobjImg["steps"];
+
+                    s_history.liOutputs.Add(imgInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Could not process image {strFilePath}, because: {ex.Message}");
+            }
+        }
+
+        s_history.Save();
+
+        Debug.Log("Finished history restore...");
     }
 
     private void Start()

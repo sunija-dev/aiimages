@@ -341,6 +341,24 @@ public class History
             history = JsonUtility.FromJson<History>(File.ReadAllText(strHistoryPath));
         return history;
     }
+
+    public void MakeBackup()
+    {
+        int iBackupNo = 1;
+
+        string strHistoryPath = Path.Combine(Application.persistentDataPath, strSaveName);
+
+        string strHistoryFileName = $"history-{iBackupNo}.json";
+        while (File.Exists(Path.Combine(Application.persistentDataPath, strHistoryFileName)))
+        {
+            iBackupNo++;
+            strHistoryFileName = $"history-{iBackupNo}.json";
+        }
+
+        string strHistoryBackupPath = Path.Combine(Application.persistentDataPath, strHistoryFileName);
+        Debug.Log($"Creating history backup at {strHistoryBackupPath}.");
+        File.WriteAllText(strHistoryBackupPath, File.ReadAllText(strHistoryPath));
+    }
 }
 
 [System.Serializable]
